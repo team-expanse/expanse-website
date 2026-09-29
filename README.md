@@ -1,8 +1,10 @@
 # Expanse website
 
-The product site for [Expanse](../expanse), a NixOS-based cluster operating
-system. Plain HTML + CSS + a little vanilla JavaScript: no build step, no
-external requests, works opened straight from disk.
+The product site for [Expanse](https://github.com/team-expanse/expanse), a
+NixOS-based cluster operating system, published at
+<https://team-expanse.github.io/expanse-website/>. Plain HTML + CSS + a little
+vanilla JavaScript: no build step, no external requests, works opened straight
+from disk.
 
 ## Structure
 
