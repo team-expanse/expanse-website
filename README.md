@@ -51,3 +51,9 @@ or horizontal overflow, and cleans up its own HTTP server.
 Light and dark follow `prefers-color-scheme`; the header toggle overrides it
 and remembers the choice in `localStorage`. Motion is disabled under
 `prefers-reduced-motion`.
+
+## License
+
+The site is licensed under the [Apache License, Version 2.0](LICENSE); see
+[`NOTICE`](NOTICE). The self-hosted fonts in `assets/fonts/` are under the SIL
+Open Font License 1.1, with their licence files alongside.

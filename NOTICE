@@ -1,0 +1,9 @@
+Expanse website
+Copyright 2026 Team Expanse
+
+This product includes software developed by Team Expanse,
+licensed under the Apache License, Version 2.0 (see LICENSE).
+
+The fonts in assets/fonts/ are not covered by the Apache License:
+  Inter            SIL Open Font License 1.1 (assets/fonts/Inter-LICENSE.txt)
+  JetBrains Mono   SIL Open Font License 1.1 (assets/fonts/JetBrainsMono-LICENSE.txt)
