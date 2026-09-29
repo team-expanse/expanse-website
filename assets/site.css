@@ -217,10 +217,10 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
   .site-nav.open { display: flex; }
   .site-nav a { padding: 0.7rem 0.75rem; font-size: 1rem; }
   .menu-btn { display: inline-flex; }
-  .header-cta { display: none; }
   .site-header .container { gap: 0.75rem; }
 }
 @media (max-width: 420px) { .brand-version { display: none; } }
+@media (max-width: 379px) { .header-actions .header-cta { display: none; } }
 @media (max-width: 560px) {
   .window-bar > span:not(.dots):not(.url) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
   .window-bar .url { display: none; }
@@ -341,6 +341,10 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
 .mu-stat .v small { font-size: 10px; font-weight: 500; color: var(--muted); margin-left: 0.15em; }
 .mu-stat .s { font-size: 9.5px; color: var(--muted); }
 .mu-card { min-width: 0; overflow: hidden; background: var(--surface); border: 1px solid var(--border); border-radius: 7px; padding: 0.5rem 0.6rem; }
+.mu-card { container-type: inline-size; }
+@container (max-width: 440px) { .mu .api { display: none; } }
+@container (max-width: 300px) { .mu .raft { display: none; } }
+@container (max-width: 150px) { .mu-ev .t { display: none; } }
 .mu-card h5 { margin: 0 0 0.35rem; font-size: 11px; font-weight: 600; }
 .mu-row2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0.45rem; }
 .mu-ok { display: flex; align-items: center; gap: 0.4rem; color: var(--ok); font-size: 10.5px; }
@@ -367,17 +371,17 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
 
 /* tty1 console mock */
 .window-dark { display: flex; flex-direction: column; }
-.tty { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0.9rem 1rem 1rem; overflow-x: auto; font-family: var(--mono); font-size: 10.5px; line-height: 1.42; }
-.tty pre { margin: 0; font: inherit; color: var(--term-fg); }
+.tty { flex: 1; container-type: inline-size; padding: 0.9rem 1rem 1rem; overflow-x: auto; font-family: var(--mono); line-height: 1.42; }
+/* Fit all 72 columns: JetBrains Mono advances 0.6em, and some renderers round advances to whole pixels */
+.tty pre { margin: 0; font: inherit; font-size: min(11px, 100cqi / 44); font-size: min(11px, round(down, 100cqi / 72, 1px) / 0.6); color: var(--term-fg); }
 .tty .hdr { background: var(--term-fg); color: var(--term-bg); font-weight: 500; }
 .tty .dim { color: var(--term-muted); }
 .tty .g { color: var(--term-green); font-weight: 500; }
 .tty .y { color: var(--term-yellow); }
 .tty .c { color: var(--term-cyan); }
 .tty .b { font-weight: 500; color: #fff; }
+.tty .hdr .b { color: inherit; }
 .tty .box { color: #4b5566; }
-@media (max-width: 960px) { .tty { font-size: 11px; justify-content: flex-start; } }
-@media (max-width: 420px) { .tty { font-size: 10px; } }
 .stage-caption { display: flex; justify-content: space-between; gap: 1rem; margin-top: 0.75rem; font-size: 0.85rem; color: var(--muted); flex-wrap: wrap; }
 
 /* ---------- adopted-parts strip ---------- */

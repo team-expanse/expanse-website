@@ -91,14 +91,14 @@
           <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>
         </a>
         <h1>The cluster OS for the <span class="grad">machines you already have</span>.</h1>
-        <p class="lead">Expanse turns any x86_64 or aarch64 box — a decade-old laptop included — into a node of a self-healing cluster: replicated storage, scheduled services, VIP failover and a live web console. Built on NixOS from proven parts, not hand-rolled distributed systems.</p>
+        <p class="lead">Expanse turns ordinary hardware — the design target is a decade-old laptop — into a node of a self-healing cluster: replicated storage, scheduled services, VIP failover and a live web console. Built on NixOS from proven parts, not hand-rolled distributed systems.</p>
         <div class="hero-actions">
           <a class="btn btn-primary btn-lg" href="docs/getting-started.html">Get started<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
           <a class="btn btn-secondary btn-lg" href="download.html"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download ISO 1.1.6</a>
         </div>
         <div class="hero-meta">
           <span><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg>2 cores · 2 GB RAM · 20 GB disk</span>
-          <span><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg>Installs in under 10 minutes</span>
+          <span><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg>Guided or unattended install</span>
           <span><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg>Starts on one node, grows as nodes join</span>
         </div>
       </div>
@@ -146,11 +146,11 @@
                 </div>
                 <div class="mu-card"><h5>Nodes</h5>
                   <table>
-                    <thead><tr><th>Node</th><th>Role</th><th>State</th><th class="hide-sm">Raft address</th><th class="hide-sm">API address</th></tr></thead>
+                    <thead><tr><th>Node</th><th>Role</th><th>State</th><th class="hide-sm raft">Raft address</th><th class="hide-sm api">API address</th></tr></thead>
                     <tbody>
-                      <tr><td><b>n1</b> <span class="spill leader">Leader</span></td><td>voter</td><td><span class="spill"><i></i>Online</span></td><td class="hide-sm"><code>10.0.0.11:7444</code></td><td class="hide-sm"><code>10.0.0.11:7443</code></td></tr>
-                      <tr><td><b>n2</b></td><td>voter</td><td><span class="spill"><i></i>Online</span></td><td class="hide-sm"><code>10.0.0.12:7444</code></td><td class="hide-sm"><code>10.0.0.12:7443</code></td></tr>
-                      <tr><td><b>n3</b></td><td>voter</td><td><span class="spill"><i></i>Online</span></td><td class="hide-sm"><code>10.0.0.13:7444</code></td><td class="hide-sm"><code>10.0.0.13:7443</code></td></tr>
+                      <tr><td><b>n1</b> <span class="spill leader">Leader</span></td><td>voter</td><td><span class="spill"><i></i>Online</span></td><td class="hide-sm raft"><code>10.0.0.11:7444</code></td><td class="hide-sm api"><code>10.0.0.11:7443</code></td></tr>
+                      <tr><td><b>n2</b></td><td>voter</td><td><span class="spill"><i></i>Online</span></td><td class="hide-sm raft"><code>10.0.0.12:7444</code></td><td class="hide-sm api"><code>10.0.0.12:7443</code></td></tr>
+                      <tr><td><b>n3</b></td><td>voter</td><td><span class="spill"><i></i>Online</span></td><td class="hide-sm raft"><code>10.0.0.13:7444</code></td><td class="hide-sm api"><code>10.0.0.13:7443</code></td></tr>
                     </tbody>
                   </table>
                 </div>
@@ -288,7 +288,7 @@
         <div class="step reveal">
           <span class="step-num" aria-hidden="true">1</span>
           <h3>Install a node</h3>
-          <p>Write the ISO to a USB stick and boot the target. The installer picks disks, network and an SSH key, shows what it will destroy, and finishes in under ten minutes. Headless? SSH in and run it there.</p>
+          <p>Write the ISO to a USB stick and boot the target. The installer picks disks, network and an SSH key, shows what it will destroy, then installs. Headless? SSH in and run it there.</p>
           <div class="code"><pre><span class="p">$ </span><span class="cmd">nix build github:expanse/expanse#iso</span>
 <span class="p">$ </span><span class="cmd">sudo dd if=result/iso/*.iso of=/dev/sdX bs=4M</span>
 <span class="cm"># boot the target from the stick, then:</span>
@@ -378,8 +378,8 @@
       <div class="stats">
         <div class="stat reveal"><div class="n">110<small>+</small></div><div class="d">NixOS VM tests that kill nodes, partition networks and pull disks — not just unit tests.</div></div>
         <div class="stat reveal reveal-2"><div class="n">0</div><div class="d">Acknowledged writes lost across leader failover, partitions and rolling upgrades in those tests.</div></div>
-        <div class="stat reveal reveal-3"><div class="n">≤15<small>s</small></div><div class="d">VIP failover budget after a hard power-off of the holder, measured from an external client (typically ~10 s).</div></div>
-        <div class="stat reveal"><div class="n">~2.5<small>%</small></div><div class="d">Of one core for the idle Raft leader on bare metal (3-node, volume-free); followers 1.1–1.2%.</div></div>
+        <div class="stat reveal reveal-3"><div class="n">≤15<small>s</small></div><div class="d">VIP failover budget after a hard power-off of the holder, measured in VM tests from an external client (typically ~10 s).</div></div>
+        <div class="stat reveal"><div class="n">~2.5<small>%</small></div><div class="d">Of one core for the idle Raft leader: three containers on one bare-metal host, no volumes; followers 1.1–1.2%.</div></div>
       </div>
     </div>
   </section>

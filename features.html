@@ -98,8 +98,8 @@
       <div class="feature-text">
         <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-disk"/></svg></div>
         <div class="eyebrow">Installer</div>
-        <h2>From a blank machine to a node in under ten minutes.</h2>
-        <p class="lead">The ISO is a hybrid image that boots under UEFI and legacy BIOS. A full-screen installer starts automatically; headless machines can be installed over SSH with the same TUI or with a one-file unattended config.</p>
+        <h2>From a blank machine to a node with one USB stick.</h2>
+        <p class="lead">The x86_64 ISO is a hybrid image that boots under UEFI and legacy BIOS. A full-screen installer starts automatically; headless machines can be installed over SSH with the same TUI or with a one-file unattended config.</p>
         <ul class="checks">
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Six steps.</strong> Welcome (hardware summary), Disks, Network, SSH key (paste one or <code>gh:&lt;username&gt;</code>), Review with a red list of what will be destroyed, Progress with a stage, bar and log tail.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Refuses to surprise you.</strong> Disks holding data are marked <code>CONTAINS DATA</code>; unattended installs will not touch them without <code>--force</code>, and <code>--dry-run</code> prints every command without running one.</span></li>
@@ -122,7 +122,7 @@
         <div class="code" style="margin-top:0.75rem"><pre><span class="p">$ </span><span class="cmd">expanse install --config expanse-install.yaml --dry-run</span>
 <span class="p">$ </span><span class="cmd">expanse install --config expanse-install.yaml --force</span></pre></div>
         <dl class="kv">
-          <div><dt>Targets</dt><dd>x86_64, aarch64</dd></div>
+          <div><dt>Targets</dt><dd>x86_64; aarch64 builds, untested</dd></div>
           <div><dt>Minimum</dt><dd>2 cores · 2 GB · 20 GB</dd></div>
           <div><dt>ISO size</dt><dd>about 1.4 GB</dd></div>
         </dl>

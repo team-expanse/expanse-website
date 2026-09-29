@@ -61,7 +61,7 @@
     <div class="container">
       <div class="eyebrow">Download</div>
       <h1>Get Expanse 1.1.6.</h1>
-      <p class="lead">One hybrid ISO installs a node on x86_64 or aarch64 hardware. Build it from the flake, or write a release image to a USB stick, then follow the <a href="docs/getting-started.html">quickstart</a>.</p>
+      <p class="lead">One hybrid ISO installs a node on x86_64 hardware. Build it from the flake, or write a release image to a USB stick, then follow the <a href="docs/getting-started.html">quickstart</a>.</p>
     </div>
   </section>
 
@@ -80,10 +80,10 @@
             </div>
           </div>
           <div class="hero-actions" style="justify-content:flex-start">
-            <a class="btn btn-primary btn-lg" href="releases/expanse-1.1.6-x86_64-linux.iso"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download ISO</a>
+            <a class="btn btn-primary btn-lg" href="https://github.com/team-expanse/expanse/releases/download/v1.1.6/expanse-1.1.6-x86_64-linux.iso"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download ISO</a>
             <a class="btn btn-secondary btn-lg" href="#source">Build from source</a>
           </div>
-          <p class="muted" style="margin-top:1.25rem;font-size:0.9rem">Release downloads are published alongside the source. If the link above is not live for your mirror yet, building from source produces the identical image: the flake asserts the ISO is named <code>expanse-1.1.6-*</code> and that the installer reports 1.1.6.</p>
+          <p class="muted" style="margin-top:1.25rem;font-size:0.9rem">Release images are attached to the <code>v1.1.6</code> release on GitHub. Building from source gives you the same release: the flake asserts the ISO is named <code>expanse-1.1.6-*</code> and that the installer reports 1.1.6.</p>
         </div>
         <div>
           <div class="card" style="height:100%">
@@ -96,7 +96,7 @@
               <div><div class="n">4 GB</div><div class="d">USB stick for the installer</div></div>
             </div>
             <ul class="checks" style="margin-top:1.25rem">
-              <li><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span><strong>Architectures:</strong> x86_64 and aarch64. Boots via UEFI or legacy BIOS.</span></li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span><strong>Architectures:</strong> x86_64, booting via UEFI or legacy BIOS. An aarch64 image (UEFI only) builds from the flake but has not been tested.</span></li>
               <li><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span><strong>Cluster sizes:</strong> one node works; three voters (or two plus a witness) survive losing one.</span></li>
               <li><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span><strong>Hardware status:</strong> automated coverage is on QEMU/KVM. Laptop, mini-PC, server and ARM SBC targets are listed in the hardware matrix as untested.</span></li>
             </ul>

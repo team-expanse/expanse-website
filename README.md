@@ -22,9 +22,10 @@ external requests, works opened straight from disk.
 Every page carries its own copy of the header, footer and inline SVG icon sprite,
 so pages stay self-contained and there is nothing to assemble.
 
-The download button points at a relative placeholder
-(`releases/expanse-1.1.6-x86_64-linux.iso`); drop the real image there, or
-change the link, when a release is published.
+The download button points at the GitHub release asset
+(`https://github.com/team-expanse/expanse/releases/download/v1.1.6/expanse-1.1.6-x86_64-linux.iso`).
+It works once the `v1.1.6` tag is pushed and the ISO is uploaded to that release;
+update the version in `download.html` for each new release.
 
 ## Preview
 

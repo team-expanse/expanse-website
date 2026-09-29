@@ -58,7 +58,7 @@
     <div class="container">
       <div class="eyebrow">Getting started</div>
       <h1>From a blank machine to a running cluster.</h1>
-      <p class="lead">This walkthrough assumes no familiarity with Nix or btrfs. It takes one machine to an installed node, forms a one-node cluster, opens the web console, and then adds more nodes. Expect under ten minutes for the install itself.</p>
+      <p class="lead">This walkthrough assumes no familiarity with Nix or btrfs. It takes one machine to an installed node, forms a one-node cluster, opens the web console, and then adds more nodes.</p>
     </div>
   </section>
 
@@ -83,7 +83,7 @@
     <article class="prose">
       <h2 id="requirements">What you need</h2>
       <ul>
-        <li>Any machine with at least <strong>2 CPU cores, 2 GB RAM and a 20 GB disk</strong>. A ten-year-old laptop is fine — that is the design target. x86_64 and aarch64 are supported.</li>
+        <li>Any machine with at least <strong>2 CPU cores, 2 GB RAM and a 20 GB disk</strong>. A ten-year-old laptop is the design target. x86_64 is the tested architecture; aarch64 images build from the flake but are untested.</li>
         <li>A USB stick of at least 4 GB (the ISO is about 1.4 GB).</li>
         <li>An SSH public key. Optional, but strongly recommended: the installer warns when none is given.</li>
         <li>A machine with Nix to build the ISO, or a downloaded release image (see <a href="../download.html">Download</a>).</li>
@@ -94,7 +94,7 @@
       <p>Build the ISO from the flake (or use a downloaded release image), then write it to the stick. Replace <code>/dev/sdX</code> with your USB device — check with <code>lsblk</code> first.</p>
       <div class="code"><pre><span class="p">$ </span><span class="cmd">nix build github:expanse/expanse#iso</span>
 <span class="p">$ </span><span class="cmd">sudo dd if=result/iso/*.iso of=/dev/sdX bs=4M status=progress oflag=direct</span></pre></div>
-      <p>The image is hybrid: it boots under UEFI and legacy BIOS alike.</p>
+      <p>The x86_64 image is hybrid: it boots under UEFI and legacy BIOS alike.</p>
 
       <h2 id="boot">2. Boot the installer</h2>
       <p>Boot the target machine from the stick. A full-screen installer starts automatically on the console.</p>
@@ -110,7 +110,7 @@
         <li><strong>Network</strong> — DHCP (recommended) or static.</li>
         <li><strong>SSH key</strong> — paste a public key, or type <code>gh:&lt;username&gt;</code> to fetch your keys from GitHub.</li>
         <li><strong>Review</strong> — the full plan, with a red list of everything that will be destroyed. Type <code>INSTALL</code> to proceed; the install starts on the last letter, with no Enter needed.</li>
-        <li><strong>Progress</strong> — the current stage, a progress bar, elapsed time and a scrolling tail of the log (the full log is in <code>/tmp/expanse-install.log</code>). Under ten minutes.</li>
+        <li><strong>Progress</strong> — the current stage, a progress bar, elapsed time and a scrolling tail of the log (the full log is in <code>/tmp/expanse-install.log</code>).</li>
       </ol>
       <p>When it finishes you get your <strong>node ID</strong> (a UUID), the machine's addresses and the next steps: the web UI URL, where the admin password is logged, and how to form a one-node cluster. Reboot and remove the stick.</p>
 
