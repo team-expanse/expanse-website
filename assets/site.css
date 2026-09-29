@@ -502,6 +502,10 @@ table.t td:first-child { font-weight: 600; white-space: nowrap; }
 .site-footer a { color: var(--muted); }
 .site-footer a:hover { color: var(--fg); }
 .footer-bottom { margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-size: 0.85rem; color: var(--faint); }
+.footer-bottom .made-with { flex-basis: 100%; margin: 0; color: var(--muted); }
+.footer-bottom .made-with a { text-decoration: underline; text-underline-offset: 0.15em; }
+.nowrap { white-space: nowrap; }
+section[id] { scroll-margin-top: var(--header-h); }
 
 /* ---------- page hero (subpages) ---------- */
 .page-hero { padding: clamp(3rem, 6vw, 5rem) 0 clamp(2rem, 4vw, 3rem); position: relative; overflow: clip; }

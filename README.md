@@ -73,6 +73,14 @@ Light and dark follow `prefers-color-scheme`; the header toggle overrides it
 and remembers the choice in `localStorage`. Motion is disabled under
 `prefers-reduced-motion`.
 
+## How it is made
+
+Expanse and this website are a joint human–AI effort: a human maintainer
+working with AI coding assistants. The site says so on every page (footer) and
+in the landing page's "How Expanse is made" section. Most commits credit the AI
+co-author in a `Co-Authored-By` trailer. The disclosure deliberately names no
+model, vendor or tool, since those change over time; the commits record them.
+
 ## License
 
 The site is licensed under the [Apache License, Version 2.0](LICENSE); see
