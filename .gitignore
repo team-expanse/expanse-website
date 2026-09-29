@@ -1,0 +1,3 @@
+releases/*
+!releases/README.txt
+__pycache__/

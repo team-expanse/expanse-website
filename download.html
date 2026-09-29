@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Download — Expanse</title>
+  <meta name="description" content="Get Expanse 1.1.6: the installer ISO, how to build it from source, hardware requirements, the changelog and known issues.">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/site.css">
+  <script>
+    try { var t = localStorage.getItem("expanse-theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+  </script>
+</head>
+<body>
+<svg class="sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-logo" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#1f6feb" stroke="none"/><path d="M16 6 7 11v10l9 5 9-5V11z" fill="none" stroke="#fff" stroke-width="2"/><path d="M16 26V16M7 11l9 5 9-5" fill="none" stroke="#fff" stroke-width="2"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/></symbol>
+  <symbol id="i-disc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+</svg>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="index.html" aria-label="Expanse home">
+      <svg class="brand-mark" aria-hidden="true"><use href="#i-logo"/></svg>
+      <span>Expanse</span>
+      <span class="brand-version">1.1.6</span>
+    </a>
+    <nav class="site-nav" id="site-nav" data-nav aria-label="Main">
+      <a href="features.html">Features</a>
+      <a href="docs/getting-started.html">Get started</a>
+      <a href="download.html" aria-current="page">Download</a>
+      <a href="download.html#changelog">Changelog</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">
+        <svg class="icon icon-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+        <svg class="icon icon-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+      </button>
+      <a class="btn btn-primary header-cta" href="docs/getting-started.html">Get started</a>
+      <button class="icon-btn menu-btn" type="button" data-nav-toggle aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+        <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="page-hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container">
+      <div class="eyebrow">Download</div>
+      <h1>Get Expanse 1.1.6.</h1>
+      <p class="lead">One hybrid ISO installs a node on x86_64 or aarch64 hardware. Build it from the flake, or write a release image to a USB stick, then follow the <a href="docs/getting-started.html">quickstart</a>.</p>
+    </div>
+  </section>
+
+  <section class="section-tight" style="padding-top:0">
+    <div class="container">
+      <div class="release">
+        <div class="release-card">
+          <div class="eyebrow">Latest release</div>
+          <h2>Expanse 1.1.6</h2>
+          <div class="date">Released 2026-09-28 · installer facelift, tty1 host console, quiet boots</div>
+          <div class="file">
+            <svg class="icon" aria-hidden="true"><use href="#i-disc"/></svg>
+            <div>
+              <div class="name">expanse-1.1.6-x86_64-linux.iso</div>
+              <div class="meta">Hybrid UEFI + BIOS installer image · about 1.4 GB · needs a 4 GB USB stick</div>
+            </div>
+          </div>
+          <div class="hero-actions" style="justify-content:flex-start">
+            <a class="btn btn-primary btn-lg" href="releases/expanse-1.1.6-x86_64-linux.iso"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download ISO</a>
+            <a class="btn btn-secondary btn-lg" href="#source">Build from source</a>
+          </div>
+          <p class="muted" style="margin-top:1.25rem;font-size:0.9rem">Release downloads are published alongside the source. If the link above is not live for your mirror yet, building from source produces the identical image: the flake asserts the ISO is named <code>expanse-1.1.6-*</code> and that the installer reports 1.1.6.</p>
+        </div>
+        <div>
+          <div class="card" style="height:100%">
+            <h3 id="requirements">Requirements</h3>
+            <p style="margin:0.5rem 0 1rem">The design target is a decade-old laptop, not a rack.</p>
+            <div class="reqs">
+              <div><div class="n">2</div><div class="d">CPU cores</div></div>
+              <div><div class="n">2 GB</div><div class="d">RAM</div></div>
+              <div><div class="n">20 GB</div><div class="d">disk (2+ for a mirror)</div></div>
+              <div><div class="n">4 GB</div><div class="d">USB stick for the installer</div></div>
+            </div>
+            <ul class="checks" style="margin-top:1.25rem">
+              <li><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span><strong>Architectures:</strong> x86_64 and aarch64. Boots via UEFI or legacy BIOS.</span></li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span><strong>Cluster sizes:</strong> one node works; three voters (or two plus a witness) survive losing one.</span></li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span><strong>Hardware status:</strong> automated coverage is on QEMU/KVM. Laptop, mini-PC, server and ARM SBC targets are listed in the hardware matrix as untested.</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight section-alt" id="source">
+    <div class="container">
+      <div class="split">
+        <div>
+          <div class="eyebrow">Build from source</div>
+          <h2>Reproducible by design.</h2>
+          <p class="lead">Expanse is a Nix flake. Building the ISO needs Nix with flakes enabled; the dev shell brings Go, golangci-lint, protoc and QEMU for everything else.</p>
+          <ul class="checks">
+            <li><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span><code>nix build .#iso</code> produces the installer; <code>nix build .#expanse</code> just the CLI and agent.</span></li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span><code>nix flake check</code> runs lint, unit tests and the NixOS VM tests (KVM required).</span></li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span>The release version lives in one place, <code>nix/version.nix</code>; the ISO name and <code>expanse version</code> both read it.</span></li>
+          </ul>
+        </div>
+        <div class="terminal"><div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>build the installer</span></div><pre><span class="cm"># the installer ISO, straight from the flake reference</span>
+<span class="p">$ </span><span class="cmd">nix build github:expanse/expanse#iso</span>
+<span class="p">$ </span><span class="cmd">ls result/iso/</span>
+<span class="out">expanse-1.1.6-x86_64-linux.iso</span>
+
+<span class="cm"># or from a checkout</span>
+<span class="p">$ </span><span class="cmd">nix develop</span>          <span class="cm"># go, golangci-lint, protoc, qemu, …</span>
+<span class="p">$ </span><span class="cmd">make build &amp;&amp; make test &amp;&amp; make lint</span>
+<span class="p">$ </span><span class="cmd">nix build .#iso -L</span>
+<span class="p">$ </span><span class="cmd">sudo dd if=result/iso/*.iso of=/dev/sdX bs=4M \
+    status=progress oflag=direct</span></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight" id="changelog">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">Changelog</div>
+        <h2>Release notes</h2>
+        <p class="lead">Versions follow Semantic Versioning. History before 1.0.0 is not reconstructed.</p>
+      </div>
+      <div class="changelog">
+        <details class="rel latest" open>
+          <summary><span class="ver">1.1.6</span><span>Installer facelift, tty1 host console, quiet boots</span><span class="when">2026-09-28</span><svg class="icon chev" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+          <div class="rel-body">
+            <h4>Changed</h4>
+            <ul>
+              <li><strong>Installer TUI</strong> has a proper console layout: a framed, centred page that fits the terminal (80×25 upwards, redrawn on resize), a "Step n of 6" indicator, a disk table with model, size, type and current contents, a reverse-video selection cursor, a red destructive list on review, a real progress view (stage, progress bar, elapsed time and a scrolling log tail) and a done screen with the node's addresses and next steps. Colours are the VT's 16; box drawing falls back to ASCII with <code>EXPANSE_TUI_ASCII=1</code>. Keys and flow are unchanged.</li>
+            </ul>
+            <h4>Added</h4>
+            <ul>
+              <li><strong><code>expanse console</code></strong>: a read-only host information screen, like ESXi's DCUI, shown on tty1 in place of a login (<code>expanse-console.service</code>; tty2+ and the serial console keep their logins). Version, hostname and node ID, addresses and web UI URL, cluster name, role and quorum, health, CPU, memory, disks, md mirror state (a degraded array in red) and uptime, refreshing every 3 s. Health comes from the agent's heartbeat, so the console never re-runs checks. <code>--once</code> prints one screen to stdout.</li>
+            </ul>
+            <h4>Fixed</h4>
+            <ul>
+              <li>Every node reported UNHEALTHY (and fired <code>ExpanseNodeUnhealthy</code>) for a minute after each boot while chrony synchronised. For the first 10 minutes after boot an unsynchronised clock now reads "unknown".</li>
+              <li>The clock-sync check's large-offset warning (&gt; 100 ms) could never fire.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="rel">
+          <summary><span class="ver">1.1.5</span><span>A polished web UI</span><span class="when">2026-09-27</span><svg class="icon chev" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+          <div class="rel-body">
+            <h4>Changed</h4>
+            <ul>
+              <li>The web UI has a proper app shell and design system: sidebar, header with cluster name and quorum/health, user menu, light/dark toggle, breadcrumbs and a footer naming the serving node and version; status pills, styled tables, cards, forms with inline validation, toasts and <code>&lt;dialog&gt;</code> confirmations. Responsive to phone width, keyboard accessible, hand-written CSS, no build step, no CDN, self-only Content-Security-Policy.</li>
+              <li><code>/</code> is a live dashboard: nodes, quorum, blocks by phase, volumes by state, firing alerts, the current generation, a "needs attention" list and recent events.</li>
+            </ul>
+            <h4>Added</h4>
+            <ul>
+              <li>Pages for <strong>Nodes</strong>, <strong>Generations</strong> (history, detail, diff of any two, rollback behind a confirm), <strong>Events</strong> (a live, filtered log of store writes) and <strong>Settings</strong> (admin password, OIDC status, UI CA download).</li>
+            </ul>
+            <h4>Fixed</h4>
+            <ul>
+              <li>Plain form posts from a browser were rejected with "CSRF token mismatch".</li>
+              <li>A node's reported health read "unknown" permanently: the agent's PATH lacked <code>chronyc</code>.</li>
+              <li>The web UI footer read "Expanse dev" on installed nodes.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="rel">
+          <summary><span class="ver">1.1.4</span><span>Mirror layout boots from either disk</span><span class="when">2026-09-27</span><svg class="icon chev" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+          <div class="rel-body">
+            <h4>Changed</h4>
+            <ul>
+              <li>The ESP and the system partition are now md RAID1 arrays across the first two disks (btrfs on the md array). Verified in QEMU: install, boot with each disk removed, and a replacement disk rebuilt and booted alone. Existing mirror installs keep the old layout until reinstalled.</li>
+              <li>On an md ESP, systemd-boot is installed with relaxed ESP checks and without an NVRAM entry; each disk boots through <code>\EFI\BOOT\BOOTX64.EFI</code>.</li>
+              <li>Mirror nodes ship <code>sgdisk</code> and log md events to the journal; the storage docs carry the disk-replacement runbook.</li>
+              <li><code>expanse doctor storage</code> reads the md array under the system btrfs: PASS for a healthy mirror, WARN when degraded.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="rel">
+          <summary><span class="ver">1.1.3</span><span>Install from the ISO works end to end</span><span class="when">2026-09-27</span><svg class="icon chev" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+          <div class="rel-body">
+            <h4>Fixed</h4>
+            <ul>
+              <li>Verified in QEMU through the interactive installer, <code>nixos-install</code>, first boot, a one-node cluster running a block, and a reboot that wipes root and keeps the cluster.</li>
+              <li>Installer TUI key handling, dropped SSH keys, missing tools; the ISO's <code>&lt;nixpkgs&gt;</code> needed flakes; installed nodes had no hardware configuration and did not run the agent; the impermanence rollback raced the system disk; <code>cluster init</code> now refuses while <code>expansed</code> runs.</li>
+              <li>The web UI could not be opened in any browser (<code>SSL_ERROR_NO_CYPHER_OVERLAP</code>): it now has its own ECDSA P-256 CA; import <code>ui-ca.pem</code>.</li>
+              <li>An installed node's firewall blocked the web UI (8443) and metrics (7447) from other machines.</li>
+              <li>The ISO and installed nodes log to the serial console too, with a login there.</li>
+            </ul>
+            <h4>Known issues</h4>
+            <ul>
+              <li>Binary-backed block types (nginx, redis, …) need their program on the node's <code>PATH</code>, which an installed node does not ship; <code>util/echo</code> runs.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="rel">
+          <summary><span class="ver">1.1.2</span><span>The installer reports its real version</span><span class="when">2026-09-26</span><svg class="icon chev" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+          <div class="rel-body">
+            <h4>Fixed</h4>
+            <ul>
+              <li><code>expanse version</code> on the installer and on installed nodes reported <code>0.0.1 (installer)</code>. The release version lives in <code>nix/version.nix</code>, and the ISO is named <code>expanse-&lt;version&gt;-&lt;system&gt;.iso</code>.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="rel">
+          <summary><span class="ver">1.1.1</span><span>Faster replica rebuilds under load</span><span class="when">2026-09-26</span><svg class="icon chev" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+          <div class="rel-body">
+            <h4>Changed</h4>
+            <ul>
+              <li>DRBD resources set <code>c-min-rate 4M</code>: a new or rebuilt replica on a busy volume syncs at 4 MiB/s or more instead of being throttled toward 250 KiB/s. Existing volumes pick it up on upgrade.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="rel">
+          <summary><span class="ver">1.1.0</span><span>Single-node clusters that grow</span><span class="when">2026-09-26</span><svg class="icon chev" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+          <div class="rel-body">
+            <h4>Added</h4>
+            <ul>
+              <li><code>cluster init --expect 1</code> forms a working cluster on one machine; default volumes, blocks with storage and VIPs run there.</li>
+              <li>Volumes grow to their replication target automatically as nodes join, one fully synced replica at a time; DRBD quorum turns on live at three replicas.</li>
+              <li>A new <code>UnderReplicated</code> volume state, shown as "1 of 3 (no redundancy)"; <code>volume list</code> shows volumes waiting for placement with the reason.</li>
+            </ul>
+            <h4>Changed</h4>
+            <ul>
+              <li>A volume or block storage entry without an explicit replication takes its storage class's target and is placed on as many eligible nodes as exist. An explicit <code>--replication N</code> still waits for N nodes.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="rel">
+          <summary><span class="ver">1.0.0</span><span>First release</span><span class="when">2026-09-26</span><svg class="icon chev" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+          <div class="rel-body">
+            <h4>Added</h4>
+            <ul>
+              <li>Installer ISO with TUI and unattended modes, declarative btrfs+LVM layout, impermanent root.</li>
+              <li>Clustering: mDNS discovery, HMAC join tokens, a Raft control plane over mTLS, generations with rollback, cordon/drain/remove, witness nodes.</li>
+              <li>DRBD-replicated volumes on LVM thin pools: create, resize, snapshot/restore, online repair, split-brain recovery.</li>
+              <li>Blocks: a scheduler for systemd-supervised workloads with rolling updates, anti-affinity, singleton and daemonset placement.</li>
+              <li>Postgres, iSCSI and QEMU/KVM blocks with failover.</li>
+              <li>WireGuard mesh, per-node nftables, L4/L7 load balancing with VIP failover.</li>
+              <li>Web UI with OIDC login. restic backup and restore of cluster config and volume data. Prometheus metrics and alert rules. Cluster CA with zero-downtime rotation; age-encrypted secrets. Rolling upgrades, one node at a time, with zero acked-write loss.</li>
+              <li>Every feature has NixOS VM-test coverage of real node kills, partitions and restarts.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight section-alt" id="known-issues">
+    <div class="container">
+      <div class="two">
+        <div>
+          <div class="eyebrow">Known issues</div>
+          <h2>Read before you install.</h2>
+          <p class="lead" style="margin-top:0.9rem">Carried in the changelog as of 1.1.6. Everything under 1.0.0 still applies unless a later release says otherwise.</p>
+        </div>
+        <div class="panel isnt">
+          <h3><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Open in 1.1.6</h3>
+          <ul>
+            <li><strong>Binary-backed block types on installed nodes.</strong> nginx, redis and similar types need their program on the node's <code>PATH</code>, which an installed node does not yet ship. <code>util/echo</code> runs.</li>
+            <li><strong>Web UI VIP.</strong> The UI takes one address from the external VIP pool; size the pool one larger than the block VIPs you need.</li>
+            <li><strong>Idle control-plane CPU with a volume attached</strong> has not been measured on real hardware; without volumes, bare metal measured 2.5% of one core on the Raft leader. With a volume, the leader is projected at about 4%.</li>
+            <li><strong>SMB/NFS file shares</strong> are paused: Samba deploys, but failover has an open bug.</li>
+            <li><strong>The on-prem LLM subsystem</strong> is paused (no accelerator hardware to validate on).</li>
+            <li><strong>TPM sealing of secrets</strong> is deferred (no TPM hardware to validate on).</li>
+            <li><strong>Mirror installs made before 1.1.4</strong> keep the old layout (ESP on the first disk only) until reinstalled.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      <div class="cta">
+        <h2>Ready to boot it?</h2>
+        <p class="lead">The quickstart covers the USB stick, the installer, the first boot, forming the cluster and opening the web UI.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg" href="docs/getting-started.html">Read the quickstart<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-secondary btn-lg" href="features.html">Browse the features</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html" aria-label="Expanse home"><svg class="brand-mark" aria-hidden="true"><use href="#i-logo"/></svg><span>Expanse</span></a>
+        <p style="margin-top:0.9rem;max-width:34ch">A NixOS-based cluster operating system for small fleets of ordinary machines.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="download.html">Download</a></li>
+          <li><a href="download.html#changelog">Changelog</a></li>
+          <li><a href="download.html#requirements">Requirements</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Docs</h4>
+        <ul>
+          <li><a href="docs/getting-started.html">Getting started</a></li>
+          <li><a href="docs/getting-started.html#cluster">Form a cluster</a></li>
+          <li><a href="docs/getting-started.html#web-ui">Open the web UI</a></li>
+          <li><a href="docs/getting-started.html#next">Volumes and blocks</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Project</h4>
+        <ul>
+          <li><a href="download.html#source">Build from source</a></li>
+          <li><a href="features.html#not-yet">What is not built yet</a></li>
+          <li><a href="download.html#known-issues">Known issues</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>Expanse 1.1.6 · Versions follow Semantic Versioning.</span>
+      <span>This site makes no external requests. Fonts: Inter and JetBrains Mono (OFL).</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

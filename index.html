@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Expanse — the cluster OS for the machines you already have</title>
+  <meta name="description" content="Expanse is a NixOS-based cluster operating system: install from a USB stick, form a Raft-backed cluster, and get replicated storage, scheduled services, VIP failover and a live web console — built from proven parts.">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/site.css">
+  <script>
+    /* Apply the remembered theme before first paint to avoid a flash. */
+    try { var t = localStorage.getItem("expanse-theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+  </script>
+</head>
+<body>
+<svg class="sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-logo" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#1f6feb" stroke="none"/><path d="M16 6 7 11v10l9 5 9-5V11z" fill="none" stroke="#fff" stroke-width="2"/><path d="M16 26V16M7 11l9 5 9-5" fill="none" stroke="#fff" stroke-width="2"/></symbol>
+  <symbol id="i-cube" viewBox="0 0 24 24"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M12 22V12M3 7l9 5 9-5"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/></symbol>
+  <symbol id="i-disk" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 12h18M7 8h.01M7 16h.01"/></symbol>
+  <symbol id="i-cluster" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M10.8 7.2 6.3 15.7M13.2 7.2l4.5 8.5M7.5 18h9"/></symbol>
+  <symbol id="i-nodes" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/></symbol>
+  <symbol id="i-volumes" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+  <symbol id="i-blocks" viewBox="0 0 24 24"><path d="M12 3 4 7v10l8 4 8-4V7z"/><path d="M4 7l8 4 8-4M12 11v10"/></symbol>
+  <symbol id="i-network" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="3" y="16" width="6" height="5" rx="1"/><rect x="15" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M6 16v-2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2"/></symbol>
+  <symbol id="i-generations" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5M12 7v5l3 2"/></symbol>
+  <symbol id="i-web" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M12 15h5"/></symbol>
+  <symbol id="i-health" viewBox="0 0 24 24"><path d="M3 12h4l2-5 4 10 2-5h6"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-backup" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/><path d="M12 8v4l3 2"/></symbol>
+  <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></symbol>
+  <symbol id="i-vm" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4M7 9h4M7 13h7"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+  <symbol id="i-dashboard" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></symbol>
+  <symbol id="i-events" viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h13"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+  <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+  <symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="currentColor" stroke="none"/></symbol>
+</svg>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="index.html" aria-label="Expanse home">
+      <svg class="brand-mark" aria-hidden="true"><use href="#i-logo"/></svg>
+      <span>Expanse</span>
+      <span class="brand-version">1.1.6</span>
+    </a>
+    <nav class="site-nav" id="site-nav" data-nav aria-label="Main">
+      <a href="features.html">Features</a>
+      <a href="docs/getting-started.html">Get started</a>
+      <a href="download.html">Download</a>
+      <a href="download.html#changelog">Changelog</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">
+        <svg class="icon icon-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+        <svg class="icon icon-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+      </button>
+      <a class="btn btn-primary header-cta" href="docs/getting-started.html">Get started</a>
+      <button class="icon-btn menu-btn" type="button" data-nav-toggle aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+        <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="hero-grid" aria-hidden="true"></div>
+    <div class="container">
+      <div class="hero-inner">
+        <a class="pill" href="download.html#changelog">
+          <span class="tag">1.1.6</span>
+          <span>Installer facelift, tty1 host console, quiet boots</span>
+          <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>
+        </a>
+        <h1>The cluster OS for the <span class="grad">machines you already have</span>.</h1>
+        <p class="lead">Expanse turns any x86_64 or aarch64 box — a decade-old laptop included — into a node of a self-healing cluster: replicated storage, scheduled services, VIP failover and a live web console. Built on NixOS from proven parts, not hand-rolled distributed systems.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg" href="docs/getting-started.html">Get started<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-secondary btn-lg" href="download.html"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download ISO 1.1.6</a>
+        </div>
+        <div class="hero-meta">
+          <span><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg>2 cores · 2 GB RAM · 20 GB disk</span>
+          <span><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg>Installs in under 10 minutes</span>
+          <span><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg>Starts on one node, grows as nodes join</span>
+        </div>
+      </div>
+
+      <!-- Product stage: web UI dashboard + tty1 host console -->
+      <div class="stage reveal">
+        <figure class="window" style="margin:0">
+          <div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>Dashboard · expanse · Expanse</span><span class="url">https://10.0.0.11:8443/</span></div>
+          <div class="mu" role="img" aria-label="Mock of the Expanse web console dashboard: 3 of 3 nodes reachable, quorum 3 of 2 with leader n1, 2 blocks running, 2 volumes healthy, no alerts firing, generation 12, and a node table">
+            <div class="mu-side" aria-hidden="true">
+              <div class="mu-brand"><svg><use href="#i-cube"/></svg>Expanse</div>
+              <div class="grp">Cluster</div>
+              <div class="it on"><svg><use href="#i-dashboard"/></svg>Dashboard</div>
+              <div class="it"><svg><use href="#i-cluster"/></svg>Cluster</div>
+              <div class="it"><svg><use href="#i-nodes"/></svg>Nodes</div>
+              <div class="it"><svg><use href="#i-health"/></svg>Health &amp; alerts</div>
+              <div class="grp">Workloads</div>
+              <div class="it"><svg><use href="#i-blocks"/></svg>Blocks</div>
+              <div class="it"><svg><use href="#i-volumes"/></svg>Volumes</div>
+              <div class="grp">History</div>
+              <div class="it"><svg><use href="#i-generations"/></svg>Generations</div>
+              <div class="it"><svg><use href="#i-events"/></svg>Events</div>
+              <div class="grp">System</div>
+              <div class="it"><svg><use href="#i-settings"/></svg>Settings</div>
+            </div>
+            <div class="mu-main" aria-hidden="true">
+              <div class="mu-head"><strong>expanse</strong><span class="spill"><i></i>Healthy</span><span class="muted">quorum 3/2</span><span class="sp"></span><span class="avatar">A</span><span>admin</span></div>
+              <div class="mu-body">
+                <div class="mu-title"><h4>Dashboard</h4><span class="muted">Cluster <b>expanse</b> at a glance.</span><span class="live"><i></i>Live</span></div>
+                <div class="mu-stats">
+                  <div class="mu-stat"><div class="l"><svg><use href="#i-nodes"/></svg>Nodes</div><div class="v">3<small>/3</small></div><div class="s">all reachable</div></div>
+                  <div class="mu-stat"><div class="l"><svg><use href="#i-cluster"/></svg>Quorum</div><div class="v">3<small>/2</small></div><div class="s">leader n1</div></div>
+                  <div class="mu-stat"><div class="l"><svg><use href="#i-blocks"/></svg>Blocks</div><div class="v">2<small>/2 running</small></div><div class="s">0 pending · 0 degraded · 0 failed</div></div>
+                  <div class="mu-stat"><div class="l"><svg><use href="#i-volumes"/></svg>Volumes</div><div class="v">2<small>/2 healthy</small></div><div class="s">0 busy · 0 degraded · 0 failed</div></div>
+                  <div class="mu-stat"><div class="l"><svg><use href="#i-alert"/></svg>Alerts</div><div class="v">0</div><div class="s">none firing</div></div>
+                  <div class="mu-stat neutral"><div class="l"><svg><use href="#i-generations"/></svg>Generation</div><div class="v">12</div><div class="s">current desired state</div></div>
+                </div>
+                <div class="mu-row2">
+                  <div class="mu-card"><h5>Needs attention</h5><div class="mu-ok"><svg><use href="#i-check-circle"/></svg>All clear — nothing is degraded, unreachable or failing.</div></div>
+                  <div class="mu-card"><h5>Recent events</h5>
+                    <div class="mu-ev"><span class="t">17:41:52</span><span class="tag">block</span><span class="k">/blocks/default/web</span><span>put</span></div>
+                    <div class="mu-ev"><span class="t">17:41:50</span><span class="tag">volume</span><span class="k">/volumes/pgdata</span><span>put</span></div>
+                    <div class="mu-ev"><span class="t">17:40:09</span><span class="tag">node</span><span class="k">/nodes/n3/status</span><span>put</span></div>
+                  </div>
+                </div>
+                <div class="mu-card"><h5>Nodes</h5>
+                  <table>
+                    <thead><tr><th>Node</th><th>Role</th><th>State</th><th class="hide-sm">Raft address</th><th class="hide-sm">API address</th></tr></thead>
+                    <tbody>
+                      <tr><td><b>n1</b> <span class="spill leader">Leader</span></td><td>voter</td><td><span class="spill"><i></i>Online</span></td><td class="hide-sm"><code>10.0.0.11:7444</code></td><td class="hide-sm"><code>10.0.0.11:7443</code></td></tr>
+                      <tr><td><b>n2</b></td><td>voter</td><td><span class="spill"><i></i>Online</span></td><td class="hide-sm"><code>10.0.0.12:7444</code></td><td class="hide-sm"><code>10.0.0.12:7443</code></td></tr>
+                      <tr><td><b>n3</b></td><td>voter</td><td><span class="spill"><i></i>Online</span></td><td class="hide-sm"><code>10.0.0.13:7444</code></td><td class="hide-sm"><code>10.0.0.13:7443</code></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </figure>
+
+        <figure class="window window-dark" style="margin:0">
+          <div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>tty1 · expanse-console.service</span></div>
+          <div class="tty" role="img" aria-label="Mock of the tty1 host console: Expanse 1.1.6 on host n1, healthy, addresses and web UI URL, cluster expanse with quorum 3 of 2 as leader, CPU, memory, disks and a healthy md RAID1 system mirror">
+<pre aria-hidden="true"><span class="hdr"> <span class="b">EXPANSE 1.1.6</span>                                 2026-09-28 17:42:10 UTC  </span>
+<span class="box">┌─ <span class="b">n1</span> ─────────────────────────────────────────────────────────────────┐</span>
+<span class="box">│</span> Hostname   n1                      Uptime     3d 4h 12m              <span class="box">│</span>
+<span class="box">│</span> Node ID    7d2f4c1e-9b3a-4e61-a0c7-5f8e21d3b940                      <span class="box">│</span>
+<span class="box">│</span> Health     <span class="g">HEALTHY</span>                                                   <span class="box">│</span>
+<span class="box">├─ <span class="b">Management</span> ─────────────────────────────────────────────────────────┤</span>
+<span class="box">│</span> eno1       10.0.0.11               Web UI     <span class="c">https://10.0.0.11:8443</span> <span class="box">│</span>
+<span class="box">│</span> exp0       10.42.1.1                                                 <span class="box">│</span>
+<span class="box">├─ <span class="b">Cluster</span> ────────────────────────────────────────────────────────────┤</span>
+<span class="box">│</span> Cluster    expanse                 Role       leader                 <span class="box">│</span>
+<span class="box">│</span> Quorum     3/2  (3 nodes)                                            <span class="box">│</span>
+<span class="box">├─ <span class="b">Hardware</span> ───────────────────────────────────────────────────────────┤</span>
+<span class="box">│</span> CPU        Intel(R) Core(TM) i5-3320M (4 threads)                    <span class="box">│</span>
+<span class="box">│</span> Memory     5.9 GiB free of 7.7 GiB                                   <span class="box">│</span>
+<span class="box">│</span> Disks      sda 500 GB ST500LM012,  sdb 500 GB ST500LM012             <span class="box">│</span>
+<span class="box">│</span> Mirror     <span class="g"><span class="b">system</span>  md127 raid1 [UU]</span>                                  <span class="box">│</span>
+<span class="box">│</span> /          38 GiB free of 40 GiB                                     <span class="box">│</span>
+<span class="box">└──────────────────────────────────────────────────────────────────────┘</span>
+ <span class="c b">Alt+F2</span> for a login shell  <span class="dim">(this screen is read-only)</span></pre>
+          </div>
+        </figure>
+      </div>
+      <div class="stage-caption">
+        <span>Left: the live web console every node serves on <code>:8443</code>. Right: the read-only host console every installed node shows on tty1.</span>
+        <span>Illustrative mock-ups rendered in HTML, not screenshots.</span>
+      </div>
+
+      <div class="parts reveal">
+        <div class="parts-label">Adopted, not reinvented</div>
+        <div class="parts-row">
+          <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>NixOS</span>
+          <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Raft</span>
+          <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>DRBD 9</span>
+          <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>LVM thin</span>
+          <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>btrfs</span>
+          <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>md RAID1</span>
+          <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>WireGuard</span>
+          <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>nftables</span>
+          <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>systemd</span>
+          <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>restic</span>
+          <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Prometheus</span>
+          <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>QEMU/KVM</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature grid -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">What you get</div>
+        <h2>Everything a small fleet needs, in one image.</h2>
+        <p class="lead">One bootable ISO installs a node. Nodes find each other, join with single-use tokens, and share one strongly consistent control plane. Everything below ships in 1.1.6 and is exercised by NixOS VM tests that kill nodes, partition networks and pull disks.</p>
+      </div>
+      <div class="grid">
+        <article class="card reveal">
+          <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-disk"/></svg></div>
+          <h3>Install from a USB stick</h3>
+          <p>A hybrid UEFI/BIOS ISO with a full-screen installer TUI or a one-file unattended mode. Declarative btrfs + LVM layout, an impermanent root that is wiped on every boot, and a two-disk mirror layout that boots from either disk alone.</p>
+          <a class="more" href="features.html#install">Installer details<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </article>
+        <article class="card reveal reveal-2">
+          <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-cluster"/></svg></div>
+          <h3>A control plane that keeps quorum</h3>
+          <p>Raft-replicated state over mTLS, linearizable reads by default, single-writer leases as the anti-split-brain primitive, witness nodes for 2+1 topologies, and a read-only degraded mode when a node cannot reach a leader.</p>
+          <a class="more" href="features.html#cluster">Clustering<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </article>
+        <article class="card reveal reveal-3">
+          <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-volumes"/></svg></div>
+          <h3>Replicated volumes</h3>
+          <p>DRBD 9 on LVM thin pools: create, resize, snapshot and restore, online repair and verified split-brain recovery. A volume starts on one node and grows to its replication target as nodes join, one fully synced replica at a time.</p>
+          <a class="more" href="features.html#storage">Storage<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </article>
+        <article class="card reveal">
+          <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-blocks"/></svg></div>
+          <h3>Blocks: services as YAML</h3>
+          <p>Declare a service, its replicas, resources and placement; the scheduler runs it as hardened systemd units. Rolling updates, anti-affinity, singleton and daemonset placement, cross-node logs, and <code>explain</code> when something will not place.</p>
+          <a class="more" href="features.html#blocks">Blocks<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </article>
+        <article class="card reveal reveal-2">
+          <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-network"/></svg></div>
+          <h3>Mesh, VIPs and load balancing</h3>
+          <p>A WireGuard overlay between every node, lease-fenced VIPs that move with their service, L4 and L7 balancing, cluster DNS for <code>&lt;block&gt;.&lt;ns&gt;.expanse.local</code>, and a default-deny nftables firewall per node.</p>
+          <a class="more" href="features.html#network">Networking<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </article>
+        <article class="card reveal reveal-3">
+          <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-generations"/></svg></div>
+          <h3>Generations and rolling upgrades</h3>
+          <p>Every fleet-wide configuration change is a generation: diff any two, roll back behind a confirm. Upgrade one node at a time with no quorum loss; a switch watchdog rolls a node back automatically if a switch goes wrong.</p>
+          <a class="more" href="features.html#upgrades">Upgrades<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </article>
+        <article class="card reveal">
+          <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-web"/></svg></div>
+          <h3>A live web console</h3>
+          <p>Every node serves the UI on <code>:8443</code>: dashboard, cluster, nodes, health, blocks, volumes, generations and events, updating over Server-Sent Events. Password login plus optional OIDC single sign-on with a fail-closed allow-list.</p>
+          <a class="more" href="features.html#console">Web UI and host console<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </article>
+        <article class="card reveal reveal-2">
+          <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-health"/></svg></div>
+          <h3>Health, metrics and alerts</h3>
+          <p>A Prometheus <code>/metrics</code> endpoint on every node, a shipped alert-rule file and Grafana dashboard, and an in-UI health page that derives the same critical alerts with no external tooling at all.</p>
+          <a class="more" href="features.html#observability">Observability<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </article>
+        <article class="card reveal reveal-3">
+          <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg></div>
+          <h3>Secure by construction</h3>
+          <p>A per-cluster CA with zero-downtime rotation, HMAC single-use join tokens, mTLS on every internal port, age-encrypted secrets, and a browser-facing UI CA that is separate from the cluster's own.</p>
+          <a class="more" href="features.html#security">Security<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="section section-alt" id="how">
+    <div class="container">
+      <div class="section-head center">
+        <div class="eyebrow">How it works</div>
+        <h2>Install. Form a cluster. Manage.</h2>
+        <p class="lead">One installed node is already a usable cluster. Each step below is the real command, not a sketch.</p>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <span class="step-num" aria-hidden="true">1</span>
+          <h3>Install a node</h3>
+          <p>Write the ISO to a USB stick and boot the target. The installer picks disks, network and an SSH key, shows what it will destroy, and finishes in under ten minutes. Headless? SSH in and run it there.</p>
+          <div class="code"><pre><span class="p">$ </span><span class="cmd">nix build github:expanse/expanse#iso</span>
+<span class="p">$ </span><span class="cmd">sudo dd if=result/iso/*.iso of=/dev/sdX bs=4M</span>
+<span class="cm"># boot the target from the stick, then:</span>
+<span class="p">$ </span><span class="cmd">expanse install --tui</span></pre></div>
+        </div>
+        <div class="step reveal reveal-2">
+          <span class="step-num" aria-hidden="true">2</span>
+          <h3>Form a cluster</h3>
+          <p>Bootstrap the first node as the sole voter. It prints a single-use join command; run it on each further node. Volumes and blocks gain replicas automatically as nodes join.</p>
+          <div class="code"><pre><span class="p">$ </span><span class="cmd">systemctl stop expansed</span>
+<span class="p">$ </span><span class="cmd">expanse cluster init --expect 1</span>
+<span class="out">cluster initialized: 5c0b… (name "expanse")</span>
+<span class="out">Join command (single-use, 15m):</span>
+<span class="out">  expanse cluster join --address 10.0.0.11:7446 \
+    --token expanse-join-…</span>
+<span class="p">$ </span><span class="cmd">systemctl start expansed</span></pre></div>
+        </div>
+        <div class="step reveal reveal-3">
+          <span class="step-num" aria-hidden="true">3</span>
+          <h3>Manage it</h3>
+          <p>Open the web console on any node, or use the CLI: apply a block, create a volume, watch health. Everything the UI does, the CLI does too — it is one control plane with two ways in.</p>
+          <div class="code"><pre><span class="p">$ </span><span class="cmd">expanse ctl block apply -f web.yaml</span>
+<span class="out">created default/web</span>
+<span class="p">$ </span><span class="cmd">expanse ctl volume create pg --size 10Gi</span>
+<span class="p">$ </span><span class="cmd">expanse cluster status</span>
+<span class="out">quorum:    <span class="ok">3/2</span>   <span class="cm"># 3 voters, 2 needed</span></span></pre></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLI showcase -->
+  <section class="section" id="cli">
+    <div class="container">
+      <div class="split">
+        <div>
+          <div class="eyebrow">One CLI, one control plane</div>
+          <h2>Operate the whole cluster from any node.</h2>
+          <p class="lead">Writes are forwarded to the Raft leader, reads are linearizable by default, and every action the web console offers is a CLI verb underneath. When a block will not place, <code>explain</code> tells you why each node was rejected.</p>
+          <ul class="checks">
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Declarative and idempotent.</strong> <code>block apply</code> is a no-op when nothing changed and a rolling update when something did.</span></li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Cross-node logs.</strong> <code>block logs default/web --replica 1</code> streams from whichever node runs it.</span></li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Doctors for storage and network.</strong> PASS/WARN/FAIL checks with a remediation hint on every row.</span></li>
+          </ul>
+        </div>
+        <div class="terminal reveal">
+          <div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>root@n1 — ssh</span></div>
+<pre><span class="p">$ </span><span class="cmd">expanse cluster status</span>
+<span class="out">cluster:   expanse (5c0b3e2a-…)</span>
+<span class="out">version:   1.1.6</span>
+<span class="out">generation: 12</span>
+<span class="out">leader:    n1</span>
+<span class="out">quorum:    <span class="ok">3/2</span></span>
+<span class="out">nodes:     3</span>
+
+<span class="out">  ID   ROLE    STATE   RAFT             API</span>
+<span class="out">  n1   voter   <span class="ok">leader</span>  10.0.0.11:7444   10.0.0.11:7443</span>
+<span class="out">  n2   voter   voter   10.0.0.12:7444   10.0.0.12:7443</span>
+<span class="out">  n3   voter   voter   10.0.0.13:7444   10.0.0.13:7443</span>
+
+<span class="p">$ </span><span class="cmd">expanse ctl block apply -f web.yaml --dry-run</span>
+<span class="cm"># validated, nothing written</span>
+<span class="p">$ </span><span class="cmd">expanse ctl block apply -f web.yaml</span>
+<span class="out">created default/web</span>
+<span class="p">$ </span><span class="cmd">expanse ctl block explain web</span>
+<span class="out">web: 3/3 placed (phase <span class="ok">RUNNING</span>)</span>
+
+<span class="p">$ </span><span class="cmd">expanse ctl volume list</span>
+<span class="out">ID      NAME    SIZE   STATE     REPLICAS  NODES (PRIMARY)</span>
+<span class="out">vol-…   pgdata  10Gi   <span class="ok">healthy</span>   3/3       n1,n2,n3 (n1)</span>
+
+<span class="p">$ </span><span class="cmd">expanse doctor storage --vg expanse</span>
+<span class="out">CHECK           STAT  DETAIL</span>
+<span class="out">drbd-module     <span class="ok">PASS</span>  loaded, version 9.2.14</span>
+<span class="out">volume-group    <span class="ok">PASS</span>  expanse: 41.3% free of 943718400000 bytes</span>
+<span class="out">thin-pools      <span class="ok">PASS</span>  1 pool(s) healthy: pool</span>
+<span class="out">system-mirror   <span class="ok">PASS</span>  md md127 RAID1 across 2 devices</span>
+<span class="out">drbd-resources  <span class="ok">PASS</span>  1 resource(s) healthy</span></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Proof band -->
+  <section class="section-tight section-alt">
+    <div class="container">
+      <div class="stats">
+        <div class="stat reveal"><div class="n">110<small>+</small></div><div class="d">NixOS VM tests that kill nodes, partition networks and pull disks — not just unit tests.</div></div>
+        <div class="stat reveal reveal-2"><div class="n">0</div><div class="d">Acknowledged writes lost across leader failover, partitions and rolling upgrades in those tests.</div></div>
+        <div class="stat reveal reveal-3"><div class="n">≤15<small>s</small></div><div class="d">VIP failover budget after a hard power-off of the holder, measured from an external client (typically ~10 s).</div></div>
+        <div class="stat reveal"><div class="n">~2.5<small>%</small></div><div class="d">Of one core for the idle Raft leader on bare metal (3-node, volume-free); followers 1.1–1.2%.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Honest framing -->
+  <section class="section" id="why">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">Why Expanse</div>
+        <h2>Built the boring way, on purpose.</h2>
+        <p class="lead">The design rule is simple: adopt a proven component for the data plane, build only the control plane that ties them together. That keeps the whole system small enough to reason about — and to test with real failures.</p>
+      </div>
+      <div class="two">
+        <div class="panel is reveal">
+          <h3><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg>Expanse is</h3>
+          <ul>
+            <li><strong>A host OS and cluster manager in one image.</strong> There is nothing to install on top; the node boots into the agent, the web console and the tty1 host console.</li>
+            <li><strong>Sized for the machines you have.</strong> 2 cores, 2 GB RAM and a 20 GB disk is the design target, and a single node is a valid cluster from day one.</li>
+            <li><strong>Strongly consistent.</strong> One Raft log holds cluster state, leases, generations and even join-token consumption, so two nodes can never both believe they own something.</li>
+            <li><strong>Reproducible.</strong> Every node is a NixOS configuration; an upgrade is a new generation with a boot entry to fall back to.</li>
+            <li><strong>Tested with real failures.</strong> Every feature has VM-test coverage of node kills, partitions and restarts, plus a chaos suite with a split-brain invariant checker.</li>
+          </ul>
+        </div>
+        <div class="panel isnt reveal reveal-2">
+          <h3><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Expanse is not</h3>
+          <ul>
+            <li><strong>Kubernetes.</strong> Blocks are systemd-supervised units described in YAML, not pods. There is no Kubernetes API, no container runtime and no operator ecosystem.</li>
+            <li><strong>A hypervisor first.</strong> VMs are one block type (QEMU/KVM on a replicated disk). Failover is a cold restart elsewhere; there is no live migration.</li>
+            <li><strong>A file server yet.</strong> SMB/NFS shares are paused: the Samba block deploys but its failover has an open bug. Use volumes, Postgres, iSCSI or VMs today.</li>
+            <li><strong>TPM-sealed.</strong> Secrets are age-encrypted, keyed from the cluster secret. TPM sealing is a named, deferred feature, not a shipped one.</li>
+            <li><strong>Validated on every box.</strong> Automated coverage is on QEMU/KVM; the laptop, mini-PC, server and ARM targets in the hardware matrix are still marked untested.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="table-wrap reveal" style="margin-top:1.25rem">
+        <table class="t">
+          <thead><tr><th>Concern</th><th>Adopted component</th><th>What Expanse adds</th></tr></thead>
+          <tbody>
+            <tr><td>Host OS and upgrades</td><td>NixOS, systemd-boot</td><td>Generations, rollback, a switch watchdog, an impermanent root</td></tr>
+            <tr><td>Cluster state</td><td>hashicorp/raft, memberlist</td><td>Leases, generations, join protocol, mTLS CA with rotation</td></tr>
+            <tr><td>Volumes</td><td>DRBD 9, LVM thin, btrfs, md RAID1</td><td>Placement, repair, split-brain resolution, grow-as-you-join</td></tr>
+            <tr><td>Services</td><td>systemd units with sandboxing</td><td>A scheduler with rolling updates, anti-affinity, singleton leases</td></tr>
+            <tr><td>Network</td><td>WireGuard, nftables, miekg/dns</td><td>Mesh reconciliation, lease-fenced VIPs, L4/L7 balancing, cluster DNS</td></tr>
+            <tr><td>Backup and metrics</td><td>restic, Prometheus, Grafana</td><td>Consistent snapshot paths, one-command restore, shipped rules and dashboard</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-tight">
+    <div class="container">
+      <div class="cta reveal">
+        <h2>Boot a node tonight. Add the second one whenever.</h2>
+        <p class="lead">The quickstart takes a blank machine to a one-node cluster with a web console, and shows how each further node joins with a single command.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg" href="docs/getting-started.html">Read the quickstart<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-secondary btn-lg" href="download.html"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Get Expanse 1.1.6</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html" aria-label="Expanse home"><svg class="brand-mark" aria-hidden="true"><use href="#i-logo"/></svg><span>Expanse</span></a>
+        <p style="margin-top:0.9rem;max-width:34ch">A NixOS-based cluster operating system for small fleets of ordinary machines.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="download.html">Download</a></li>
+          <li><a href="download.html#changelog">Changelog</a></li>
+          <li><a href="download.html#requirements">Requirements</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Docs</h4>
+        <ul>
+          <li><a href="docs/getting-started.html">Getting started</a></li>
+          <li><a href="docs/getting-started.html#cluster">Form a cluster</a></li>
+          <li><a href="docs/getting-started.html#web-ui">Open the web UI</a></li>
+          <li><a href="docs/getting-started.html#next">Volumes and blocks</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Project</h4>
+        <ul>
+          <li><a href="download.html#source">Build from source</a></li>
+          <li><a href="features.html#not-yet">What is not built yet</a></li>
+          <li><a href="download.html#known-issues">Known issues</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>Expanse 1.1.6 · Versions follow Semantic Versioning.</span>
+      <span>This site makes no external requests. Fonts: Inter and JetBrains Mono (OFL).</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

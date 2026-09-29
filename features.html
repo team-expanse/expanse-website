@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Features — Expanse</title>
+  <meta name="description" content="Everything Expanse 1.1.6 ships: installer, Raft control plane, DRBD-replicated volumes, blocks, networking, generations and rolling upgrades, web and host consoles, observability, security, backup, and what is deliberately not built yet.">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/site.css">
+  <script>
+    try { var t = localStorage.getItem("expanse-theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+  </script>
+</head>
+<body>
+<svg class="sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-logo" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#1f6feb" stroke="none"/><path d="M16 6 7 11v10l9 5 9-5V11z" fill="none" stroke="#fff" stroke-width="2"/><path d="M16 26V16M7 11l9 5 9-5" fill="none" stroke="#fff" stroke-width="2"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/></symbol>
+  <symbol id="i-disk" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 12h18M7 8h.01M7 16h.01"/></symbol>
+  <symbol id="i-cluster" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M10.8 7.2 6.3 15.7M13.2 7.2l4.5 8.5M7.5 18h9"/></symbol>
+  <symbol id="i-volumes" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+  <symbol id="i-blocks" viewBox="0 0 24 24"><path d="M12 3 4 7v10l8 4 8-4V7z"/><path d="M4 7l8 4 8-4M12 11v10"/></symbol>
+  <symbol id="i-network" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="3" y="16" width="6" height="5" rx="1"/><rect x="15" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M6 16v-2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2"/></symbol>
+  <symbol id="i-generations" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5M12 7v5l3 2"/></symbol>
+  <symbol id="i-web" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M12 15h5"/></symbol>
+  <symbol id="i-health" viewBox="0 0 24 24"><path d="M3 12h4l2-5 4 10 2-5h6"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-backup" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/><path d="M12 8v4l3 2"/></symbol>
+  <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></symbol>
+  <symbol id="i-vm" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4M7 9h4M7 13h7"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
+</svg>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="index.html" aria-label="Expanse home">
+      <svg class="brand-mark" aria-hidden="true"><use href="#i-logo"/></svg>
+      <span>Expanse</span>
+      <span class="brand-version">1.1.6</span>
+    </a>
+    <nav class="site-nav" id="site-nav" data-nav aria-label="Main">
+      <a href="features.html" aria-current="page">Features</a>
+      <a href="docs/getting-started.html">Get started</a>
+      <a href="download.html">Download</a>
+      <a href="download.html#changelog">Changelog</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">
+        <svg class="icon icon-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+        <svg class="icon icon-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+      </button>
+      <a class="btn btn-primary header-cta" href="docs/getting-started.html">Get started</a>
+      <button class="icon-btn menu-btn" type="button" data-nav-toggle aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+        <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="page-hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container">
+      <div class="eyebrow">Features</div>
+      <h1>What ships in Expanse 1.1.6.</h1>
+      <p class="lead">Every capability below is in the release, documented, and covered by NixOS VM tests that exercise real node kills, partitions and restarts. The last section lists what is deliberately <em>not</em> built yet, so you are never guessing.</p>
+      <div class="parts-row" style="justify-content:flex-start;margin-top:1.5rem">
+        <a class="part" href="#install">Installer</a>
+        <a class="part" href="#cluster">Clustering</a>
+        <a class="part" href="#storage">Storage</a>
+        <a class="part" href="#blocks">Blocks</a>
+        <a class="part" href="#network">Networking</a>
+        <a class="part" href="#upgrades">Generations &amp; upgrades</a>
+        <a class="part" href="#console">Web UI &amp; host console</a>
+        <a class="part" href="#observability">Observability</a>
+        <a class="part" href="#security">Security</a>
+        <a class="part" href="#backup">Backup</a>
+        <a class="part" href="#stateful">Postgres, iSCSI, VMs</a>
+        <a class="part" href="#not-yet">Not yet</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <!-- Installer -->
+    <section class="feature" id="install">
+      <div class="feature-text">
+        <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-disk"/></svg></div>
+        <div class="eyebrow">Installer</div>
+        <h2>From a blank machine to a node in under ten minutes.</h2>
+        <p class="lead">The ISO is a hybrid image that boots under UEFI and legacy BIOS. A full-screen installer starts automatically; headless machines can be installed over SSH with the same TUI or with a one-file unattended config.</p>
+        <ul class="checks">
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Six steps.</strong> Welcome (hardware summary), Disks, Network, SSH key (paste one or <code>gh:&lt;username&gt;</code>), Review with a red list of what will be destroyed, Progress with a stage, bar and log tail.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Refuses to surprise you.</strong> Disks holding data are marked <code>CONTAINS DATA</code>; unattended installs will not touch them without <code>--force</code>, and <code>--dry-run</code> prints every command without running one.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>A layout built for recovery.</strong> btrfs subvolumes <code>@root @nix @persist @log</code>; the root is wiped on every reboot and only <code>/persist</code> survives. The rest of every disk becomes the LVM volume group <code>expanse</code>.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Mirror layout on two or more disks.</strong> The ESP and the system partition are md RAID1 across the first two disks, so the node boots from either disk alone; a replacement disk rebuilds without a reinstall.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Idempotent.</strong> Boot the stick again and re-run: same config, same system. Node identity lives in <code>/persist</code> and survives.</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="code"><div class="code-title">expanse-install.yaml · unattended install</div><pre><span class="k">version</span>: 1
+<span class="k">disks</span>:
+  <span class="k">layout</span>: auto          <span class="cm"># auto | single | mirror</span>
+  <span class="k">devices</span>: [/dev/sda]   <span class="cm"># empty = use every disk</span>
+<span class="k">network</span>:
+  <span class="k">mode</span>: dhcp
+<span class="k">ssh</span>:
+  <span class="k">authorized_keys</span>:
+    - <span class="s">ssh-ed25519 AAAA...</span>
+<span class="k">timezone</span>: UTC</pre></div>
+        <div class="code" style="margin-top:0.75rem"><pre><span class="p">$ </span><span class="cmd">expanse install --config expanse-install.yaml --dry-run</span>
+<span class="p">$ </span><span class="cmd">expanse install --config expanse-install.yaml --force</span></pre></div>
+        <dl class="kv">
+          <div><dt>Targets</dt><dd>x86_64, aarch64</dd></div>
+          <div><dt>Minimum</dt><dd>2 cores · 2 GB · 20 GB</dd></div>
+          <div><dt>ISO size</dt><dd>about 1.4 GB</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- Clustering -->
+    <section class="feature flip" id="cluster">
+      <div class="feature-text">
+        <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-cluster"/></svg></div>
+        <div class="eyebrow">Clustering</div>
+        <h2>One Raft log, mutually authenticated, from the first node.</h2>
+        <p class="lead">Cluster state, leases and generations live in one Raft-replicated store over mTLS. <code>cluster init</code> bootstraps a single voter; every further node joins with a single-use token and grows the same cluster.</p>
+        <ul class="checks">
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Join tokens that cannot be replayed.</strong> HMAC-SHA256, TTL-bounded, consumed inside the Raft log — of two simultaneous joins exactly one wins. The joiner proves possession of its own Ed25519 key before a certificate is issued.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Linearizable by default.</strong> Reads take one quorum round trip; stale reads are opt-in. Writes from any node are forwarded to the leader and fail fast (about 2 s) against a deposed one.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Leases with a guard band.</strong> 15 s TTL, renewed every 5 s; a takeover cannot happen until at least 8 s after a partitioned holder has stopped. That holds on clock <em>rate</em>, never on clock offset.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Degrades honestly.</strong> A node that cannot reach a leader goes read-only and freezes reconciliation instead of guessing.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Witness nodes and node lifecycle.</strong> A witness is a full voter that never runs workloads (2 + 1 topologies). Cordon, drain and remove are interlocked; removal transfers leadership first.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>mDNS discovery.</strong> <code>expanse cluster discover</code> lists clusters and unjoined nodes on the L2 network; <code>cluster join --discover</code> finds the join endpoint itself.</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="terminal"><div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>leader n1, then a new node n2</span></div><pre><span class="cm"># on the leader, with its agent stopped:</span>
+<span class="p">$ </span><span class="cmd">expanse cluster token create --ttl 15m --uses 1</span>
+<span class="out">expanse-join-…</span>
+
+<span class="cm"># on the new node, before its agent starts:</span>
+<span class="p">$ </span><span class="cmd">expanse cluster join --address 10.0.0.11:7446 \
+    --token expanse-join-…</span>
+<span class="out">joined cluster 5c0b3e2a-… as n2 (10.0.0.12:7444)</span>
+<span class="p">$ </span><span class="cmd">systemctl start expansed</span>
+
+<span class="p">$ </span><span class="cmd">expanse cluster status</span>
+<span class="out">quorum:    <span class="ok">2/2</span></span>
+<span class="out">nodes:     2</span></pre></div>
+        <dl class="kv">
+          <div><dt>API / gRPC</dt><dd>7443 (mTLS)</dd></div>
+          <div><dt>Raft</dt><dd>7444</dd></div>
+          <div><dt>Gossip</dt><dd>7445</dd></div>
+          <div><dt>Join</dt><dd>7446</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- Storage -->
+    <section class="feature" id="storage">
+      <div class="feature-text">
+        <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-volumes"/></svg></div>
+        <div class="eyebrow">Storage</div>
+        <h2>Replicated volumes that grow with the cluster.</h2>
+        <p class="lead">Volumes are DRBD 9 resources (protocol C) on LVM thin volumes, placed by the leader. Replication is a <em>target</em>, not a precondition: a volume lands on one node today and gains replicas as nodes join, one fully synced replica at a time.</p>
+        <ul class="checks">
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Full lifecycle.</strong> Create, grow, snapshot and restore, verify and resync a scrubbed replica, retire a dead node's copy, or hand-pick the surviving side of a split-brain with <code>volume diverged --choose</code>.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Honest states.</strong> <code>UnderReplicated</code> means every replica is healthy but there are fewer than the target — the CLI and UI show "1 of 3 (no redundancy)" rather than a green tick.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Quorum switches on live.</strong> DRBD quorum turns on at three replicas without interrupting I/O, verified under continuous acknowledged writes.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Rebuilds that finish.</strong> A resync floor of 4 MiB/s keeps a busy volume from starving its new replica; a 256 MiB volume under a heavy fsync writer gained a replica in 33 s on VMs.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>A doctor for it.</strong> <code>expanse doctor storage</code> checks the DRBD module, VG headroom, thin-pool data and metadata, the system mirror and every DRBD resource, with a remediation hint on anything short of PASS.</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="code nowrap"><div class="code-title">the stack, per node</div><pre><span class="out">GPT ─┬─ ESP (FAT32)             → /boot
+     ├─ btrfs partition          → @root @nix @persist @log
+     └─ LVM PV → VG "expanse"    → thin pool → thin LVs
+                                     └─ DRBD 9 (protocol C, quorum at ≥3)
+                                          └─ filesystem or raw (block replica)</span></pre></div>
+        <div class="code" style="margin-top:0.75rem"><pre><span class="p">$ </span><span class="cmd">expanse ctl volume create data --size 20Gi</span>
+<span class="p">$ </span><span class="cmd">expanse ctl volume list</span>
+<span class="out">ID      NAME   SIZE   STATE            REPLICAS  NODES (PRIMARY)</span>
+<span class="out">vol-…   data   20Gi   <span class="warn">underreplicated</span>  1/3       n1 (n1)  no redundancy</span>
+<span class="cm"># … two nodes join …</span>
+<span class="out">vol-…   data   20Gi   <span class="ok">healthy</span>          3/3       n1,n2,n3 (n1)</span>
+<span class="p">$ </span><span class="cmd">expanse ctl volume resize data --size 40Gi</span>
+<span class="p">$ </span><span class="cmd">expanse ctl volume snapshot data --name before-migration</span></pre></div>
+      </div>
+    </section>
+
+    <!-- Blocks -->
+    <section class="feature flip" id="blocks">
+      <div class="feature-text">
+        <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-blocks"/></svg></div>
+        <div class="eyebrow">Blocks</div>
+        <h2>Services as YAML, run as hardened systemd units.</h2>
+        <p class="lead">A block declares a catalog type, replicas, resources, placement and networking. The leader's scheduler filters and scores nodes; each node's agent renders the unit and supervises it. Health flows back through the store and the block is promoted to <code>RUNNING</code> when every replica is.</p>
+        <ul class="checks">
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Rolling updates that keep serving.</strong> <code>maxUnavailable</code>, <code>maxSurge</code> and <code>minReadySeconds</code> are honoured; the rolling-update VM test asserts zero failed health probes during a roll. A mid-roll crash resumes deterministically.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Placement you can reason about.</strong> Node anti-affinity, even spread, required capabilities (for example <code>kvm</code>), daemonsets, and singletons fenced by a Raft lease so exactly one instance ever runs.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Self-healing.</strong> A node silent past the 30 s grace has its placements retired and rescheduled under the same rules.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Sandboxed.</strong> Units run with <code>DynamicUser</code>, <code>ProtectSystem=strict</code>, <code>PrivateTmp</code> and friends; config is validated against the type's JSON Schema before anything is written.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Eleven shipped types.</strong> <code>util/echo</code>, <code>web/nginx</code>, <code>web/static-site</code>, <code>web/whoami</code>, <code>db/redis</code>, <code>db/postgres</code>, <code>monitor/node-exporter</code>, <code>ai/ollama</code>, <code>share/smb</code>, <code>iscsi/target</code>, <code>vm/instance</code>. A new type is four files plus one flake entry.</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="code"><div class="code-title">web.yaml</div><pre><span class="k">apiVersion</span>: expanse.io/v1
+<span class="k">kind</span>: Block
+<span class="k">metadata</span>: { <span class="k">name</span>: web, <span class="k">namespace</span>: default }
+<span class="k">spec</span>:
+  <span class="k">type</span>: web/nginx
+  <span class="k">version</span>: <span class="s">"1.27"</span>
+  <span class="k">replicas</span>: 3
+  <span class="k">strategy</span>:
+    <span class="k">kind</span>: active-active
+    <span class="k">update</span>:
+      <span class="k">mode</span>: rolling
+      <span class="k">maxUnavailable</span>: 1
+      <span class="k">maxSurge</span>: 0
+      <span class="k">minReadySeconds</span>: 10
+  <span class="k">resources</span>:
+    <span class="k">requests</span>: { <span class="k">cpu</span>: <span class="s">"500m"</span>, <span class="k">memory</span>: <span class="s">"256Mi"</span> }
+  <span class="k">placement</span>:
+    <span class="k">antiAffinity</span>: node   <span class="cm"># never two replicas on one node</span>
+  <span class="k">network</span>:
+    <span class="k">ports</span>:
+      - <span class="k">name</span>: http
+        <span class="k">port</span>: 80
+        <span class="k">targetPort</span>: 8080
+        <span class="k">expose</span>: vip
+    <span class="k">healthCheck</span>:
+      <span class="k">readiness</span>: { <span class="k">type</span>: http, <span class="k">path</span>: /, <span class="k">port</span>: 8080 }</pre></div>
+        <div class="code" style="margin-top:0.75rem"><pre><span class="p">$ </span><span class="cmd">expanse ctl block apply -f web.yaml</span>
+<span class="p">$ </span><span class="cmd">expanse ctl block scale web --replicas 5</span>
+<span class="p">$ </span><span class="cmd">expanse ctl block logs default/web --replica 1</span>
+<span class="p">$ </span><span class="cmd">expanse ctl block explain web</span></pre></div>
+      </div>
+    </section>
+
+    <!-- Networking -->
+    <section class="feature" id="network">
+      <div class="feature-text">
+        <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-network"/></svg></div>
+        <div class="eyebrow">Networking</div>
+        <h2>A mesh, VIPs that move, and a firewall that never reloads.</h2>
+        <p class="lead">Every node joins a WireGuard overlay reconciled from the store — a key rotation converges in one pass. Services are reached through VIPs held under a lease, balanced at L4 or L7, and named by cluster DNS.</p>
+        <ul class="checks">
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Lease-fenced VIPs.</strong> The holder announces the address with gratuitous ARP; losing the lease removes the address before the listener stops. A replacement takes over within 15 s of a hard power-off, typically about 10 s.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>L4 and L7 balancing.</strong> TCP splicing round-robin with drain-on-removal, and an HTTP reverse proxy routing by <code>&lt;block&gt;.&lt;ns&gt;.expanse.local</code> and path prefix with idempotent retries.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Cluster DNS.</strong> An authoritative server on each node's overlay address: block names to VIPs, replica names to addresses, SRV for declared ports; scale-ups visible within 5 s.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Default-deny nftables.</strong> One <code>inet expanse</code> table per node with dynamic sets for peers, VIPs and block ports. After bootstrap it is only ever updated element by element, so conntrack is never dropped.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong><code>expanse doctor network</code>.</strong> Twelve live checks — interfaces, overlay peers and path MTU, the port matrix, exactly-one VIP holder, ARP consistency, DNS, firewall, conntrack, time sync.</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="code nowrap"><div class="code-title">address plan</div><pre><span class="out">      External clients
+            │
+            ▼  (VIP 192.168.1.100 — ARP announced by the lease holder)
+    ┌───────────────────────────────────────────────┐
+    │  Physical LAN  192.168.1.0/24                 │
+    │   n1 .11        n2 .12        n3 .13          │
+    └───────────────────────────────────────────────┘
+        │  WireGuard overlay  10.42.0.0/16  (exp0, MTU 1420)
+        ▼  Service VIPs 10.43.0.0/16 (+ a LAN VIP pool you declare)</span></pre></div>
+        <dl class="kv">
+          <div><dt>VIP takeover</dt><dd>≤ 15 s, ~10 s typical</dd></div>
+          <div><dt>L7 proxy (loopback)</dt><dd>≥ 20k req/s, +p99 ≤ 1 ms</dd></div>
+          <div><dt>DNS p99 (loopback)</dt><dd>≤ 1 ms</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- Generations & upgrades -->
+    <section class="feature flip" id="upgrades">
+      <div class="feature-text">
+        <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-generations"/></svg></div>
+        <div class="eyebrow">Generations and rolling upgrades</div>
+        <h2>Every change is a generation. Every node can roll back.</h2>
+        <p class="lead">Fleet-wide desired state is versioned inside the Raft store: hash-addressed, append-only, kept for the last 50 generations or 30 days. Rollback restores an earlier generation as a new one, so history never loses a step.</p>
+        <ul class="checks">
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Diff anything.</strong> <code>generation diff 11 12</code> in the CLI, or the Generations page in the web UI: added, removed and changed keys, with rollback behind a confirm dialog.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Upgrades are ordinary NixOS switches.</strong> The agent builds the flake attribute and runs the same activation script <code>nixos-rebuild switch</code> uses, restarting only what changed and installing a boot entry.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>A watchdog for bad switches.</strong> If a pending switch is still unconfirmed after 10 minutes, the node rolls back to its previous generation and reboots. A bad remote change cannot brick a node.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>One node at a time, no gap.</strong> Confirm quorum and every replica <code>UpToDate</code>, drain any volume primary, switch, wait for the agent to rejoin, then the next. A surviving node's reads and writes keep working throughout — proven with a background write loop, not a spot check.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Scope stated plainly.</strong> The proof covers builds that share the replicated log's wire version, which has not changed since it was introduced; a future bump needs its own dual-version plan.</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="terminal"><div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>upgrade one node</span></div><pre><span class="cm"># first: quorum reads 3/2 and every volume is UpToDate</span>
+<span class="p">$ </span><span class="cmd">expanse cluster status</span>
+<span class="p">$ </span><span class="cmd">expanse ctl resource apply - \
+    --socket /run/expanse/agent.sock &lt;&lt;'EOF'</span>
+<span class="cmd">nix-config:node:</span>
+<span class="cmd">  type: nix-config</span>
+<span class="cmd">  flake: path:/etc/nixos</span>
+<span class="cmd">  attr: nixosConfigurations.expanse-node.config.system.build.toplevel</span>
+<span class="cmd">  switch_mode: switch</span>
+<span class="cmd">EOF</span>
+<span class="cm"># wait for expansed to return and quorum to read 3/2,</span>
+<span class="cm"># then the next node</span>
+
+<span class="p">$ </span><span class="cmd">expanse ctl generation list</span>
+<span class="p">$ </span><span class="cmd">expanse ctl generation diff 11 12</span>
+<span class="p">$ </span><span class="cmd">expanse ctl generation rollback 11</span>   <span class="cm"># becomes generation 13</span></pre></div>
+      </div>
+    </section>
+
+    <!-- Web UI & host console -->
+    <section class="feature" id="console">
+      <div class="feature-text">
+        <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-web"/></svg></div>
+        <div class="eyebrow">Web UI and host console</div>
+        <h2>Two consoles, no agents to install.</h2>
+        <p class="lead">Every node serves the web UI on <code>:8443</code> as soon as its agent starts, and shows a read-only host console on tty1 in place of a login prompt — the same idea as a hypervisor's local console, for a cluster node.</p>
+        <ul class="checks">
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Live pages.</strong> Dashboard, Cluster, Nodes, Health &amp; alerts, Blocks (deploy, scale, delete, per-replica logs), Volumes (create, snapshot, resize), Generations (diff, rollback), Events and Settings, updating over Server-Sent Events, never by polling.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Built to work offline.</strong> Embedded templates, hand-written CSS, vendored htmx, no build step, and a self-only Content-Security-Policy. Light and dark themes, keyboard accessible, usable on a phone.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Sessions that survive failover.</strong> Sessions and CSRF tokens live in the replicated store, so a login keeps working when the UI's VIP moves to another node.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>One admin, never a default password.</strong> The first agent to open its store generates a random password, hashes it with argon2id and logs the plaintext exactly once. Reset locally with <code>expanse ctl admin reset-password</code>.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Optional OIDC single sign-on.</strong> Additive to password login, gated by a required allow-list of verified e-mail addresses, issuing the same store-backed session.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>The tty1 host console.</strong> Version, hostname and node ID, every address and the web UI URL, cluster name, role and quorum, health, CPU, memory, disks and md mirror state, refreshed every 3 s. It never offers a shell or shows a secret; <kbd>Alt</kbd>+<kbd>F2</kbd> is a login shell, and <code>expanse console --once</code> prints the same screen over SSH.</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="terminal"><div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>root@n1 — ssh</span></div><pre><span class="p">$ </span><span class="cmd">expanse console --once</span>
+<span class="out"> <span class="cmd">EXPANSE 1.1.6</span>                      2026-09-28 17:42:10 UTC</span>
+<span class="out">┌─ <span class="cmd">n1</span> ─────────────────────────────────────────────────────┐</span>
+<span class="out">│ Hostname   n1                Uptime     3d 4h 12m        │</span>
+<span class="out">│ Health     <span class="ok">HEALTHY</span>                                       │</span>
+<span class="out">├─ <span class="cmd">Management</span> ─────────────────────────────────────────────┤</span>
+<span class="out">│ eno1       10.0.0.11                                     │</span>
+<span class="out">│ Web UI     <span class="cy">https://10.0.0.11:8443</span>                        │</span>
+<span class="out">├─ <span class="cmd">Cluster</span> ────────────────────────────────────────────────┤</span>
+<span class="out">│ Cluster    expanse           Role       leader           │</span>
+<span class="out">│ Quorum     3/2  (3 nodes)                                │</span>
+<span class="out">└──────────────────────────────────────────────────────────┘</span>
+
+<span class="cm"># lost the admin password? reset it locally, shown once:</span>
+<span class="p">$ </span><span class="cmd">expanse ctl admin reset-password \
+    --socket /run/expanse/agent.sock</span>
+
+<span class="cm"># trust the UI's own CA in your browser:</span>
+<span class="p">$ </span><span class="cmd">scp root@n1:/persist/expanse/ca/ui-ca.pem .</span></pre></div>
+      </div>
+    </section>
+
+    <!-- Observability -->
+    <section class="feature flip" id="observability">
+      <div class="feature-text">
+        <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-health"/></svg></div>
+        <div class="eyebrow">Observability</div>
+        <h2>The same health signal, everywhere you look.</h2>
+        <p class="lead">Expanse does not ship its own metrics database. Every node exports Prometheus metrics for node, resource, volume and quorum health; the web UI's Health page derives the same critical alerts in-process, so the two can never disagree.</p>
+        <ul class="checks">
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Authenticated <code>/metrics</code>.</strong> A dedicated listener on <code>:7447</code> behind the cluster CA and a bearer token you mint with <code>expanse ctl metrics set-token</code>.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Shipped alert rules.</strong> Seven critical rules that fire on the first true evaluation — node unhealthy or unreachable, resource unhealthy, volume failed or read-only, quorum without a leader or degraded — and four sustained-window warnings.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>A shipped Grafana dashboard</strong> with six panels, verified rendering real data through Grafana's own query API.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Within the 30 s budget.</strong> A node failure is visible as a firing alert in the UI and Grafana inside 30 s; a measured run at a 2 s scrape cadence closed the pipeline in 11.5–11.7 s. Scrape at 5 s or faster.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Routing is yours.</strong> Alertmanager receivers (e-mail, webhooks, pagers) are deliberately left to the operator.</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="code"><div class="code-title">prometheus.yml · one node</div><pre><span class="k">scrape_configs</span>:
+  - <span class="k">job_name</span>: expanse
+    <span class="k">scheme</span>: https
+    <span class="k">scrape_interval</span>: 5s
+    <span class="k">tls_config</span>:
+      <span class="k">ca_file</span>: /etc/prometheus/expanse-ca.pem
+      <span class="k">server_name</span>: n1
+    <span class="k">bearer_token_file</span>: /etc/prometheus/expanse-metrics-token
+    <span class="k">static_configs</span>:
+      - <span class="k">targets</span>: [<span class="s">'10.0.0.11:7447'</span>]
+<span class="k">rule_files</span>:
+  - deploy/prometheus/expanse-alerts.rules.yml</pre></div>
+        <dl class="kv">
+          <div><dt>Critical rules</dt><dd>7, no pending window</dd></div>
+          <div><dt>Warning rules</dt><dd>4, 2–5 min windows</dd></div>
+          <div><dt>Dashboard panels</dt><dd>6</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- Security -->
+    <section class="feature" id="security">
+      <div class="feature-text">
+        <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg></div>
+        <div class="eyebrow">Security</div>
+        <h2>mTLS everywhere, a CA you can rotate without downtime.</h2>
+        <p class="lead">Each cluster has its own Ed25519 CA; every node holds a certificate for internal mTLS that renews itself every six hours. Rotation is just "renew onto a new CA": both roots are trusted during the transition and nothing restarts.</p>
+        <ul class="checks">
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Three commands.</strong> <code>ca rotate</code> makes the new root primary, <code>ca status</code> lists nodes still pending, <code>ca complete</code> retires the old root — and refuses until every node has renewed, so it is safe to run early.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Nothing joins without a token.</strong> Single-use, expiring join tokens; self-signed client certificates are rejected with <code>unknown ca</code>; zero cleartext on the join path, verified in the VM tests.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Two CAs on purpose.</strong> Browsers reject Ed25519 TLS, so the web UI has its own ECDSA P-256 CA, created once per cluster. Node-to-node traffic and metrics keep the cluster CA.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Secrets at rest.</strong> Key material is age-encrypted, keyed by HKDF over the cluster secret. TPM sealing is a named, deferred feature: no TPM hardware has been available to validate it.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Firewall by default.</strong> Cluster ports are reachable only over the overlay; the web UI and metrics ports are open but TLS-authenticated.</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="terminal"><div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>rotate the cluster CA</span></div><pre><span class="p">$ </span><span class="cmd">systemctl stop expansed</span>
+<span class="p">$ </span><span class="cmd">expanse cluster ca rotate &amp;&amp; systemctl start expansed</span>
+<span class="out">CA rotation started: the new CA is now primary; the old CA stays trusted.</span>
+
+<span class="p">$ </span><span class="cmd">expanse cluster ca status</span>
+<span class="out">rotating: primary CA fingerprint sha256:…</span>
+<span class="out">pending nodes (not yet renewed): [n3]</span>
+<span class="cm"># … after every node's renewal loop has ticked …</span>
+<span class="out">every node has renewed onto the new CA; safe to run `cluster ca complete`</span>
+
+<span class="p">$ </span><span class="cmd">systemctl stop expansed</span>
+<span class="p">$ </span><span class="cmd">expanse cluster ca complete &amp;&amp; systemctl start expansed</span>
+<span class="out">CA rotation complete: outgoing CA retired.</span></pre></div>
+      </div>
+    </section>
+
+    <!-- Backup -->
+    <section class="feature flip" id="backup">
+      <div class="feature-text">
+        <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-backup"/></svg></div>
+        <div class="eyebrow">Backup and disaster recovery</div>
+        <h2>restic underneath, one command to bring a node back.</h2>
+        <p class="lead">Expanse does not write a backup engine. Each node's cluster state — identity, CA, node TLS, the Raft log and the generation history — sits under <code>/persist/expanse</code>, which restic backs up to any S3-compatible destination. Volume bytes are captured through thin snapshots.</p>
+        <ul class="checks">
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>One repository per node.</strong> <code>expanse cluster restore</code> pulls exactly that node's state back and the daemon rejoins under its original identity, with no re-init or re-join step.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Whole-cluster loss is covered.</strong> Restore every node and start every daemon: quorum reforms cold from the restored logs and the reconciler converges the fleet back to the captured desired state — proven end to end in a VM test.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Volume data as a flat image.</strong> <code>expanse ctl volume snapshot</code> takes an LVM thin snapshot; restic and <code>dd</code> move the bytes out and back onto the live DRBD device, checksum-equal.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Scheduling is yours.</strong> Backups run from cron, a systemd timer or by hand; an automatic cadence is a named, deferred extension point.</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="terminal"><div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>back up and restore a node</span></div><pre><span class="p">$ </span><span class="cmd">export RESTIC_REPOSITORY=s3:https://s3.example.net/backups/n1</span>
+<span class="p">$ </span><span class="cmd">export RESTIC_PASSWORD=…</span>
+<span class="p">$ </span><span class="cmd">restic init</span>                       <span class="cm"># once, per node</span>
+<span class="p">$ </span><span class="cmd">restic backup /persist/expanse</span>    <span class="cm"># on whatever cadence fits</span>
+
+<span class="cm"># the node is rebuilt from the ISO; bring its state back:</span>
+<span class="p">$ </span><span class="cmd">expanse cluster restore</span>
+<span class="out">restored /persist/expanse from the latest backup</span>
+<span class="p">$ </span><span class="cmd">systemctl start expansed</span>          <span class="cm"># rejoins as the same node</span></pre></div>
+      </div>
+    </section>
+
+    <!-- Stateful blocks -->
+    <section class="section-tight" id="stateful" style="border-top:1px solid var(--border)">
+      <div class="section-head">
+        <div class="eyebrow">Stateful workloads</div>
+        <h2>Postgres, iSCSI and virtual machines, each with failover.</h2>
+        <p class="lead">Three shipped block types put real state on the cluster. Each one reuses the same primitives — replicated volumes, leases, VIPs and singleton scheduling — rather than a bespoke mechanism.</p>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-db"/></svg></div>
+          <h3><code>db/postgres</code></h3>
+          <p>Each replica runs on its own node with its own volume; PostgreSQL streaming replication is the redundancy. A lease-gated controller picks the primary, standbys clone from it with <code>pg_basebackup</code>, and on primary loss a survivor is promoted live with <code>pg_promote()</code> — no restart. Clients use one VIP routed to the primary only.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-target"/></svg></div>
+          <h3><code>iscsi/target</code></h3>
+          <p>One raw DRBD-backed volume exported as a single LUN through LIO. The block is a singleton colocated with the volume's primary and exposed at a stable VIP; when its node fails the VIP moves with the new primary and the initiator's own session recovery reconnects to the same portal address.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-vm"/></svg></div>
+          <h3><code>vm/instance</code></h3>
+          <p>A QEMU/KVM guest on a raw replicated disk, scheduled only to nodes with hardware virtualization, with a MAC pinned from the block's name so it comes back at the same address. Node loss means a cold boot elsewhere — the guest's filesystem was verified intact under sustained fsync load through the kill. There is no live migration.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Not yet -->
+    <section class="section-tight" id="not-yet" style="border-top:1px solid var(--border)">
+      <div class="two">
+        <div>
+          <div class="eyebrow">Not built yet</div>
+          <h2>What Expanse does not do today.</h2>
+          <p class="lead" style="margin-top:0.9rem">Each item below is recorded in the project's own documentation as paused, deferred or a known issue. None of them is quietly missing.</p>
+        </div>
+        <div class="panel isnt">
+          <h3><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Paused, deferred or known</h3>
+          <ul>
+            <li><strong>SMB/NFS file shares.</strong> Paused: the Samba block deploys, but its failover has an open bug.</li>
+            <li><strong>On-prem LLM subsystem.</strong> Paused; no accelerator hardware has been available to validate against.</li>
+            <li><strong>TPM sealing of secrets.</strong> Deferred; secrets stay age-encrypted.</li>
+            <li><strong>VM live migration and an interactive VM console.</strong> Deferred; failover is a cold restart and the guest console is the unit's journal.</li>
+            <li><strong>Alertmanager routing and backup scheduling.</strong> Left to the operator by design.</li>
+            <li><strong>Binary-backed block types on installed nodes.</strong> Types such as nginx and redis need their program on the node's <code>PATH</code>, which an installed node does not yet ship; <code>util/echo</code> runs.</li>
+            <li><strong>Real-hardware validation.</strong> Automated tests run on QEMU/KVM. The old-laptop, mini-PC, server and ARM targets in the hardware matrix are marked untested, and idle CPU with a replicated volume attached has not been measured on bare metal.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <section class="section-tight">
+    <div class="container">
+      <div class="cta">
+        <h2>See it on your own hardware.</h2>
+        <p class="lead">The quickstart goes from a USB stick to a one-node cluster with a web console, then adds nodes.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg" href="docs/getting-started.html">Read the quickstart<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-secondary btn-lg" href="download.html"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download 1.1.6</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html" aria-label="Expanse home"><svg class="brand-mark" aria-hidden="true"><use href="#i-logo"/></svg><span>Expanse</span></a>
+        <p style="margin-top:0.9rem;max-width:34ch">A NixOS-based cluster operating system for small fleets of ordinary machines.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="download.html">Download</a></li>
+          <li><a href="download.html#changelog">Changelog</a></li>
+          <li><a href="download.html#requirements">Requirements</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Docs</h4>
+        <ul>
+          <li><a href="docs/getting-started.html">Getting started</a></li>
+          <li><a href="docs/getting-started.html#cluster">Form a cluster</a></li>
+          <li><a href="docs/getting-started.html#web-ui">Open the web UI</a></li>
+          <li><a href="docs/getting-started.html#next">Volumes and blocks</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Project</h4>
+        <ul>
+          <li><a href="download.html#source">Build from source</a></li>
+          <li><a href="features.html#not-yet">What is not built yet</a></li>
+          <li><a href="download.html#known-issues">Known issues</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>Expanse 1.1.6 · Versions follow Semantic Versioning.</span>
+      <span>This site makes no external requests. Fonts: Inter and JetBrains Mono (OFL).</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>
