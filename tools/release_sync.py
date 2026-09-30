@@ -124,13 +124,17 @@ def bump_version(text: str, old: str, new: str) -> str:
 
 
 def update_release_details(text: str, rel: Release) -> str:
-    """Refresh the hero badge, release card summary, ISO size and checksum."""
+    """Refresh the hero badge, release card summary, ISO size and checksum, outside the changelog history."""
     summary = html.escape(rel.summary, quote=False)
     headline = summary[:1].upper() + summary[1:]
-    text = re.sub(r'(<span class="tag">[^<]*</span>\s*<span>)[^<]*(</span>)', rf"\g<1>{headline}\g<2>", text)
-    text = re.sub(r'(<div class="date">Released )[^<]*(</div>)', rf"\g<1>{rel.date} · {summary}\g<2>", text)
-    text = re.sub(r"about [\d.]+ GB", f"about {rel.iso_size / 1e9:.1f} GB", text)
-    return re.sub(r'(<code class="sha256">)[0-9a-f]*(</code>)', rf"\g<1>{rel.iso_sha256}\g<2>", text)
+
+    def refresh(part: str) -> str:
+        part = re.sub(r'(<span class="tag">[^<]*</span>\s*<span>)[^<]*(</span>)', rf"\g<1>{headline}\g<2>", part)
+        part = re.sub(r'(<div class="date">Released )[^<]*(</div>)', rf"\g<1>{rel.date} · {summary}\g<2>", part)
+        part = re.sub(r"about [\d.]+ GB", f"about {rel.iso_size / 1e9:.1f} GB", part)
+        return re.sub(r'(<code class="sha256">)[0-9a-f]*(</code>)', rf"\g<1>{rel.iso_sha256}\g<2>", part)
+
+    return _outside_changelog(text, refresh)
 
 
 def add_changelog_entry(text: str, rel: Release) -> str:

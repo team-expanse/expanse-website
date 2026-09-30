@@ -137,6 +137,11 @@ class ReleaseCard(unittest.TestCase):
         self.assertIn("about 1.5 GB", out)
         self.assertIn(f'<code class="sha256">{"ab" * 32}</code>', out)
 
+    def test_leaves_changelog_history_alone(self):
+        rel = rs.Release.from_manifest(RELEASE, NOTES)
+        history = CHANGELOG.replace("Built in 1.1.6.", "The ISO grows to about 1.65 GB.")
+        self.assertIn("about 1.65 GB", rs.update_release_details(self.CARD + history, rel))
+
 
 class EndToEnd(unittest.TestCase):
     def make_site(self, root: Path) -> None:
