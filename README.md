@@ -1,10 +1,9 @@
 # Expanse website
 
 The product site for [Expanse](https://github.com/team-expanse/expanse), a
-NixOS-based cluster operating system, published at
-<https://team-expanse.github.io/expanse-website/>. Plain HTML + CSS + a little
-vanilla JavaScript: no build step, no external requests, works opened straight
-from disk.
+NixOS-based cluster operating system, published at <https://expanseos.org/>.
+Plain HTML + CSS + a little vanilla JavaScript: no build step, no external
+requests, works opened straight from disk.
 
 ## Structure
 
@@ -21,6 +20,7 @@ from disk.
 | `tools/screenshots.py` | Serves the site and captures review screenshots with Playwright |
 | `tools/sync-release` | Release hook: syncs the site to a new Expanse release (see below) |
 | `screenshots/` | The captured PNGs |
+| `CNAME` | The custom domain GitHub Pages serves the site on |
 
 Every page carries its own copy of the header, footer and inline SVG icon sprite,
 so pages stay self-contained and there is nothing to assemble.
