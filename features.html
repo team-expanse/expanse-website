@@ -141,12 +141,12 @@
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Linearizable by default.</strong> Reads take one quorum round trip; stale reads are opt-in. Writes from any node are forwarded to the leader and fail fast (about 2 s) against a deposed one.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Leases with a guard band.</strong> 15 s TTL, renewed every 5 s; a takeover cannot happen until at least 8 s after a partitioned holder has stopped. That holds on clock <em>rate</em>, never on clock offset.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Degrades honestly.</strong> A node that cannot reach a leader goes read-only and freezes reconciliation instead of guessing.</span></li>
-          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Witness nodes and node lifecycle.</strong> A witness is a full voter that never runs workloads (2 + 1 topologies). Cordon, drain and remove are interlocked; removal transfers leadership first.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Witness nodes and node lifecycle.</strong> A witness is a full voter that never runs workloads (2 + 1 topologies). Cordon, drain and remove are interlocked, and work from any node. Removing the leader is refused until <code>transfer-leadership</code> moves it.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>mDNS discovery.</strong> <code>expanse cluster discover</code> lists clusters and unjoined nodes on the L2 network; <code>cluster join --discover</code> finds the join endpoint itself.</span></li>
         </ul>
       </div>
       <div>
-        <div class="terminal"><div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>leader n1, then a new node n2</span></div><pre><span class="cm"># on the leader, with its agent stopped:</span>
+        <div class="terminal"><div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>n1, then a new node n2</span></div><pre><span class="cm"># on any node of the cluster:</span>
 <span class="p">$ </span><span class="cmd">expanse cluster token create --ttl 15m --uses 1</span>
 <span class="out">expanse-join-…</span>
 
@@ -401,7 +401,7 @@
         <h2>mTLS everywhere, a CA you can rotate without downtime.</h2>
         <p class="lead">Each cluster has its own Ed25519 CA; every node holds a certificate for internal mTLS that renews itself every six hours. Rotation is just "renew onto a new CA": both roots are trusted during the transition and nothing restarts.</p>
         <ul class="checks">
-          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Three commands.</strong> <code>ca rotate</code> makes the new root primary, <code>ca status</code> lists nodes still pending, <code>ca complete</code> retires the old root — and refuses until every node has renewed, so it is safe to run early.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Three commands, from any node.</strong> No agent stops. <code>ca rotate</code> makes the new root primary, <code>ca status</code> lists nodes still pending, <code>ca complete</code> retires the old root — and refuses until every node has renewed, so it is safe to run early.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Nothing joins without a token.</strong> Single-use, expiring join tokens; self-signed client certificates are rejected with <code>unknown ca</code>; zero cleartext on the join path, verified in the VM tests.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Two CAs on purpose.</strong> Browsers reject Ed25519 TLS, so the web UI has its own ECDSA P-256 CA, created once per cluster. Node-to-node traffic and metrics keep the cluster CA.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Secrets at rest.</strong> Key material is age-encrypted, keyed by HKDF over the cluster secret. TPM sealing is a named, deferred feature: no TPM hardware has been available to validate it.</span></li>
@@ -409,8 +409,7 @@
         </ul>
       </div>
       <div>
-        <div class="terminal"><div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>rotate the cluster CA</span></div><pre><span class="p">$ </span><span class="cmd">systemctl stop expansed</span>
-<span class="p">$ </span><span class="cmd">expanse cluster ca rotate &amp;&amp; systemctl start expansed</span>
+        <div class="terminal"><div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>rotate the cluster CA</span></div><pre><span class="p">$ </span><span class="cmd">expanse cluster ca rotate</span>
 <span class="out">CA rotation started: the new CA is now primary; the old CA stays trusted.</span>
 
 <span class="p">$ </span><span class="cmd">expanse cluster ca status</span>
@@ -419,8 +418,7 @@
 <span class="cm"># … after every node's renewal loop has ticked …</span>
 <span class="out">every node has renewed onto the new CA; safe to run `cluster ca complete`</span>
 
-<span class="p">$ </span><span class="cmd">systemctl stop expansed</span>
-<span class="p">$ </span><span class="cmd">expanse cluster ca complete &amp;&amp; systemctl start expansed</span>
+<span class="p">$ </span><span class="cmd">expanse cluster ca complete</span>
 <span class="out">CA rotation complete: outgoing CA retired.</span></pre></div>
       </div>
     </section>

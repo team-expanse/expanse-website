@@ -176,7 +176,7 @@
 <span class="cm"># curl:    --cacert ui-ca.pem</span></pre></div>
 
       <h2 id="join">7. Add nodes</h2>
-      <p>Install each further machine the same way. Then, on the new node with its agent not yet started, run the join command the leader printed (or mint a fresh token on the leader with <code>expanse cluster token create</code>, with that node's agent stopped):</p>
+      <p>Install each further machine the same way. Then, on the new node with its agent not yet started, run the join command the leader printed (or mint a fresh token on any running node with <code>expanse cluster token create</code>):</p>
       <div class="code"><pre><span class="cm"># on the new node</span>
 <span class="p">$ </span><span class="cmd">systemctl stop expansed</span>
 <span class="p">$ </span><span class="cmd">expanse cluster join --address 10.0.0.11:7446 --token expanse-join-…</span>
