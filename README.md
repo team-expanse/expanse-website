@@ -12,7 +12,7 @@ requests, works opened straight from disk.
 | `index.html` | Landing page: hero, mock web console and tty1 host console, feature grid, how it works, CLI showcase, honest comparison, CTA |
 | `features.html` | Every shipped capability in depth, plus what is deliberately not built yet |
 | `docs/getting-started.html` | Quickstart derived from the project's `docs/INSTALL.md` |
-| `download.html` | Latest release (1.2.1), build-from-source, requirements, changelog, known issues |
+| `download.html` | Latest release (1.2.2), build-from-source, requirements, changelog, known issues |
 | `assets/site.css` | The whole design system: tokens, light/dark themes, components |
 | `assets/site.js` | Theme toggle, mobile nav, copy buttons, scroll reveal, TOC highlight |
 | `assets/fonts/` | Self-hosted Inter and JetBrains Mono (OFL; licences alongside) |
@@ -26,7 +26,7 @@ Every page carries its own copy of the header, footer and inline SVG icon sprite
 so pages stay self-contained and there is nothing to assemble.
 
 The download button points at the GitHub release asset
-(`https://github.com/team-expanse/expanse/releases/download/v1.2.1/expanse-1.2.1-x86_64-linux.iso`).
+(`https://github.com/team-expanse/expanse/releases/download/v1.2.2/expanse-1.2.2-x86_64-linux.iso`).
 The release hook below keeps it, and every other version mention, current.
 
 ## Preview
