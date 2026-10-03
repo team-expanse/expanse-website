@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <title>Download — Expanse</title>
-  <meta name="description" content="Get Expanse 1.2.2: the installer ISO, how to build it from source, hardware requirements, the changelog and known issues.">
+  <meta name="description" content="Get Expanse 1.2.3: the installer ISO, how to build it from source, hardware requirements, the changelog and known issues.">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/site.css">
   <script>
@@ -34,7 +34,7 @@
     <a class="brand" href="index.html" aria-label="Expanse home">
       <svg class="brand-mark" aria-hidden="true"><use href="#i-logo"/></svg>
       <span>Expanse</span>
-      <span class="brand-version">1.2.2</span>
+      <span class="brand-version">1.2.3</span>
     </a>
     <nav class="site-nav" id="site-nav" data-nav aria-label="Main">
       <a href="features.html">Features</a>
@@ -60,7 +60,7 @@
     <div class="hero-bg" aria-hidden="true"></div>
     <div class="container">
       <div class="eyebrow">Download</div>
-      <h1>Get Expanse 1.2.2.</h1>
+      <h1>Get Expanse 1.2.3.</h1>
       <p class="lead">One hybrid ISO installs a node on x86_64 hardware. Build it from the flake, or write a release image to a USB stick, then follow the <a href="docs/getting-started.html">quickstart</a>.</p>
     </div>
   </section>
@@ -70,21 +70,21 @@
       <div class="release">
         <div class="release-card">
           <div class="eyebrow">Latest release</div>
-          <h2>Expanse 1.2.2</h2>
-          <div class="date">Released 2026-10-02 · cluster admin commands work from any node with agents running</div>
+          <h2>Expanse 1.2.3</h2>
+          <div class="date">Released 2026-10-03 · cordon keeps replicas; drain moves them</div>
           <div class="file">
             <svg class="icon" aria-hidden="true"><use href="#i-disc"/></svg>
             <div>
-              <div class="name">expanse-1.2.2-x86_64-linux.iso</div>
+              <div class="name">expanse-1.2.3-x86_64-linux.iso</div>
               <div class="meta">Hybrid UEFI + BIOS installer image · about 1.7 GB · needs a 4 GB USB stick</div>
-              <div class="meta">SHA-256 <code class="sha256">1b35a86d28fd51b70586e9dfddfb55c2266f82a89d595ca29888dc60c0e7e47d</code></div>
+              <div class="meta">SHA-256 <code class="sha256">ac6b2a20db7a31c46d0f5a84669d9990952f77745f2b0c4d3c20cf2b35024c85</code></div>
             </div>
           </div>
           <div class="hero-actions" style="justify-content:flex-start">
-            <a class="btn btn-primary btn-lg" href="https://github.com/team-expanse/expanse/releases/download/v1.2.2/expanse-1.2.2-x86_64-linux.iso"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download ISO</a>
+            <a class="btn btn-primary btn-lg" href="https://github.com/team-expanse/expanse/releases/download/v1.2.3/expanse-1.2.3-x86_64-linux.iso"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download ISO</a>
             <a class="btn btn-secondary btn-lg" href="#source">Build from source</a>
           </div>
-          <p class="muted" style="margin-top:1.25rem;font-size:0.9rem">Release images are attached to the <a href="https://github.com/team-expanse/expanse/releases/tag/v1.2.2"><code>v1.2.2</code> release</a> on GitHub. Check the download against the release's <a href="https://github.com/team-expanse/expanse/releases/download/v1.2.2/SHA256SUMS"><code>SHA256SUMS</code></a> with <code>sha256sum -c SHA256SUMS</code> in the same folder. Building from source gives you the same release: the flake asserts the ISO is named <code>expanse-1.2.2-*</code> and that the installer reports 1.2.2.</p>
+          <p class="muted" style="margin-top:1.25rem;font-size:0.9rem">Release images are attached to the <a href="https://github.com/team-expanse/expanse/releases/tag/v1.2.3"><code>v1.2.3</code> release</a> on GitHub. Check the download against the release's <a href="https://github.com/team-expanse/expanse/releases/download/v1.2.3/SHA256SUMS"><code>SHA256SUMS</code></a> with <code>sha256sum -c SHA256SUMS</code> in the same folder. Building from source gives you the same release: the flake asserts the ISO is named <code>expanse-1.2.3-*</code> and that the installer reports 1.2.3.</p>
         </div>
         <div>
           <div class="card" style="height:100%">
@@ -121,10 +121,10 @@
             <li><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span>The release version lives in one place, <code>nix/version.nix</code>; the ISO name and <code>expanse version</code> both read it.</span></li>
           </ul>
         </div>
-        <div class="terminal"><div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>build the installer</span></div><pre><span class="cm"># the 1.2.2 installer ISO, straight from the release tag</span>
-<span class="p">$ </span><span class="cmd">nix build github:team-expanse/expanse/v1.2.2#iso</span>
+        <div class="terminal"><div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>build the installer</span></div><pre><span class="cm"># the 1.2.3 installer ISO, straight from the release tag</span>
+<span class="p">$ </span><span class="cmd">nix build github:team-expanse/expanse/v1.2.3#iso</span>
 <span class="p">$ </span><span class="cmd">ls result/iso/</span>
-<span class="out">expanse-1.2.2-x86_64-linux.iso</span>
+<span class="out">expanse-1.2.3-x86_64-linux.iso</span>
 
 <span class="cm"># or from a checkout</span>
 <span class="p">$ </span><span class="cmd">nix develop</span>          <span class="cm"># go, golangci-lint, protoc, qemu, …</span>
@@ -145,6 +145,18 @@
       </div>
       <div class="changelog">
         <details class="rel latest" open>
+          <summary><span class="ver">1.2.3</span><span>Cordon keeps replicas; drain moves them</span><span class="when">2026-10-03</span><svg class="icon chev" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+          <div class="rel-body">
+            <h4>Fixed</h4>
+            <ul>
+              <li><code>expanse ctl node cordon</code> no longer evicts a node's replicas. A cordoned node was treated as unreachable, so 30 seconds later its replicas were marked lost and replaced elsewhere. Cordon now only stops new placements.</li>
+              <li><code>expanse ctl node drain</code> now moves the node's replicas, daemonsets included, on the next controller pass instead of relying on that eviction. <code>ctl node list</code> and the status page show the node as draining, and <code>uncordon</code> ends the drain. A drain refused for lack of another placeable node no longer leaves the node cordoned.</li>
+              <li>A daemonset replica on a cordoned node that goes silent is now dropped, as on any other unreachable node, instead of being kept indefinitely.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="rel">
           <summary><span class="ver">1.2.2</span><span>Cluster admin commands work from any node with agents running</span><span class="when">2026-10-02</span><svg class="icon chev" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
           <div class="rel-body">
             <h4>Fixed</h4>
@@ -375,10 +387,10 @@
         <div>
           <div class="eyebrow">Known issues</div>
           <h2>Read before you install.</h2>
-          <p class="lead" style="margin-top:0.9rem">Carried in the changelog as of 1.2.2. Everything under 1.0.0 still applies unless a later release says otherwise.</p>
+          <p class="lead" style="margin-top:0.9rem">Carried in the changelog as of 1.2.3. Everything under 1.0.0 still applies unless a later release says otherwise.</p>
         </div>
         <div class="panel isnt">
-          <h3><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Open in 1.2.2</h3>
+          <h3><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Open in 1.2.3</h3>
           <ul>
             <li><strong>Binary-backed block types on installed nodes.</strong> nginx, redis and similar types need their program on the node's <code>PATH</code>, which an installed node does not yet ship. <code>util/echo</code> runs.</li>
             <li><strong>Web UI VIP.</strong> The UI takes one address from the external VIP pool; size the pool one larger than the block VIPs you need.</li>
@@ -445,7 +457,7 @@
     </div>
     <div class="footer-bottom">
       <p class="made-with">Expanse and this site are a joint human–AI effort: built by a human maintainer working with AI coding assistants. <a href="index.html#made-with-ai">How Expanse is made</a></p>
-      <span>Expanse 1.2.2 · Apache License 2.0 · Versions follow Semantic Versioning.</span>
+      <span>Expanse 1.2.3 · Apache License 2.0 · Versions follow Semantic Versioning.</span>
       <span>This site makes no external requests. Fonts: Inter and JetBrains Mono (OFL).</span>
     </div>
   </div>
