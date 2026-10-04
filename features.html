@@ -141,7 +141,7 @@
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Linearizable by default.</strong> Reads take one quorum round trip; stale reads are opt-in. Writes from any node are forwarded to the leader and fail fast (about 2 s) against a deposed one.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Leases with a guard band.</strong> 15 s TTL, renewed every 5 s; a takeover cannot happen until at least 8 s after a partitioned holder has stopped. That holds on clock <em>rate</em>, never on clock offset.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Degrades honestly.</strong> A node that cannot reach a leader goes read-only and freezes reconciliation instead of guessing.</span></li>
-          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Witness nodes and node lifecycle.</strong> A witness is a full voter that never runs workloads (2 + 1 topologies). Cordon only stops new placements; drain also moves the node's replicas, daemonsets included, and <code>uncordon</code> ends it. Cordon, drain and remove are interlocked, and work from any node. Removing the leader is refused until <code>transfer-leadership</code> moves it.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Witness nodes and node lifecycle.</strong> A witness is a full voter that never runs workloads (2 + 1 topologies). Cordon only stops new placements; drain also moves the node's replicas, daemonsets included, and <code>uncordon</code> ends it. Cordon, drain and remove are interlocked, and work from any node. Removing the leader is refused until <code>transfer-leadership</code> moves it. A removed node stops its workloads and its agent exits for good, even if it was down or cut off when it was removed.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>mDNS discovery.</strong> <code>expanse cluster discover</code> lists clusters and unjoined nodes on the L2 network; <code>cluster join --discover</code> finds the join endpoint itself.</span></li>
         </ul>
       </div>
@@ -196,7 +196,8 @@
 <span class="cm"># … two nodes join …</span>
 <span class="out">vol-…   data   20Gi   <span class="ok">healthy</span>          3/3       n1,n2,n3 (n1)</span>
 <span class="p">$ </span><span class="cmd">expanse ctl volume resize data --size 40Gi</span>
-<span class="p">$ </span><span class="cmd">expanse ctl volume snapshot data --name before-migration</span></pre></div>
+<span class="p">$ </span><span class="cmd">expanse ctl volume snapshot data --name before-migration</span>
+<span class="out">snapshot "before-migration" of volume "data" taken on n1</span></pre></div>
       </div>
     </section>
 
@@ -433,7 +434,7 @@
         <ul class="checks">
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>One repository per node.</strong> <code>expanse cluster restore</code> pulls exactly that node's state back and the daemon rejoins under its original identity, with no re-init or re-join step.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Whole-cluster loss is covered.</strong> Restore every node and start every daemon: quorum reforms cold from the restored logs and the reconciler converges the fleet back to the captured desired state — proven end to end in a VM test.</span></li>
-          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Volume data as a flat image.</strong> <code>expanse ctl volume snapshot</code> takes an LVM thin snapshot; restic and <code>dd</code> move the bytes out and back onto the live DRBD device, checksum-equal.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Volume data as a flat image.</strong> <code>expanse ctl volume snapshot</code> takes an LVM thin snapshot and returns once the primary holds it; restic and <code>dd</code> move the bytes out and back onto the live DRBD device, checksum-equal.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Scheduling is yours.</strong> Backups run from cron, a systemd timer or by hand; an automatic cadence is a named, deferred extension point.</span></li>
         </ul>
       </div>
