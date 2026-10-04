@@ -178,7 +178,7 @@
         <ul class="checks">
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Full lifecycle.</strong> Create, grow, snapshot and restore, verify and resync a scrubbed replica, retire a dead node's copy, or hand-pick the surviving side of a split-brain with <code>volume diverged --choose</code>.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Honest states.</strong> <code>UnderReplicated</code> means every replica is healthy but there are fewer than the target — the CLI and UI show "1 of 3 (no redundancy)" rather than a green tick.</span></li>
-          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Quorum switches on live.</strong> DRBD quorum turns on at three replicas without interrupting I/O, verified under continuous acknowledged writes.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Quorum switches on live.</strong> DRBD quorum turns on at three replicas without interrupting I/O, verified under continuous acknowledged writes. A two-replica volume borrows a spare node as a diskless tiebreaker, so a cut-off primary stops writing instead of splitting the volume; only a two-node cluster, with no spare, runs without one.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Rebuilds that finish.</strong> A resync floor of 4 MiB/s keeps a busy volume from starving its new replica; a 256 MiB volume under a heavy fsync writer gained a replica in 33 s on VMs.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>A doctor for it.</strong> <code>expanse doctor storage</code> checks the DRBD module, VG headroom, thin-pool data and metadata, the system mirror and every DRBD resource, with a remediation hint on anything short of PASS.</span></li>
         </ul>
@@ -187,7 +187,7 @@
         <div class="code nowrap"><div class="code-title">the stack, per node</div><pre><span class="out">GPT ─┬─ ESP (FAT32)             → /boot
      ├─ btrfs partition          → @root @nix @persist @log
      └─ LVM PV → VG "expanse"    → thin pool → thin LVs
-                                     └─ DRBD 9 (protocol C, quorum at ≥3)
+                                     └─ DRBD 9 (protocol C, quorum at ≥3 votes)
                                           └─ filesystem or raw (block replica)</span></pre></div>
         <div class="code" style="margin-top:0.75rem"><pre><span class="p">$ </span><span class="cmd">expanse ctl volume create data --size 20Gi</span>
 <span class="p">$ </span><span class="cmd">expanse ctl volume list</span>
@@ -461,7 +461,7 @@
         <article class="card">
           <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-db"/></svg></div>
           <h3><code>db/postgres</code></h3>
-          <p>Each replica runs on its own node with its own volume; PostgreSQL streaming replication is the redundancy. A lease-gated controller picks the primary, standbys clone from it with <code>pg_basebackup</code>, and on primary loss a survivor is promoted live with <code>pg_promote()</code> — no restart. Clients use one VIP routed to the primary only.</p>
+          <p>Each replica runs on its own node with its own volume; PostgreSQL streaming replication is the redundancy. A lease-gated controller picks the primary, standbys clone from it with <code>pg_basebackup</code>, and on primary loss a survivor is promoted live with <code>pg_promote()</code> — no restart. A primary cut off by a partition rejoins as a standby once the network heals. Clients use one VIP routed to the primary only.</p>
         </article>
         <article class="card">
           <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-target"/></svg></div>
