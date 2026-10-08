@@ -205,6 +205,9 @@
           <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Prometheus</span>
           <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Grafana</span>
           <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>NFS-Ganesha</span>
+          <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Garage</span>
+          <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>PostgreSQL</span>
+          <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>MariaDB</span>
           <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>QEMU/KVM</span>
         </div>
       </div>
@@ -410,7 +413,7 @@
           <ul>
             <li><strong>Kubernetes.</strong> Blocks are systemd-supervised units described in YAML, not pods. There is no Kubernetes API, no container runtime and no operator ecosystem.</li>
             <li><strong>A hypervisor first.</strong> VMs are one block type (QEMU/KVM on a replicated disk). Failover is a cold restart elsewhere; there is no live migration.</li>
-            <li><strong>An SMB file server yet.</strong> The Samba block deploys but its failover has an open bug. NFS shares fail over today, as do volumes, Postgres, iSCSI and VMs.</li>
+            <li><strong>An SMB file server yet.</strong> The Samba block deploys but its failover has an open bug. NFS shares fail over today, as do volumes, Postgres, MariaDB, S3 object storage, iSCSI and VMs.</li>
             <li><strong>TPM-sealed.</strong> Secrets are age-encrypted, keyed from the cluster secret. TPM sealing is a named, deferred feature, not a shipped one.</li>
             <li><strong>Validated on every box.</strong> Automated coverage is on QEMU/KVM; the laptop, mini-PC, server and ARM targets in the hardware matrix are still marked untested.</li>
           </ul>
@@ -426,6 +429,8 @@
             <tr><td>Services</td><td>systemd units with sandboxing</td><td>A scheduler with rolling updates, anti-affinity, singleton leases</td></tr>
             <tr><td>Network</td><td>WireGuard, nftables, miekg/dns</td><td>Mesh reconciliation, lease-fenced VIPs, L4/L7 balancing, cluster DNS</td></tr>
             <tr><td>File shares</td><td>NFS-Ganesha</td><td>An export that fails over with its volume, with lock reclaim across the move</td></tr>
+            <tr><td>Object storage</td><td>Garage</td><td>An S3 endpoint whose objects, buckets and keys fail over with its volume</td></tr>
+            <tr><td>Databases</td><td>PostgreSQL, MariaDB</td><td>Live standby promotion for Postgres; a MariaDB that recovers on a survivor with every acknowledged commit</td></tr>
             <tr><td>Backup and metrics</td><td>restic, Prometheus, Grafana</td><td>Consistent snapshot paths, one-command restore, shipped rules and dashboard</td></tr>
           </tbody>
         </table>

@@ -36,6 +36,8 @@
   <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></symbol>
   <symbol id="i-vm" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4M7 9h4M7 13h7"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+  <symbol id="i-bucket" viewBox="0 0 24 24"><path d="M4 6h16l-2 14H6z"/><path d="M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3"/></symbol>
+  <symbol id="i-rows" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 9v11"/></symbol>
   <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
 </svg>
 
@@ -85,7 +87,7 @@
         <a class="part" href="#observability">Observability</a>
         <a class="part" href="#security">Security</a>
         <a class="part" href="#backup">Backup</a>
-        <a class="part" href="#stateful">Postgres, NFS, iSCSI, VMs</a>
+        <a class="part" href="#stateful">Databases, storage, VMs</a>
         <a class="part" href="#not-yet">Not yet</a>
       </div>
     </div>
@@ -214,7 +216,7 @@
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Self-healing.</strong> A node silent past the 30 s grace has its placements retired and rescheduled under the same rules. A replica with storage moves only when another node holds a healthy copy of its volume; otherwise it keeps its place and restarts when its node returns. A replica that keeps failing its liveness probe is restarted in place with a growing pause between tries; after five restarts it moves to another node, and if it fails there too it is stopped rather than cycled through the cluster.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Readiness that steers traffic.</strong> Each node runs the <code>tcp</code> and <code>http</code> readiness probes of the replicas it hosts. The VIP load balancer and DNS stop sending traffic to a replica whose probe fails, and a new replica is not <code>RUNNING</code> until its probe passes.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Sandboxed.</strong> Units run with <code>DynamicUser</code>, <code>ProtectSystem=strict</code>, <code>PrivateTmp</code> and friends; config is validated against the type's JSON Schema before anything is written.</span></li>
-          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Fourteen shipped types.</strong> <code>util/echo</code>, <code>web/nginx</code>, <code>web/static-site</code>, <code>web/whoami</code>, <code>db/redis</code>, <code>db/postgres</code>, <code>monitor/node-exporter</code>, <code>monitor/prometheus</code>, <code>monitor/grafana</code>, <code>ai/ollama</code>, <code>share/smb</code>, <code>share/nfs</code>, <code>iscsi/target</code>, <code>vm/instance</code>. A new type is four files plus one flake entry.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Sixteen shipped types.</strong> <code>util/echo</code>, <code>web/nginx</code>, <code>web/static-site</code>, <code>web/whoami</code>, <code>db/redis</code>, <code>db/postgres</code>, <code>db/mariadb</code>, <code>monitor/node-exporter</code>, <code>monitor/prometheus</code>, <code>monitor/grafana</code>, <code>ai/ollama</code>, <code>share/smb</code>, <code>share/nfs</code>, <code>storage/s3</code>, <code>iscsi/target</code>, <code>vm/instance</code>. A new type is four files plus one flake entry.</span></li>
         </ul>
       </div>
       <div>
@@ -456,8 +458,8 @@
     <section class="section-tight" id="stateful" style="border-top:1px solid var(--border)">
       <div class="section-head">
         <div class="eyebrow">Stateful workloads</div>
-        <h2>Postgres, NFS, iSCSI and virtual machines, each with failover.</h2>
-        <p class="lead">Four shipped block types put real state on the cluster. Each one reuses the same primitives — replicated volumes, leases, VIPs and singleton scheduling — rather than a bespoke mechanism.</p>
+        <h2>Databases, file and object storage, iSCSI and virtual machines, each with failover.</h2>
+        <p class="lead">Six shipped block types put real state on the cluster. Each one reuses the same primitives — replicated volumes, leases, VIPs and singleton scheduling — rather than a bespoke mechanism.</p>
       </div>
       <div class="grid" style="grid-template-columns:repeat(auto-fit, minmax(min(100%, 400px), 1fr))">
         <article class="card">
@@ -466,9 +468,19 @@
           <p>Each replica runs on its own node with its own volume; PostgreSQL streaming replication is the redundancy. A lease-gated controller picks the primary, standbys clone from it with <code>pg_basebackup</code>, and on primary loss a survivor is promoted live with <code>pg_promote()</code> — no restart. A primary cut off by a partition rejoins as a standby once the network heals. Clients use one VIP routed to the primary only.</p>
         </article>
         <article class="card">
+          <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-rows"/></svg></div>
+          <h3><code>db/mariadb</code></h3>
+          <p>One MariaDB server whose whole datadir sits on a replicated volume behind a VIP. InnoDB syncs its redo log on every commit, so when the serving node fails the server restarts on a survivor, runs crash recovery on the same data, and every commit a client saw acknowledged is still there. The root password, database and application account are set from the block's config on every start.</p>
+        </article>
+        <article class="card">
           <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-disk"/></svg></div>
           <h3><code>share/nfs</code></h3>
           <p>One NFSv4.1/4.2 export of a replicated volume, served by NFS-Ganesha behind a stable VIP. Its client-recovery records live on the volume, so when the serving node fails the export moves with the data and clients reclaim their opens and locks during the grace period. A <code>hard</code> mount blocks, then carries on, and a writer holding a file open keeps writing without remounting.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-bucket"/></svg></div>
+          <h3><code>storage/s3</code></h3>
+          <p>An S3-compatible object store on Garage, with its metadata, objects and keys on a replicated volume behind a VIP. It creates the configured access key and buckets on start. Garage syncs each object before acknowledging it, so after a failover the survivor is the same Garage node with the same buckets, and clients retry against the same endpoint and key.</p>
         </article>
         <article class="card">
           <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-target"/></svg></div>
@@ -478,7 +490,7 @@
         <article class="card">
           <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-vm"/></svg></div>
           <h3><code>vm/instance</code></h3>
-          <p>A QEMU/KVM guest on a raw replicated disk, scheduled only to nodes with hardware virtualization, with a MAC pinned from the block's name so it comes back at the same address. It counts as <code>RUNNING</code> only once the guest reports over vsock that it has booted. Node loss means a cold boot elsewhere — the guest's filesystem was verified intact under sustained fsync load through the kill. There is no live migration.</p>
+          <p>A QEMU/KVM guest on a raw replicated disk, scheduled only to nodes with hardware virtualization, with a MAC pinned from the block's name so it comes back at the same address. It counts as <code>RUNNING</code> only once the guest reports over vsock that it has booted. Node loss means a cold boot elsewhere — the guest's filesystem was verified intact under sustained fsync load through the kill. There is no live migration. A prebuilt guest image runs the Pando app platform this way, and Pando and its apps come back on a survivor.</p>
         </article>
       </div>
     </section>
