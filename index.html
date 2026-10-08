@@ -205,6 +205,8 @@
           <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Prometheus</span>
           <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Grafana</span>
           <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>NFS-Ganesha</span>
+          <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Caddy</span>
+          <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>HAProxy</span>
           <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Garage</span>
           <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>PostgreSQL</span>
           <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>MariaDB</span>
@@ -250,7 +252,7 @@
         <article class="card reveal reveal-2">
           <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-network"/></svg></div>
           <h3>Mesh, VIPs and load balancing</h3>
-          <p>A WireGuard overlay between every node, lease-fenced VIPs that move with their service, L4 and L7 balancing, cluster DNS for <code>&lt;block&gt;.&lt;ns&gt;.expanse.local</code>, and a default-deny nftables firewall per node.</p>
+          <p>A WireGuard overlay between every node, lease-fenced VIPs that move with their service, L4 and L7 balancing, Caddy and HAProxy blocks, cluster DNS for <code>&lt;block&gt;.&lt;ns&gt;.expanse.local</code>, and a default-deny nftables firewall per node.</p>
           <a class="more" href="features.html#network">Networking<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         </article>
         <article class="card reveal reveal-3">
@@ -428,6 +430,7 @@
             <tr><td>Volumes</td><td>DRBD 9, LVM thin, btrfs, md RAID1</td><td>Placement, repair, split-brain resolution, grow-as-you-join</td></tr>
             <tr><td>Services</td><td>systemd units with sandboxing</td><td>A scheduler with rolling updates, anti-affinity, singleton leases</td></tr>
             <tr><td>Network</td><td>WireGuard, nftables, miekg/dns</td><td>Mesh reconciliation, lease-fenced VIPs, L4/L7 balancing, cluster DNS</td></tr>
+            <tr><td>Proxies</td><td>Caddy, HAProxy</td><td>Automatic HTTPS whose certificates fail over with their volume; balancing to servers in or out of the cluster</td></tr>
             <tr><td>File shares</td><td>NFS-Ganesha</td><td>An export that fails over with its volume, with lock reclaim across the move</td></tr>
             <tr><td>Object storage</td><td>Garage</td><td>An S3 endpoint whose objects, buckets and keys fail over with its volume</td></tr>
             <tr><td>Databases</td><td>PostgreSQL, MariaDB</td><td>Live standby promotion for Postgres; a MariaDB that recovers on a survivor with every acknowledged commit</td></tr>
