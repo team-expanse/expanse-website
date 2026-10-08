@@ -492,7 +492,7 @@
         <div class="panel isnt">
           <h3><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Open in 1.6.0</h3>
           <ul>
-            <li><strong>Binary-backed block types on installed nodes.</strong> Nginx, redis, <code>web/caddy</code>, <code>net/haproxy</code>, <code>share/nfs</code>, <code>storage/s3</code>, <code>db/mariadb</code>, <code>monitor/prometheus</code> and <code>monitor/grafana</code> need their program on the node's <code>PATH</code>, which an installed node does not yet ship; add the package (for example <code>pkgs.garage</code> for S3) to <code>environment.systemPackages</code>. <code>util/echo</code> runs.</li>
+            <li><strong>Binary-backed block types on installed nodes.</strong> Nginx, redis, <code>web/caddy</code>, <code>net/haproxy</code>, <code>dev/forgejo</code>, <code>share/nfs</code>, <code>storage/s3</code>, <code>db/mariadb</code>, <code>monitor/prometheus</code> and <code>monitor/grafana</code> need their program on the node's <code>PATH</code>, which an installed node does not yet ship; add the package (for example <code>pkgs.garage</code> for S3) to <code>environment.systemPackages</code>. <code>util/echo</code> runs.</li>
             <li><strong>Web UI VIP.</strong> The UI takes one address from the external VIP pool; size the pool one larger than the block VIPs you need.</li>
             <li><strong>Idle control-plane CPU with a volume attached</strong> has not been measured on real hardware; without volumes, bare metal measured 2.5% of one core on the Raft leader. With a volume, the leader is projected at about 4%.</li>
             <li><strong>SMB file shares</strong> are paused: Samba deploys, but failover has an open bug. NFS shares (<code>share/nfs</code>) fail over.</li>

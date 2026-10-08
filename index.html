@@ -207,6 +207,7 @@
           <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>NFS-Ganesha</span>
           <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Caddy</span>
           <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>HAProxy</span>
+          <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Forgejo</span>
           <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Garage</span>
           <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>PostgreSQL</span>
           <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>MariaDB</span>
@@ -431,6 +432,7 @@
             <tr><td>Services</td><td>systemd units with sandboxing</td><td>A scheduler with rolling updates, anti-affinity, singleton leases</td></tr>
             <tr><td>Network</td><td>WireGuard, nftables, miekg/dns</td><td>Mesh reconciliation, lease-fenced VIPs, L4/L7 balancing, cluster DNS</td></tr>
             <tr><td>Proxies</td><td>Caddy, HAProxy</td><td>Automatic HTTPS whose certificates fail over with their volume; balancing to servers in or out of the cluster</td></tr>
+            <tr><td>Git hosting</td><td>Forgejo</td><td>A forge whose repositories, host key and sessions fail over with its volume</td></tr>
             <tr><td>File shares</td><td>NFS-Ganesha</td><td>An export that fails over with its volume, with lock reclaim across the move</td></tr>
             <tr><td>Object storage</td><td>Garage</td><td>An S3 endpoint whose objects, buckets and keys fail over with its volume</td></tr>
             <tr><td>Databases</td><td>PostgreSQL, MariaDB</td><td>Live standby promotion for Postgres; a MariaDB that recovers on a survivor with every acknowledged commit</td></tr>
