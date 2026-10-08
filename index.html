@@ -56,7 +56,7 @@
     <a class="brand" href="index.html" aria-label="Expanse home">
       <svg class="brand-mark" aria-hidden="true"><use href="#i-logo"/></svg>
       <span>Expanse</span>
-      <span class="brand-version">1.6.0</span>
+      <span class="brand-version">1.7.0</span>
     </a>
     <nav class="site-nav" id="site-nav" data-nav aria-label="Main">
       <a href="features.html">Features</a>
@@ -86,15 +86,15 @@
     <div class="container">
       <div class="hero-inner">
         <a class="pill" href="download.html#changelog">
-          <span class="tag">1.6.0</span>
-          <span>Forgejo block</span>
+          <span class="tag">1.7.0</span>
+          <span>Restic backup block</span>
           <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>
         </a>
         <h1>The cluster OS for the <span class="grad">machines you already have</span>.</h1>
         <p class="lead">Expanse turns ordinary hardware — the design target is a decade-old laptop — into a node of a self-healing cluster: replicated storage, scheduled services, VIP failover and a live web console. Built on NixOS from proven parts, not hand-rolled distributed systems.</p>
         <div class="hero-actions">
           <a class="btn btn-primary btn-lg" href="docs/getting-started.html">Get started<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-          <a class="btn btn-secondary btn-lg" href="download.html"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download ISO 1.6.0</a>
+          <a class="btn btn-secondary btn-lg" href="download.html"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download ISO 1.7.0</a>
         </div>
         <div class="hero-meta">
           <span><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg>2 cores · 2 GB RAM · 20 GB disk</span>
@@ -161,8 +161,8 @@
 
         <figure class="window window-dark" style="margin:0">
           <div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>tty1 · expanse-console.service</span></div>
-          <div class="tty" role="img" aria-label="Mock of the tty1 host console: Expanse 1.6.0 on host n1, healthy, addresses and web UI URL, cluster expanse with quorum 3 of 2 as leader, CPU, memory, disks and a healthy md RAID1 system mirror">
-<pre aria-hidden="true"><span class="hdr"> <span class="b">EXPANSE 1.6.0</span>                                 2026-09-28 17:42:10 UTC  </span>
+          <div class="tty" role="img" aria-label="Mock of the tty1 host console: Expanse 1.7.0 on host n1, healthy, addresses and web UI URL, cluster expanse with quorum 3 of 2 as leader, CPU, memory, disks and a healthy md RAID1 system mirror">
+<pre aria-hidden="true"><span class="hdr"> <span class="b">EXPANSE 1.7.0</span>                                 2026-09-28 17:42:10 UTC  </span>
 <span class="box">┌─ <span class="b">n1</span> ─────────────────────────────────────────────────────────────────┐</span>
 <span class="box">│</span> Hostname   n1                      Uptime     3d 4h 12m              <span class="box">│</span>
 <span class="box">│</span> Node ID    7d2f4c1e-9b3a-4e61-a0c7-5f8e21d3b940                      <span class="box">│</span>
@@ -223,7 +223,7 @@
       <div class="section-head">
         <div class="eyebrow">What you get</div>
         <h2>Everything a small fleet needs, in one image.</h2>
-        <p class="lead">One bootable ISO installs a node. Nodes find each other, join with single-use tokens, and share one strongly consistent control plane. Everything below ships in 1.6.0 and is exercised by NixOS VM tests that kill nodes, partition networks and pull disks.</p>
+        <p class="lead">One bootable ISO installs a node. Nodes find each other, join with single-use tokens, and share one strongly consistent control plane. Everything below ships in 1.7.0 and is exercised by NixOS VM tests that kill nodes, partition networks and pull disks.</p>
       </div>
       <div class="grid">
         <article class="card reveal">
@@ -297,7 +297,7 @@
           <span class="step-num" aria-hidden="true">1</span>
           <h3>Install a node</h3>
           <p>Write the ISO to a USB stick and boot the target. The installer picks disks, network and an SSH key, shows what it will destroy, then installs. Headless? SSH in and run it there.</p>
-          <div class="code"><pre><span class="p">$ </span><span class="cmd">nix build github:team-expanse/expanse/v1.6.0#iso</span>
+          <div class="code"><pre><span class="p">$ </span><span class="cmd">nix build github:team-expanse/expanse/v1.7.0#iso</span>
 <span class="p">$ </span><span class="cmd">sudo dd if=result/iso/*.iso of=/dev/sdX bs=4M</span>
 <span class="cm"># boot the target from the stick, then:</span>
 <span class="p">$ </span><span class="cmd">expanse install --tui</span></pre></div>
@@ -346,7 +346,7 @@
           <div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>root@n1 — ssh</span></div>
 <pre><span class="p">$ </span><span class="cmd">expanse cluster status</span>
 <span class="out">cluster:   expanse (5c0b3e2a-…)</span>
-<span class="out">version:   1.6.0</span>
+<span class="out">version:   1.7.0</span>
 <span class="out">generation: 12</span>
 <span class="out">leader:    n1</span>
 <span class="out">quorum:    <span class="ok">3/2</span></span>
@@ -469,7 +469,7 @@
         <p class="lead">The quickstart takes a blank machine to a one-node cluster with a web console, and shows how each further node joins with a single command.</p>
         <div class="hero-actions">
           <a class="btn btn-primary btn-lg" href="docs/getting-started.html">Read the quickstart<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-          <a class="btn btn-secondary btn-lg" href="download.html"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Get Expanse 1.6.0</a>
+          <a class="btn btn-secondary btn-lg" href="download.html"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Get Expanse 1.7.0</a>
         </div>
       </div>
     </div>
@@ -514,7 +514,7 @@
     </div>
     <div class="footer-bottom">
       <p class="made-with">Expanse and this site are a joint human–AI effort: built by a human maintainer working with AI coding assistants. <a href="index.html#made-with-ai">How Expanse is made</a></p>
-      <span>Expanse 1.6.0 · Apache License 2.0 · Versions follow Semantic Versioning.</span>
+      <span>Expanse 1.7.0 · Apache License 2.0 · Versions follow Semantic Versioning.</span>
       <span>This site makes no external requests. Fonts: Inter and JetBrains Mono (OFL).</span>
     </div>
   </div>
