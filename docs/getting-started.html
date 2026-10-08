@@ -31,7 +31,7 @@
     <a class="brand" href="../index.html" aria-label="Expanse home">
       <svg class="brand-mark" aria-hidden="true"><use href="#i-logo"/></svg>
       <span>Expanse</span>
-      <span class="brand-version">1.3.0</span>
+      <span class="brand-version">1.4.0</span>
     </a>
     <nav class="site-nav" id="site-nav" data-nav aria-label="Main">
       <a href="../features.html">Features</a>
@@ -92,7 +92,7 @@
 
       <h2 id="usb">1. Make the installer USB</h2>
       <p>Build the ISO from the flake (or use a <a href="../download.html">downloaded release image</a>), then write it to the stick. Replace <code>/dev/sdX</code> with your USB device — check with <code>lsblk</code> first.</p>
-      <div class="code"><pre><span class="p">$ </span><span class="cmd">nix build github:team-expanse/expanse/v1.3.0#iso</span>
+      <div class="code"><pre><span class="p">$ </span><span class="cmd">nix build github:team-expanse/expanse/v1.4.0#iso</span>
 <span class="p">$ </span><span class="cmd">sudo dd if=result/iso/*.iso of=/dev/sdX bs=4M status=progress oflag=direct</span></pre></div>
       <p>The x86_64 image is hybrid: it boots under UEFI and legacy BIOS alike.</p>
 
@@ -157,7 +157,7 @@
 <span class="p">$ </span><span class="cmd">systemctl start expansed</span>
 <span class="p">$ </span><span class="cmd">expanse cluster status</span>
 <span class="out">cluster:   expanse (5c0b3e2a-…)</span>
-<span class="out">version:   1.3.0</span>
+<span class="out">version:   1.4.0</span>
 <span class="out">generation: 1</span>
 <span class="out">leader:    n1</span>
 <span class="out">quorum:    <span class="ok">1/1</span></span>
@@ -242,7 +242,7 @@
 
       <nav class="doc-nav" aria-label="Related pages">
         <a class="btn btn-secondary" href="../features.html">All features</a>
-        <a class="btn btn-primary" href="../download.html">Download 1.3.0<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-primary" href="../download.html">Download 1.4.0<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       </nav>
     </article>
   </div>
@@ -286,7 +286,7 @@
     </div>
     <div class="footer-bottom">
       <p class="made-with">Expanse and this site are a joint human–AI effort: built by a human maintainer working with AI coding assistants. <a href="../index.html#made-with-ai">How Expanse is made</a></p>
-      <span>Expanse 1.3.0 · Apache License 2.0 · Versions follow Semantic Versioning.</span>
+      <span>Expanse 1.4.0 · Apache License 2.0 · Versions follow Semantic Versioning.</span>
       <span>This site makes no external requests. Fonts: Inter and JetBrains Mono (OFL).</span>
     </div>
   </div>
