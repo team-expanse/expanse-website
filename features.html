@@ -85,7 +85,7 @@
         <a class="part" href="#observability">Observability</a>
         <a class="part" href="#security">Security</a>
         <a class="part" href="#backup">Backup</a>
-        <a class="part" href="#stateful">Postgres, iSCSI, VMs</a>
+        <a class="part" href="#stateful">Postgres, NFS, iSCSI, VMs</a>
         <a class="part" href="#not-yet">Not yet</a>
       </div>
     </div>
@@ -214,7 +214,7 @@
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Self-healing.</strong> A node silent past the 30 s grace has its placements retired and rescheduled under the same rules. A replica with storage moves only when another node holds a healthy copy of its volume; otherwise it keeps its place and restarts when its node returns. A replica that keeps failing its liveness probe is restarted in place with a growing pause between tries; after five restarts it moves to another node, and if it fails there too it is stopped rather than cycled through the cluster.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Readiness that steers traffic.</strong> Each node runs the <code>tcp</code> and <code>http</code> readiness probes of the replicas it hosts. The VIP load balancer and DNS stop sending traffic to a replica whose probe fails, and a new replica is not <code>RUNNING</code> until its probe passes.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Sandboxed.</strong> Units run with <code>DynamicUser</code>, <code>ProtectSystem=strict</code>, <code>PrivateTmp</code> and friends; config is validated against the type's JSON Schema before anything is written.</span></li>
-          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Eleven shipped types.</strong> <code>util/echo</code>, <code>web/nginx</code>, <code>web/static-site</code>, <code>web/whoami</code>, <code>db/redis</code>, <code>db/postgres</code>, <code>monitor/node-exporter</code>, <code>ai/ollama</code>, <code>share/smb</code>, <code>iscsi/target</code>, <code>vm/instance</code>. A new type is four files plus one flake entry.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Fourteen shipped types.</strong> <code>util/echo</code>, <code>web/nginx</code>, <code>web/static-site</code>, <code>web/whoami</code>, <code>db/redis</code>, <code>db/postgres</code>, <code>monitor/node-exporter</code>, <code>monitor/prometheus</code>, <code>monitor/grafana</code>, <code>ai/ollama</code>, <code>share/smb</code>, <code>share/nfs</code>, <code>iscsi/target</code>, <code>vm/instance</code>. A new type is four files plus one flake entry.</span></li>
         </ul>
       </div>
       <div>
@@ -364,11 +364,12 @@
         <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-health"/></svg></div>
         <div class="eyebrow">Observability</div>
         <h2>The same health signal, everywhere you look.</h2>
-        <p class="lead">Expanse does not ship its own metrics database. Every node exports Prometheus metrics for node, resource, volume and quorum health; the web UI's Health page derives the same critical alerts in-process, so the two can never disagree.</p>
+        <p class="lead">Expanse does not write its own metrics database. Every node exports Prometheus metrics for node, resource, volume and quorum health; the web UI's Health page derives the same critical alerts in-process, so the two can never disagree.</p>
         <ul class="checks">
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Authenticated <code>/metrics</code>.</strong> A dedicated listener on <code>:7447</code> behind the cluster CA and a bearer token you mint with <code>expanse ctl metrics set-token</code>.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Shipped alert rules.</strong> Seven critical rules that fire on the first true evaluation — node unhealthy or unreachable, resource unhealthy, volume failed or read-only, quorum without a leader or degraded — and four sustained-window warnings.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>A shipped Grafana dashboard</strong> with six panels, verified rendering real data through Grafana's own query API.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Or run them as blocks.</strong> <code>monitor/prometheus</code> scrapes every node over the cluster's mutual TLS, plus node-exporter, and loads the shipped rules unmodified; <code>monitor/grafana</code> comes with the datasource and dashboard set up. Both keep their data on a replicated volume.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Within the 30 s budget.</strong> A node failure is visible as a firing alert in the UI and Grafana inside 30 s; a measured run at a 2 s scrape cadence closed the pipeline in 11.5–11.7 s. Scrape at 5 s or faster.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Routing is yours.</strong> Alertmanager receivers (e-mail, webhooks, pagers) are deliberately left to the operator.</span></li>
         </ul>
@@ -455,14 +456,19 @@
     <section class="section-tight" id="stateful" style="border-top:1px solid var(--border)">
       <div class="section-head">
         <div class="eyebrow">Stateful workloads</div>
-        <h2>Postgres, iSCSI and virtual machines, each with failover.</h2>
-        <p class="lead">Three shipped block types put real state on the cluster. Each one reuses the same primitives — replicated volumes, leases, VIPs and singleton scheduling — rather than a bespoke mechanism.</p>
+        <h2>Postgres, NFS, iSCSI and virtual machines, each with failover.</h2>
+        <p class="lead">Four shipped block types put real state on the cluster. Each one reuses the same primitives — replicated volumes, leases, VIPs and singleton scheduling — rather than a bespoke mechanism.</p>
       </div>
-      <div class="grid">
+      <div class="grid" style="grid-template-columns:repeat(auto-fit, minmax(min(100%, 400px), 1fr))">
         <article class="card">
           <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-db"/></svg></div>
           <h3><code>db/postgres</code></h3>
           <p>Each replica runs on its own node with its own volume; PostgreSQL streaming replication is the redundancy. A lease-gated controller picks the primary, standbys clone from it with <code>pg_basebackup</code>, and on primary loss a survivor is promoted live with <code>pg_promote()</code> — no restart. A primary cut off by a partition rejoins as a standby once the network heals. Clients use one VIP routed to the primary only.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-disk"/></svg></div>
+          <h3><code>share/nfs</code></h3>
+          <p>One NFSv4.1/4.2 export of a replicated volume, served by NFS-Ganesha behind a stable VIP. Its client-recovery records live on the volume, so when the serving node fails the export moves with the data and clients reclaim their opens and locks during the grace period. A <code>hard</code> mount blocks, then carries on, and a writer holding a file open keeps writing without remounting.</p>
         </article>
         <article class="card">
           <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-target"/></svg></div>
@@ -488,7 +494,7 @@
         <div class="panel isnt">
           <h3><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Paused, deferred or known</h3>
           <ul>
-            <li><strong>SMB/NFS file shares.</strong> Paused: the Samba block deploys, but its failover has an open bug.</li>
+            <li><strong>SMB file shares.</strong> Paused: the Samba block deploys, but its failover has an open bug. NFS shares (<code>share/nfs</code>) fail over.</li>
             <li><strong>On-prem LLM subsystem.</strong> Paused; no accelerator hardware has been available to validate against.</li>
             <li><strong>TPM sealing of secrets.</strong> Deferred; secrets stay age-encrypted.</li>
             <li><strong>VM live migration and an interactive VM console.</strong> Deferred; failover is a cold restart and the guest console is the unit's journal.</li>
