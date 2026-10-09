@@ -59,7 +59,7 @@
     <div class="container">
       <div class="eyebrow">Block reference</div>
       <h1>Every block type Expanse ships.</h1>
-      <p class="lead">Expanse 1.8.0 ships twenty block types. Each page covers what the block runs, an example to start from, every configuration key with its default, how to use it, and what happens when a node fails.</p>
+      <p class="lead">Expanse 1.8.0 ships twenty-three block types. Each page covers what the block runs, an example to start from, every configuration key with its default, how to use it, and what happens when a node fails.</p>
     </div>
   </section>
 
@@ -75,6 +75,8 @@
         <li><a href="#vm">Virtual machines</a></li>
         <li><a href="#monitor">Monitoring</a></li>
         <li><a href="#dev">Developer tools</a></li>
+        <li><a href="#security">Security</a></li>
+        <li><a href="#media">Media</a></li>
         <li><a href="#util">Utilities</a></li>
         <li><a href="#ai">AI</a></li>
       </ol>
@@ -126,7 +128,10 @@
             <tr><td><a href="blocks/monitor-prometheus.html"><code>monitor/prometheus</code></a></td><td><code>pkgs.prometheus</code></td></tr>
             <tr><td><a href="blocks/monitor-grafana.html"><code>monitor/grafana</code></a></td><td><code>pkgs.grafana</code></td></tr>
             <tr><td><a href="blocks/monitor-node-exporter.html"><code>monitor/node-exporter</code></a></td><td><code>pkgs.prometheus-node-exporter</code></td></tr>
+            <tr><td><a href="blocks/monitor-uptime-kuma.html"><code>monitor/uptime-kuma</code></a></td><td><code>pkgs.uptime-kuma</code></td></tr>
             <tr><td><a href="blocks/dev-forgejo.html"><code>dev/forgejo</code></a></td><td><code>pkgs.forgejo</code></td></tr>
+            <tr><td><a href="blocks/security-vaultwarden.html"><code>security/vaultwarden</code></a></td><td><code>pkgs.vaultwarden</code> and <code>pkgs.vaultwarden.webvault</code></td></tr>
+            <tr><td><a href="blocks/media-jellyfin.html"><code>media/jellyfin</code></a></td><td><code>pkgs.jellyfin</code></td></tr>
             <tr><td><a href="blocks/util-restic-backup.html"><code>util/restic-backup</code></a></td><td><code>pkgs.restic</code></td></tr>
             <tr><td><a href="blocks/util-echo.html"><code>util/echo</code></a></td><td>None: built in</td></tr>
             <tr><td><a href="blocks/ai-ollama.html"><code>ai/ollama</code></a></td><td><code>pkgs.ollama</code></td></tr>
@@ -244,6 +249,12 @@
             <p class="card-meta">Daemonset</p>
             <a class="more" href="blocks/monitor-node-exporter.html">Configuration and usage<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
           </article>
+          <article class="card">
+            <h3><a href="blocks/monitor-uptime-kuma.html"><code>monitor/uptime-kuma</code></a></h3>
+            <p>Uptime Kuma with its monitors, history and SQLite database on a replicated volume behind a VIP.</p>
+            <p class="card-meta">Singleton on a replicated volume</p>
+            <a class="more" href="blocks/monitor-uptime-kuma.html">Configuration and usage<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          </article>
         </div>
       <h2 id="dev">Developer tools</h2>
         <div class="grid block-grid">
@@ -252,6 +263,24 @@
             <p>Forgejo with its repositories, database, SSH host key and secrets on a replicated volume behind a VIP.</p>
             <p class="card-meta">Singleton on a replicated volume</p>
             <a class="more" href="blocks/dev-forgejo.html">Configuration and usage<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          </article>
+        </div>
+      <h2 id="security">Security</h2>
+        <div class="grid block-grid">
+          <article class="card">
+            <h3><a href="blocks/security-vaultwarden.html"><code>security/vaultwarden</code></a></h3>
+            <p>Vaultwarden, a Bitwarden-compatible password manager, with its vaults and database on a replicated volume behind a VIP.</p>
+            <p class="card-meta">Singleton on a replicated volume</p>
+            <a class="more" href="blocks/security-vaultwarden.html">Configuration and usage<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          </article>
+        </div>
+      <h2 id="media">Media</h2>
+        <div class="grid block-grid">
+          <article class="card">
+            <h3><a href="blocks/media-jellyfin.html"><code>media/jellyfin</code></a></h3>
+            <p>Jellyfin with its library database and settings on a replicated volume behind a VIP, streaming media every node mounts.</p>
+            <p class="card-meta">Singleton on a replicated volume</p>
+            <a class="more" href="blocks/media-jellyfin.html">Configuration and usage<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
           </article>
         </div>
       <h2 id="util">Utilities</h2>
