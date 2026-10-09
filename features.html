@@ -53,6 +53,7 @@
     <nav class="site-nav" id="site-nav" data-nav aria-label="Main">
       <a href="features.html" aria-current="page">Features</a>
       <a href="docs/getting-started.html">Get started</a>
+      <a href="docs/blocks.html">Blocks</a>
       <a href="download.html">Download</a>
       <a href="download.html#changelog">Changelog</a>
     </nav>
@@ -216,7 +217,7 @@
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Self-healing.</strong> A node silent past the 30 s grace has its placements retired and rescheduled under the same rules. A replica with storage moves only when another node holds a healthy copy of its volume; otherwise it keeps its place and restarts when its node returns. A replica that keeps failing its liveness probe is restarted in place with a growing pause between tries; after five restarts it moves to another node, and if it fails there too it is stopped rather than cycled through the cluster.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Readiness that steers traffic.</strong> Each node runs the <code>tcp</code> and <code>http</code> readiness probes of the replicas it hosts. The VIP load balancer and DNS stop sending traffic to a replica whose probe fails, and a new replica is not <code>RUNNING</code> until its probe passes.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Sandboxed.</strong> Units run with <code>DynamicUser</code>, <code>ProtectSystem=strict</code>, <code>PrivateTmp</code> and friends; config is validated against the type's JSON Schema before anything is written.</span></li>
-          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Twenty shipped types.</strong> <code>util/echo</code>, <code>web/nginx</code>, <code>web/static-site</code>, <code>web/whoami</code>, <code>web/caddy</code>, <code>net/haproxy</code>, <code>dev/forgejo</code>, <code>db/redis</code>, <code>db/postgres</code>, <code>db/mariadb</code>, <code>monitor/node-exporter</code>, <code>monitor/prometheus</code>, <code>monitor/grafana</code>, <code>ai/ollama</code>, <code>share/smb</code>, <code>share/nfs</code>, <code>storage/s3</code>, <code>iscsi/target</code>, <code>vm/instance</code>, <code>util/restic-backup</code>. A new type is four files plus one flake entry.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Twenty shipped types.</strong> <a href="docs/blocks/util-echo.html"><code>util/echo</code></a>, <a href="docs/blocks/web-nginx.html"><code>web/nginx</code></a>, <a href="docs/blocks/web-static-site.html"><code>web/static-site</code></a>, <a href="docs/blocks/web-whoami.html"><code>web/whoami</code></a>, <a href="docs/blocks/web-caddy.html"><code>web/caddy</code></a>, <a href="docs/blocks/net-haproxy.html"><code>net/haproxy</code></a>, <a href="docs/blocks/dev-forgejo.html"><code>dev/forgejo</code></a>, <a href="docs/blocks/db-redis.html"><code>db/redis</code></a>, <a href="docs/blocks/db-postgres.html"><code>db/postgres</code></a>, <a href="docs/blocks/db-mariadb.html"><code>db/mariadb</code></a>, <a href="docs/blocks/monitor-node-exporter.html"><code>monitor/node-exporter</code></a>, <a href="docs/blocks/monitor-prometheus.html"><code>monitor/prometheus</code></a>, <a href="docs/blocks/monitor-grafana.html"><code>monitor/grafana</code></a>, <a href="docs/blocks/ai-ollama.html"><code>ai/ollama</code></a>, <a href="docs/blocks/share-smb.html"><code>share/smb</code></a>, <a href="docs/blocks/share-nfs.html"><code>share/nfs</code></a>, <a href="docs/blocks/storage-s3.html"><code>storage/s3</code></a>, <a href="docs/blocks/iscsi-target.html"><code>iscsi/target</code></a>, <a href="docs/blocks/vm-instance.html"><code>vm/instance</code></a>, <a href="docs/blocks/util-restic-backup.html"><code>util/restic-backup</code></a>. A new type is four files plus one flake entry. The <a href="docs/blocks.html">block reference</a> covers each type's configuration and usage.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>A Git forge that fails over.</strong> <code>dev/forgejo</code> keeps repositories, its database, the SSH host key and its secrets on a replicated volume behind a VIP serving HTTP and SSH. After a failover users reconnect to the same address and host key, stay logged in, and find every acknowledged push.</span></li>
         </ul>
       </div>
@@ -466,32 +467,32 @@
       <div class="grid" style="grid-template-columns:repeat(auto-fit, minmax(min(100%, 400px), 1fr))">
         <article class="card">
           <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-db"/></svg></div>
-          <h3><code>db/postgres</code></h3>
+          <h3><a href="docs/blocks/db-postgres.html"><code>db/postgres</code></a></h3>
           <p>Each replica runs on its own node with its own volume; PostgreSQL streaming replication is the redundancy. A lease-gated controller picks the primary, standbys clone from it with <code>pg_basebackup</code>, and on primary loss a survivor is promoted live with <code>pg_promote()</code> — no restart. A primary cut off by a partition rejoins as a standby once the network heals. Clients use one VIP routed to the primary only.</p>
         </article>
         <article class="card">
           <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-rows"/></svg></div>
-          <h3><code>db/mariadb</code></h3>
+          <h3><a href="docs/blocks/db-mariadb.html"><code>db/mariadb</code></a></h3>
           <p>One MariaDB server whose whole datadir sits on a replicated volume behind a VIP. InnoDB syncs its redo log on every commit, so when the serving node fails the server restarts on a survivor, runs crash recovery on the same data, and every commit a client saw acknowledged is still there. The root password, database and application account are set from the block's config on every start.</p>
         </article>
         <article class="card">
           <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-disk"/></svg></div>
-          <h3><code>share/nfs</code></h3>
+          <h3><a href="docs/blocks/share-nfs.html"><code>share/nfs</code></a></h3>
           <p>One NFSv4.1/4.2 export of a replicated volume, served by NFS-Ganesha behind a stable VIP. Its client-recovery records live on the volume, so when the serving node fails the export moves with the data and clients reclaim their opens and locks during the grace period. A <code>hard</code> mount blocks, then carries on, and a writer holding a file open keeps writing without remounting.</p>
         </article>
         <article class="card">
           <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-bucket"/></svg></div>
-          <h3><code>storage/s3</code></h3>
+          <h3><a href="docs/blocks/storage-s3.html"><code>storage/s3</code></a></h3>
           <p>An S3-compatible object store on Garage, with its metadata, objects and keys on a replicated volume behind a VIP. It creates the configured access key and buckets on start. Garage syncs each object before acknowledging it, so after a failover the survivor is the same Garage node with the same buckets, and clients retry against the same endpoint and key.</p>
         </article>
         <article class="card">
           <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-target"/></svg></div>
-          <h3><code>iscsi/target</code></h3>
+          <h3><a href="docs/blocks/iscsi-target.html"><code>iscsi/target</code></a></h3>
           <p>One raw DRBD-backed volume exported as a single LUN through LIO. The block is a singleton colocated with the volume's primary and exposed at a stable VIP; when its node fails the VIP moves with the new primary and the initiator's own session recovery reconnects to the same portal address.</p>
         </article>
         <article class="card">
           <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-vm"/></svg></div>
-          <h3><code>vm/instance</code></h3>
+          <h3><a href="docs/blocks/vm-instance.html"><code>vm/instance</code></a></h3>
           <p>A QEMU/KVM guest on a raw replicated disk, scheduled only to nodes with hardware virtualization, with a MAC pinned from the block's name so it comes back at the same address. It counts as <code>RUNNING</code> only once the guest reports over vsock that it has booted. Node loss means a cold boot elsewhere — the guest's filesystem was verified intact under sustained fsync load through the kill. There is no live migration. A prebuilt guest image runs the Pando app platform this way, and Pando and its apps come back on a survivor.</p>
         </article>
       </div>
@@ -516,7 +517,7 @@
             <li><strong>iSCSI persistent reservations across failover.</strong> Deferred; the target on the new node starts with no registered keys, so a workload that relies on SCSI reservations sees them lost.</li>
             <li><strong>Block secrets.</strong> A block that lists <code>spec.secrets</code> is refused until they can be stored and delivered.</li>
             <li><strong>Alertmanager routing and scheduled backups of node state.</strong> Left to the operator by design; volume backups are scheduled by <code>util/restic-backup</code>.</li>
-            <li><strong>Binary-backed block types on installed nodes.</strong> Types such as nginx, redis, <code>web/caddy</code>, <code>net/haproxy</code>, <code>dev/forgejo</code>, <code>share/nfs</code>, <code>storage/s3</code>, <code>db/mariadb</code>, <code>monitor/prometheus</code>, <code>monitor/grafana</code> and <code>util/restic-backup</code> need their program on the node's <code>PATH</code>, which an installed node does not yet ship; add the package (for example <code>pkgs.garage</code> for S3) to <code>environment.systemPackages</code>. <code>util/echo</code> runs.</li>
+            <li><strong>Block programs on installed nodes.</strong> Every block type except <code>util/echo</code>, <code>web/whoami</code> and <code>web/static-site</code> runs an upstream program, such as <code>postgres</code> or <code>caddy</code>, that an installed node does not ship; add its package to <code>environment.systemPackages</code> on each node that may run the block. The <a href="docs/blocks.html#packages">block reference</a> lists the package for every type.</li>
             <li><strong>Real-hardware validation.</strong> Automated tests run on QEMU/KVM. The old-laptop, mini-PC, server and ARM targets in the hardware matrix are marked untested, and idle CPU with a replicated volume attached has not been measured on bare metal.</li>
           </ul>
         </div>
@@ -562,6 +563,7 @@
           <li><a href="docs/getting-started.html#cluster">Form a cluster</a></li>
           <li><a href="docs/getting-started.html#web-ui">Open the web UI</a></li>
           <li><a href="docs/getting-started.html#next">Volumes and blocks</a></li>
+          <li><a href="docs/blocks.html">Block reference</a></li>
         </ul>
       </div>
       <div>

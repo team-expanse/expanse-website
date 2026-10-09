@@ -36,6 +36,7 @@
     <nav class="site-nav" id="site-nav" data-nav aria-label="Main">
       <a href="../features.html">Features</a>
       <a href="getting-started.html" aria-current="page">Get started</a>
+      <a href="blocks.html">Blocks</a>
       <a href="../download.html">Download</a>
       <a href="../download.html#changelog">Changelog</a>
     </nav>
@@ -200,7 +201,7 @@
       <p>A volume without an explicit <code>--replication</code> takes its class's target (3 by default) and is placed on as many eligible nodes as exist; it reads <code>underreplicated</code> until the target is met and gains replicas automatically as nodes join.</p>
 
       <h3>Deploy a block</h3>
-      <p>Blocks are services described in YAML and run as systemd units. <code>util/echo</code> is the shipped test workload and runs on a fresh install; other types are listed with <code>expanse ctl catalog list</code>.</p>
+      <p>Blocks are services described in YAML and run as systemd units. <code>util/echo</code> is the shipped test workload and runs on a fresh install; other types are listed with <code>expanse ctl catalog list</code>, and the <a href="blocks.html">block reference</a> covers each one's configuration and usage.</p>
       <div class="code"><div class="code-title">echo.yaml</div><pre><span class="k">apiVersion</span>: expanse.io/v1
 <span class="k">kind</span>: Block
 <span class="k">metadata</span>:
@@ -271,6 +272,7 @@
           <li><a href="getting-started.html#cluster">Form a cluster</a></li>
           <li><a href="getting-started.html#web-ui">Open the web UI</a></li>
           <li><a href="getting-started.html#next">Volumes and blocks</a></li>
+          <li><a href="blocks.html">Block reference</a></li>
         </ul>
       </div>
       <div>

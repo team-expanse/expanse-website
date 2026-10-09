@@ -28,6 +28,9 @@ SHOTS = [
     ("features-desktop.png", "/features.html", 1440, "dark"),
     ("getting-started-desktop.png", "/docs/getting-started.html", 1440, "light"),
     ("download-desktop.png", "/download.html", 1440, "dark"),
+    ("blocks-desktop.png", "/docs/blocks.html", 1440, "light"),
+    ("block-page-desktop.png", "/docs/blocks/db-postgres.html", 1440, "dark"),
+    ("block-page-mobile.png", "/docs/blocks/net-haproxy.html", 390, "dark"),
 ]
 
 

@@ -12,6 +12,8 @@ requests, works opened straight from disk.
 | `index.html` | Landing page: hero, mock web console and tty1 host console, feature grid, how it works, CLI showcase, honest comparison, CTA |
 | `features.html` | Every shipped capability in depth, plus what is deliberately not built yet |
 | `docs/getting-started.html` | Quickstart derived from the project's `docs/INSTALL.md` |
+| `docs/blocks.html` | Block reference: the fields every block shares, the package each type needs, and a card per type |
+| `docs/blocks/<category>-<name>.html` | One page per shipped block type: example, configuration, usage, failover, limits |
 | `download.html` | Latest release (1.7.0), build-from-source, requirements, changelog, known issues |
 | `assets/site.css` | The whole design system: tokens, light/dark themes, components |
 | `assets/site.js` | Theme toggle, mobile nav, copy buttons, scroll reveal, TOC highlight |
@@ -19,6 +21,7 @@ requests, works opened straight from disk.
 | `assets/logo.svg` | Favicon / mark |
 | `tools/screenshots.py` | Serves the site and captures review screenshots with Playwright |
 | `tools/sync-release` | Release hook: syncs the site to a new Expanse release (see below) |
+| `tools/blocks_check.py` | Checks the block pages against the block types a release ships |
 | `screenshots/` | The captured PNGs |
 | `CNAME` | The custom domain GitHub Pages serves the site on |
 
@@ -58,7 +61,10 @@ directory's `release.json` and `notes.md` and:
 - refreshes the hero badge, the release card (summary, date, ISO size and SHA-256)
   and the download link;
 - adds the release notes as the new latest changelog entry;
-- commits the result as `release: sync site to <version>`.
+- commits the result as `release: sync site to <version>`;
+- warns, without failing, when the block pages no longer match the release:
+  a shipped type with no page or catalog link, a page for a type that is gone,
+  or a config table whose keys differ from the type's `schema.json` at the tag.
 
 Re-running it for an unchanged release changes nothing; if the notes or ISO
 changed, it refreshes them. It refuses to commit over
@@ -68,6 +74,11 @@ for review. It does not push.
 ```sh
 python3 -m unittest discover -s tools   # the hook's tests
 ```
+
+A warning means a page needs writing or editing by hand. Each config table row
+carries `data-key="<key>"`, which is what the check compares. Write defaults
+from the block's runtime (`cmd/expanse-block-run`), not from `defaults.yaml`,
+which Expanse does not apply.
 
 ## Theming
 
