@@ -21,3 +21,5 @@ except (release_sync.SyncError, OSError, ValueError) as e:
     sys.exit(f"sync-release: {e}")
 version = release_sync.site_version(site)
 print(f"sync-release: site at {version}; " + (f"updated {', '.join(changed)}" if changed else "already up to date"))
+for problem in release_sync.block_problems(site, args.release_dir, version):
+    print(f"sync-release: warning: block pages: {problem}", file=sys.stderr)

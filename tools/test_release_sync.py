@@ -143,6 +143,23 @@ class ReleaseCard(unittest.TestCase):
         self.assertIn("about 1.65 GB", rs.update_release_details(self.CARD + history, rel))
 
 
+class SiteFiles(unittest.TestCase):
+    def test_include_the_block_pages(self):
+        with tempfile.TemporaryDirectory() as t:
+            site = Path(t)
+            (site / "docs" / "blocks").mkdir(parents=True)
+            for f in ("docs/blocks.html", "docs/blocks/web-nginx.html", "docs/blocks/db-redis.html"):
+                (site / f).write_text("")
+            self.assertEqual(rs.site_files(site)[-3:], ["docs/blocks.html", "docs/blocks/db-redis.html", "docs/blocks/web-nginx.html"])
+            self.assertEqual(rs.site_files(site)[:len(rs.SITE_FILES)], rs.SITE_FILES)
+
+
+class BlockProblems(unittest.TestCase):
+    def test_none_without_an_expanse_checkout(self):
+        with tempfile.TemporaryDirectory() as t:
+            self.assertEqual(rs.block_problems(Path(t), write_release(Path(t)), "1.1.7"), [])
+
+
 class EndToEnd(unittest.TestCase):
     def make_site(self, root: Path) -> None:
         (root / "docs").mkdir()

@@ -6,7 +6,16 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
+import blocks_check
+
 SITE_FILES = ["index.html", "features.html", "download.html", "docs/getting-started.html", "README.md"]
+
+
+def site_files(site: Path) -> list:
+    """The fixed site files, then the block catalog and block pages that exist."""
+    blocks = [blocks_check.CATALOG] if (site / blocks_check.CATALOG).exists() else []
+    blocks += sorted(str(p.relative_to(site)) for p in (site / "docs" / "blocks").glob("*.html"))
+    return SITE_FILES + blocks
 
 
 class SyncError(Exception):
@@ -172,11 +181,12 @@ def _git(site: Path, *args: str, git_config=()) -> str:
 def sync(site: Path, release_dir: Path, commit: bool = True, git_config=()) -> list:
     """Update the site for the release and return the files changed; commit them if asked (needs clean site files)."""
     rel, old = load_release(release_dir), site_version(site)
-    dirty = commit and _git(site, "status", "--porcelain", "--", *SITE_FILES).strip()
+    files = site_files(site)
+    dirty = commit and _git(site, "status", "--porcelain", "--", *files).strip()
     if dirty:
         raise SyncError(f"uncommitted changes in site files; commit or stash them first:\n{dirty}")
     changed = []
-    for name in SITE_FILES:
+    for name in files:
         path = site / name
         before = path.read_text()
         after = update_release_details(bump_version(before, old, rel.version), rel)
@@ -189,3 +199,11 @@ def sync(site: Path, release_dir: Path, commit: bool = True, git_config=()) -> l
         _git(site, "add", "--", *changed)
         _git(site, "commit", "-q", "-m", f"release: sync site to {rel.version}", git_config=git_config)
     return changed
+
+
+def block_problems(site: Path, release_dir: Path, version: str) -> list:
+    """Block-page mismatches against the release's tag, when release_dir sits in an Expanse checkout."""
+    repo = release_dir.resolve().parent.parent
+    if not (repo / ".git").exists():
+        return []
+    return blocks_check.check(site, repo, "v" + version)
