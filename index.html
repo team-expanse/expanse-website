@@ -216,6 +216,7 @@
           <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Vaultwarden</span>
           <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Jellyfin</span>
           <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Uptime Kuma</span>
+          <span class="part"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Immich</span>
         </div>
       </div>
     </div>
@@ -374,7 +375,7 @@
 
 <span class="p">$ </span><span class="cmd">expanse doctor storage --vg expanse</span>
 <span class="out">CHECK           STAT  DETAIL</span>
-<span class="out">drbd-module     <span class="ok">PASS</span>  loaded, version 9.2.14</span>
+<span class="out">drbd-module     <span class="ok">PASS</span>  loaded, version 9.2.16</span>
 <span class="out">volume-group    <span class="ok">PASS</span>  expanse: 41.3% free of 943718400000 bytes</span>
 <span class="out">thin-pools      <span class="ok">PASS</span>  1 pool(s) healthy: pool</span>
 <span class="out">system-mirror   <span class="ok">PASS</span>  md md127 RAID1 across 2 devices</span>
@@ -440,7 +441,7 @@
             <tr><td>File shares</td><td>NFS-Ganesha</td><td>An export that fails over with its volume, with lock reclaim across the move</td></tr>
             <tr><td>Object storage</td><td>Garage</td><td>An S3 endpoint whose objects, buckets and keys fail over with its volume</td></tr>
             <tr><td>Databases</td><td>PostgreSQL, MariaDB</td><td>Live standby promotion for Postgres; a MariaDB that recovers on a survivor with every acknowledged commit</td></tr>
-            <tr><td>Self-hosted apps</td><td>Vaultwarden, Jellyfin, Uptime Kuma</td><td>A password vault, media server and status monitor whose SQLite databases sync every commit and fail over with their volume</td></tr>
+            <tr><td>Self-hosted apps</td><td>Vaultwarden, Jellyfin, Uptime Kuma, Immich</td><td>A password vault, media server, status monitor and photo library whose databases sync every commit and fail over with their volume</td></tr>
             <tr><td>Backup and metrics</td><td>restic, Prometheus, Grafana</td><td>Consistent snapshot paths, scheduled volume backups that follow failover, one-command restore, shipped rules and dashboard</td></tr>
           </tbody>
         </table>

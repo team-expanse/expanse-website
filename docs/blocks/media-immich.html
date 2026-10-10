@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>media/immich block — Expanse</title>
+  <meta name="description" content="The media/immich block: Immich with its uploads, Postgres database and job queue on a replicated volume behind a VIP. Configuration, an example, usage and failover behaviour.">
+  <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script>
+    try { var t = localStorage.getItem("expanse-theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+  </script>
+</head>
+<body>
+<svg class="sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-logo" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#1f6feb" stroke="none"/><path d="M16 6 7 11v10l9 5 9-5V11z" fill="none" stroke="#fff" stroke-width="2"/><path d="M16 26V16M7 11l9 5 9-5" fill="none" stroke="#fff" stroke-width="2"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+</svg>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="../../index.html" aria-label="Expanse home">
+      <svg class="brand-mark" aria-hidden="true"><use href="#i-logo"/></svg>
+      <span>Expanse</span>
+      <span class="brand-version">1.9.0</span>
+    </a>
+    <nav class="site-nav" id="site-nav" data-nav aria-label="Main">
+      <a href="../../features.html">Features</a>
+      <a href="../../docs/getting-started.html">Get started</a>
+      <a href="../blocks.html" aria-current="page">Blocks</a>
+      <a href="../../download.html">Download</a>
+      <a href="../../download.html#changelog">Changelog</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">
+        <svg class="icon icon-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+        <svg class="icon icon-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+      </button>
+      <a class="btn btn-primary header-cta" href="../../download.html">Download</a>
+      <button class="icon-btn menu-btn" type="button" data-nav-toggle aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+        <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="page-hero" style="padding-bottom:0">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container">
+      <div class="eyebrow"><a href="../blocks.html">Blocks</a> · Media</div>
+      <h1><code>media/immich</code></h1>
+      <p class="lead">Immich photo and video library. Immich with its uploads, Postgres database and job queue on a replicated volume behind a VIP.</p>
+    </div>
+  </section>
+
+  <div class="container docs">
+    <aside class="toc" aria-label="On this page">
+      <h4>On this page</h4>
+      <ol>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#example">Example</a></li>
+        <li><a href="#configuration">Configuration</a></li>
+        <li><a href="#usage">Using it</a></li>
+        <li><a href="#failover">When a node fails</a></li>
+        <li><a href="#limits">Limits</a></li>
+        <li><a href="#source">Source</a></li>
+      </ol>
+    </aside>
+
+    <article class="prose">
+      <h2 id="overview">Overview</h2>
+      <p>Runs Immich, a photo and video library with mobile backup, albums, sharing and, with machine learning, smart search and face recognition. The block is a singleton that runs where its volume's primary is, behind a VIP. It runs Immich's whole stack itself, with every piece's state on the one volume: a private Postgres 18 with the VectorChord extension, reachable only over a Unix socket; Redis for Immich's job queue; the optional machine-learning service on loopback; and the Immich server. The volume holds the uploads, thumbnails and transcoded videos, the database, the job queue and the downloaded models.</p>
+<div class="code"><div class="code-title">configuration.nix</div><pre>environment.systemPackages = [
+  pkgs.immich
+  pkgs.immich.machine-learning  <span class="cm"># unless machineLearning is false</span>
+  pkgs.redis
+  (pkgs.postgresql_18.withPackages (ps: [ ps.pgvector ps.vectorchord ]))
+];</pre></div>
+<p>That Postgres package is a superset of <code>pkgs.postgresql_18</code>, so <a href="db-postgres.html"><code>db/postgres</code></a> blocks on the same node keep working with it; ship it in place of <code>pkgs.postgresql_18</code>, not beside it. The block refuses to start, naming the package, when the <code>postgres</code> on the node lacks VectorChord.</p>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><div><p>Open <code>http://&lt;VIP&gt;/</code> right after deploying: until the administrator account is created, anyone who reaches Immich can create it.</p></div></div>
+<dl class="kv">
+  <div><dt>Shape</dt><dd>Singleton on a replicated volume</dd></div>
+  <div><dt>Reached at</dt><dd>VIP on HTTP</dd></div>
+  <div><dt>Node package</dt><dd><code>pkgs.immich</code>, <code>pkgs.immich.machine-learning</code>, <code>pkgs.redis</code> and Postgres 18 with VectorChord</dd></div>
+</dl>
+<p>Each node that may run it needs <code>pkgs.immich</code>, <code>pkgs.immich.machine-learning</code>, <code>pkgs.redis</code> and Postgres 18 with VectorChord in <code>environment.systemPackages</code>, in the node's NixOS configuration (<code>/persist/etc/nixos</code>); an installed node does not ship it. The block's unit finds the program on the node's system profile.</p>
+
+      <h2 id="example">Example</h2>
+      <div class="code"><div class="code-title">immich.yaml</div><pre><span class="k">apiVersion</span>: expanse.io/v1
+<span class="k">kind</span>: Block
+<span class="k">metadata</span>:
+  <span class="k">name</span>: photos
+  <span class="k">namespace</span>: default
+<span class="k">spec</span>:
+  <span class="k">type</span>: media/immich
+  <span class="k">replicas</span>: 1
+  <span class="k">strategy</span>:
+    <span class="k">kind</span>: SINGLETON
+  <span class="k">resources</span>:
+    <span class="k">requests</span>:
+      <span class="k">cpu</span>: <span class="s">"2"</span>
+      <span class="k">memory</span>: 4Gi
+  <span class="k">storage</span>:
+    - <span class="k">name</span>: immich-data
+      <span class="k">size</span>: 500Gi
+      <span class="k">replication</span>: 3
+      <span class="k">mountPath</span>: /var/lib/immich
+  <span class="k">network</span>:
+    <span class="k">ports</span>:
+      - <span class="k">name</span>: http
+        <span class="k">port</span>: 80
+        <span class="k">target_port</span>: 2283
+        <span class="k">protocol</span>: tcp
+        <span class="k">expose</span>: EXPOSE_VIP
+    <span class="k">health_check</span>:
+      <span class="k">readiness</span>:
+        <span class="k">type</span>: PROBE_TCP
+        <span class="k">port</span>: 2283
+        <span class="k">period_seconds</span>: 2</pre></div>
+<p>Size the volume for the library: the originals, plus thumbnails and transcoded videos (roughly a further 10 to 20 percent), plus the database.</p>
+<div class="code"><pre><span class="p">$ </span><span class="cmd">expanse ctl block apply -f immich.yaml --dry-run</span>   <span class="cm"># validate only</span>
+<span class="p">$ </span><span class="cmd">expanse ctl block apply -f immich.yaml</span></pre></div>
+
+      <h2 id="configuration">Configuration</h2>
+      <p>Everything else (users, libraries, storage template, job settings) is set in Immich's web UI and kept in its database on the volume.</p>
+<p>Keys go under <code>spec.config</code> and are checked against the type's JSON Schema when the block is applied. A default is what the block uses when the key is unset.</p>
+<div class="table-wrap">
+        <table class="t config" data-block="media/immich">
+          <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr data-key="port"><td><code>port</code></td><td><code>2283</code></td><td>Immich's HTTP port, the <code>target_port</code> of 80.</td></tr>
+            <tr data-key="machineLearning"><td><code>machineLearning</code></td><td><code>true</code></td><td>Run Immich's machine-learning service for smart search, face recognition and OCR, on <code>127.0.0.1:3003</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="usage">Using it</h2>
+      <p>Point a name at the block's VIP (<code>expanse ctl block get photos</code>) and create the administrator. The mobile apps want HTTPS: put a <a href="web-caddy.html"><code>web/caddy</code></a> block in front and point it at this block's VIP.</p>
+<p>On first start, Immich imports its reverse-geocoding data into the database before it runs any job; that took 140 seconds in Expanse's VM test. Uploads are accepted meanwhile and processed afterwards.</p>
+<p>The machine-learning service downloads its models from Hugging Face the first time each is used and keeps them on the volume, so nodes need internet access for it. With <code>machineLearning: false</code>, also turn machine learning off in <em>Administration → Settings → Machine Learning</em>, or every new photo logs a failed job.</p>
+
+      <h2 id="failover">When a node fails</h2>
+      <p>When the serving node dies, the block, its volume's primary and its VIP move together to a survivor, and Immich starts there on the same volume. Uploads and browsing pause until it is back; the address stays the same, and the apps stay signed in, because sessions are in the database.</p>
+<p>Nothing Immich acknowledged is lost. Immich syncs each upload before the database records it, and the block starts Postgres with <code>fsync</code>, <code>synchronous_commit</code> and <code>full_page_writes</code> on its command line, so a stray setting cannot turn them off. Thumbnails, metadata, transcoding and machine learning run as jobs queued in Redis, which the block runs with <code>appendfsync always</code>: a job queued before an upload was acknowledged runs on the survivor. In Expanse's three-node VM test, with 20 uploads' jobs still queued when the serving node was killed, Immich answered on a survivor about two minutes later with all 21 photos byte for byte, and every queued job ran.</p>
+
+      <h2 id="limits">Limits</h2>
+      <ul>
+<li>One Immich at a time: it keeps its state in one database on one volume.</li>
+<li>No external database or Redis: the block always runs its own, on its volume.</li>
+<li>No hardware-accelerated transcoding or machine learning: no GPU is passed to the block.</li>
+<li>External libraries on other storage do not fail over with the block; only what is on the volume does.</li>
+<li>No HTTPS inside the block; use <code>web/caddy</code> in front.</li>
+<li>Failover with machine learning running is untested: the VM test runs without it.</li>
+<li>Backups are separate: back up the volume with <a href="util-restic-backup.html"><code>util/restic-backup</code></a>.</li>
+</ul>
+
+      <h2 id="source">Source</h2>
+      <ul>
+<li><a href="https://github.com/team-expanse/expanse/blob/v1.9.0/docs/IMMICH.md">docs/IMMICH.md</a>: the Expanse guide this page follows.</li>
+<li><a href="https://github.com/team-expanse/expanse/tree/v1.9.0/nix/blocks/media/immich">nix/blocks/media/immich</a>: the type's identity and JSON Schema.</li>
+</ul>
+<p><a href="../blocks.html">All block types</a> · <a href="../blocks.html#fields">Fields every block shares</a></p>
+    </article>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="../../index.html" aria-label="Expanse home"><svg class="brand-mark" aria-hidden="true"><use href="#i-logo"/></svg><span>Expanse</span></a>
+        <p style="margin-top:0.9rem;max-width:34ch">A NixOS-based cluster operating system for small fleets of ordinary machines.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="../../features.html">Features</a></li>
+          <li><a href="../../download.html">Download</a></li>
+          <li><a href="../../download.html#changelog">Changelog</a></li>
+          <li><a href="../../download.html#requirements">Requirements</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Docs</h4>
+        <ul>
+          <li><a href="../getting-started.html">Getting started</a></li>
+          <li><a href="../getting-started.html#cluster">Form a cluster</a></li>
+          <li><a href="../getting-started.html#web-ui">Open the web UI</a></li>
+          <li><a href="../getting-started.html#next">Volumes and blocks</a></li>
+          <li><a href="../blocks.html">Block reference</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Project</h4>
+        <ul>
+          <li><a href="../../download.html#source">Build from source</a></li>
+          <li><a href="../../features.html#not-yet">What is not built yet</a></li>
+          <li><a href="https://github.com/team-expanse/expanse">Source on GitHub</a></li>
+          <li><a href="https://github.com/team-expanse/expanse/blob/main/LICENSE">Apache License 2.0</a></li>
+          <li><a href="../../download.html#known-issues">Known issues</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="made-with">Expanse and this site are a joint human–AI effort: built by a human maintainer working with AI coding assistants. <a href="../../index.html#made-with-ai">How Expanse is made</a></p>
+      <span>Expanse 1.9.0 · Apache License 2.0 · Versions follow Semantic Versioning.</span>
+      <span>This site makes no external requests. Fonts: Inter and JetBrains Mono (OFL).</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/site.js" defer></script>
+</body>
+</html>

@@ -80,12 +80,13 @@
     <article class="prose">
       <h2 id="overview">Overview</h2>
       <p>Runs Grafana with the <code>expanse-prometheus</code> datasource pointing at <code>prometheusUrl</code> and Expanse's cluster-health dashboard provisioned: node health, resource health, volume health, quorum, and per-node degraded and unreachable flags. With a storage entry, Grafana's database and plugins live on the volume.</p>
+<p>Grafana 13.2 no longer includes its Prometheus datasource, so nodes also need Expanse's <code>packages.grafana-plugins</code> flake output (<code>nix/grafana-plugins.nix</code>, which ships <code>grafanaPlugins.prometheus</code>). The block links the shipped plugins into Grafana's plugin directory on every start; plugins installed through Grafana's UI stay as they are.</p>
 <dl class="kv">
   <div><dt>Shape</dt><dd>Singleton on a replicated volume</dd></div>
   <div><dt>Reached at</dt><dd>Node port, or a VIP</dd></div>
-  <div><dt>Node package</dt><dd><code>pkgs.grafana</code></dd></div>
+  <div><dt>Node package</dt><dd><code>pkgs.grafana</code> and Expanse's <code>packages.grafana-plugins</code></dd></div>
 </dl>
-<p>Each node that may run it needs <code>pkgs.grafana</code> in <code>environment.systemPackages</code>, in the node's NixOS configuration (<code>/persist/etc/nixos</code>); an installed node does not ship it. The block's unit finds the program on the node's system profile.</p>
+<p>Each node that may run it needs <code>pkgs.grafana</code> and Expanse's <code>packages.grafana-plugins</code> in <code>environment.systemPackages</code>, in the node's NixOS configuration (<code>/persist/etc/nixos</code>); an installed node does not ship it. The block's unit finds the program on the node's system profile.</p>
 
       <h2 id="example">Example</h2>
       <div class="code"><div class="code-title">grafana.yaml</div><pre><span class="k">apiVersion</span>: expanse.io/v1
