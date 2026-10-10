@@ -14,7 +14,7 @@ requests, works opened straight from disk.
 | `docs/getting-started.html` | Quickstart derived from the project's `docs/INSTALL.md` |
 | `docs/blocks.html` | Block reference: the fields every block shares, the package each type needs, and a card per type |
 | `docs/blocks/<category>-<name>.html` | One page per shipped block type: example, configuration, usage, failover, limits |
-| `download.html` | Latest release (1.8.0), build-from-source, requirements, changelog, known issues |
+| `download.html` | Latest release (1.9.0), build-from-source, requirements, changelog, known issues |
 | `assets/site.css` | The whole design system: tokens, light/dark themes, components |
 | `assets/site.js` | Theme toggle, mobile nav, copy buttons, scroll reveal, TOC highlight |
 | `assets/fonts/` | Self-hosted Inter and JetBrains Mono (OFL; licences alongside) |
@@ -29,7 +29,7 @@ Every page carries its own copy of the header, footer and inline SVG icon sprite
 so pages stay self-contained and there is nothing to assemble.
 
 The download button points at the GitHub release asset
-(`https://github.com/team-expanse/expanse/releases/download/v1.8.0/expanse-1.8.0-x86_64-linux.iso`).
+(`https://github.com/team-expanse/expanse/releases/download/v1.9.0/expanse-1.9.0-x86_64-linux.iso`).
 The release hook below keeps it, and every other version mention, current.
 
 ## Preview
