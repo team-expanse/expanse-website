@@ -131,6 +131,7 @@
             <tr data-key="bootInitrd"><td><code>bootInitrd</code></td><td>none</td><td>The initramfs for <code>bootKernel</code>.</td></tr>
             <tr data-key="bootCmdline"><td><code>bootCmdline</code></td><td>none</td><td>Kernel command line, used with <code>bootKernel</code>.</td></tr>
             <tr data-key="guestReady"><td><code>guestReady</code></td><td><code>systemd</code></td><td>When the VM counts as <code>RUNNING</code>. <code>systemd</code>: once the guest's systemd (254 or newer) reports over vsock that it reached <code>multi-user.target</code>. <code>none</code>: as soon as QEMU starts, for guests without systemd.</td></tr>
+            <tr data-key="cpuModel"><td><code>cpuModel</code></td><td>qemu's default</td><td>The guest's CPU model. <code>host</code> passes the node's CPU through, including <code>vmx</code>/<code>svm</code>, so the guest can run KVM itself (nested virtualization). <code>host</code> is the only value accepted.</td></tr>
           </tbody>
         </table>
       </div>
@@ -151,6 +152,7 @@
 <li>No live migration.</li>
 <li>No interactive console; the serial console is read-only through the journal.</li>
 <li>Liveness probes are not run for VMs.</li>
+<li>A <code>cpuModel: host</code> guest is tied to its node's CPU features; keep its candidate nodes on the same CPU generation.</li>
 <li>Validated guest: a minimal NixOS image. Other operating systems are unverified.</li>
 </ul>
 
