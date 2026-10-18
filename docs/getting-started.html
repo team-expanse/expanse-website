@@ -158,7 +158,7 @@
 <span class="p">$ </span><span class="cmd">systemctl start expansed</span>
 <span class="p">$ </span><span class="cmd">expanse cluster status</span>
 <span class="out">cluster:   expanse (5c0b3e2a-…)</span>
-<span class="out">version:   1.10.1</span>
+<span class="out">formed with: 1.10.1</span>
 <span class="out">generation: 1</span>
 <span class="out">leader:    n1</span>
 <span class="out">quorum:    <span class="ok">1/1</span></span>
@@ -191,7 +191,7 @@
 
       <h2 id="next">8. Volumes and blocks</h2>
       <h3>Enable replicated volumes</h3>
-      <p>Replicated volumes need the DRBD kernel module and a thin pool, so they are an explicit opt-in. Add to the node's NixOS configuration (<code>/persist/etc/nixos</code>) and rebuild, then create the pool once per node — its size is a capacity decision, so it is not inferred:</p>
+      <p>Replicated volumes need the DRBD kernel module and a thin pool, so they are an explicit opt-in. Add to the node's NixOS configuration (<code>/etc/nixos/configuration.nix</code>, kept in <code>/persist/etc/nixos</code>), run <code>nixos-rebuild switch</code> and <strong>reboot</strong>: a switch can only load the kernel's in-tree DRBD 8.4, and until the reboot <code>expansed</code> refuses to create volumes. Create the pool once per node, before or after the reboot — its size is a capacity decision, so it is not inferred:</p>
       <div class="code"><div class="code-title">configuration.nix</div><pre><span class="k">expanse.agent.storageVG</span> = <span class="s">"expanse"</span>;
 <span class="k">expanse.agent.storagePool</span> = <span class="s">"pool"</span>;   <span class="cm"># empty = thick volumes, no snapshots</span></pre></div>
       <div class="code"><pre><span class="p">$ </span><span class="cmd">lvcreate --type thin-pool -l 95%FREE -n pool expanse</span>   <span class="cm"># leave headroom</span>
@@ -201,7 +201,7 @@
       <p>A volume without an explicit <code>--replication</code> takes its class's target (3 by default) and is placed on as many eligible nodes as exist; it reads <code>underreplicated</code> until the target is met and gains replicas automatically as nodes join.</p>
 
       <h3>Deploy a block</h3>
-      <p>Blocks are services described in YAML and run as systemd units. <code>util/echo</code> is the shipped test workload and runs on a fresh install; other types are listed with <code>expanse ctl catalog list</code>, and the <a href="blocks.html">block reference</a> covers each one's configuration and usage.</p>
+      <p>Blocks are services described in YAML and run as systemd units. <code>util/echo</code> is the shipped test workload and runs on a fresh install with no download; other types fetch their programs from the NixOS binary cache the first time they are placed on a node, so that first placement needs network access; other types are listed with <code>expanse ctl catalog list</code>, and the <a href="blocks.html">block reference</a> covers each one's configuration and usage.</p>
       <div class="code"><div class="code-title">echo.yaml</div><pre><span class="k">apiVersion</span>: expanse.io/v1
 <span class="k">kind</span>: Block
 <span class="k">metadata</span>:

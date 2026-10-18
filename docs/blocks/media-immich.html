@@ -80,20 +80,14 @@
     <article class="prose">
       <h2 id="overview">Overview</h2>
       <p>Runs Immich, a photo and video library with mobile backup, albums, sharing and, with machine learning, smart search and face recognition. The block is a singleton that runs where its volume's primary is, behind a VIP. It runs Immich's whole stack itself, with every piece's state on the one volume: a private Postgres 18 with the VectorChord extension, reachable only over a Unix socket; Redis for Immich's job queue; the optional machine-learning service on loopback; and the Immich server. The volume holds the uploads, thumbnails and transcoded videos, the database, the job queue and the downloaded models.</p>
-<div class="code"><div class="code-title">configuration.nix</div><pre>environment.systemPackages = [
-  pkgs.immich
-  pkgs.immich.machine-learning  <span class="cm"># unless machineLearning is false</span>
-  pkgs.redis
-  (pkgs.postgresql_18.withPackages (ps: [ ps.pgvector ps.vectorchord ]))
-];</pre></div>
-<p>That Postgres package is a superset of <code>pkgs.postgresql_18</code>, so <a href="db-postgres.html"><code>db/postgres</code></a> blocks on the same node keep working with it; ship it in place of <code>pkgs.postgresql_18</code>, not beside it. The block refuses to start, naming the package, when the <code>postgres</code> on the node lacks VectorChord.</p>
+<p>Its Postgres is the same build <a href="db-postgres.html"><code>db/postgres</code></a> uses, with <code>pgvector</code> and VectorChord added, so one copy serves both types on a node.</p>
 <div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><div><p>Open <code>http://&lt;VIP&gt;/</code> right after deploying: until the administrator account is created, anyone who reaches Immich can create it.</p></div></div>
 <dl class="kv">
   <div><dt>Shape</dt><dd>Singleton on a replicated volume</dd></div>
   <div><dt>Reached at</dt><dd>VIP on HTTP</dd></div>
   <div><dt>Node package</dt><dd><code>pkgs.immich</code>, <code>pkgs.immich.machine-learning</code>, <code>pkgs.redis</code> and Postgres 18 with VectorChord</dd></div>
 </dl>
-<p>Each node that may run it needs <code>pkgs.immich</code>, <code>pkgs.immich.machine-learning</code>, <code>pkgs.redis</code> and Postgres 18 with VectorChord in <code>environment.systemPackages</code>, in the node's NixOS configuration (<code>/persist/etc/nixos</code>); an installed node does not ship it. The block's unit finds the program on the node's system profile.</p>
+<p>Fetched on demand: the first time a block of this type is placed on a node, its agent fetches <code>pkgs.immich</code>, <code>pkgs.immich.machine-learning</code>, <code>pkgs.redis</code> and Postgres 18 with VectorChord, built from the node's own nixpkgs so the NixOS binary cache serves it. That first placement needs network access (or a binary cache on the LAN) and waits for the download; later placements on that node start at once.</p>
 
       <h2 id="example">Example</h2>
       <div class="code"><div class="code-title">immich.yaml</div><pre><span class="k">apiVersion</span>: expanse.io/v1

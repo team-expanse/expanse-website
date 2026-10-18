@@ -84,9 +84,9 @@
 <dl class="kv">
   <div><dt>Shape</dt><dd>Singleton on a raw replicated volume</dd></div>
   <div><dt>Reached at</dt><dd>The guest's own address</dd></div>
-  <div><dt>Node package</dt><dd><code>pkgs.qemu_kvm</code></dd></div>
+  <div><dt>Node package</dt><dd>Built in (headless qemu)</dd></div>
 </dl>
-<p>Each node that may run it needs <code>pkgs.qemu_kvm</code> in <code>environment.systemPackages</code>, in the node's NixOS configuration (<code>/persist/etc/nixos</code>); an installed node does not ship it. The block's unit finds the program on the node's system profile.</p>
+<p>Built into every node: Expanse ships a headless qemu build, so a node needs nothing extra to run a VM.</p>
 
       <h2 id="example">Example</h2>
       <div class="code"><div class="code-title">instance.yaml</div><pre><span class="k">apiVersion</span>: expanse.io/v1

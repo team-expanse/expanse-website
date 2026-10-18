@@ -86,7 +86,7 @@
   <div><dt>Reached at</dt><dd>Node port</dd></div>
   <div><dt>Node package</dt><dd><code>pkgs.ollama</code></dd></div>
 </dl>
-<p>Each node that may run it needs <code>pkgs.ollama</code> in <code>environment.systemPackages</code>, in the node's NixOS configuration (<code>/persist/etc/nixos</code>); an installed node does not ship it. The block's unit finds the program on the node's system profile.</p>
+<p>Fetched on demand: the first time a block of this type is placed on a node, its agent fetches <code>pkgs.ollama</code>, built from the node's own nixpkgs so the NixOS binary cache serves it. That first placement needs network access (or a binary cache on the LAN) and waits for the download; later placements on that node start at once.</p>
 
       <h2 id="example">Example</h2>
       <div class="code"><div class="code-title">ollama.yaml</div><pre><span class="k">apiVersion</span>: expanse.io/v1

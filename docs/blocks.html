@@ -107,10 +107,10 @@
       <p><code>spec.secrets</code> is refused until secrets can be stored and delivered.</p>
 
       <h2 id="packages">Programs on the node</h2>
-      <p>Most types run an upstream program, such as <code>postgres</code> or <code>caddy</code>, which the block's unit finds on the node's system profile. An installed node does not ship these programs: add the package to <code>environment.systemPackages</code> in the NixOS configuration (<code>/persist/etc/nixos</code>) of every node that may run the block, and rebuild. Only three types are built into Expanse.</p>
+      <p>Most types run an upstream program, such as <code>postgres</code> or <code>caddy</code>. Nodes do not carry every type's programs, which together are about 5 GiB. <code>vm/instance</code>'s qemu is built into every node; any other type's programs are fetched from the NixOS binary cache the first time a block of that type is placed on a node, so that first placement needs network access and waits for the download. <code>util/echo</code>, <code>web/whoami</code> and <code>web/static-site</code> are built into Expanse and need nothing.</p>
       <div class="table-wrap">
         <table class="t">
-          <thead><tr><th>Type</th><th>Package each node needs</th></tr></thead>
+          <thead><tr><th>Type</th><th>Programs fetched on first placement</th></tr></thead>
           <tbody>
             <tr><td><a href="blocks/web-caddy.html"><code>web/caddy</code></a></td><td><code>pkgs.caddy</code></td></tr>
             <tr><td><a href="blocks/net-haproxy.html"><code>net/haproxy</code></a></td><td><code>pkgs.haproxy</code></td></tr>
@@ -124,7 +124,7 @@
             <tr><td><a href="blocks/storage-s3.html"><code>storage/s3</code></a></td><td><code>pkgs.garage</code></td></tr>
             <tr><td><a href="blocks/iscsi-target.html"><code>iscsi/target</code></a></td><td><code>pkgs.targetcli-fb</code></td></tr>
             <tr><td><a href="blocks/share-smb.html"><code>share/smb</code></a></td><td><code>pkgs.samba</code></td></tr>
-            <tr><td><a href="blocks/vm-instance.html"><code>vm/instance</code></a></td><td><code>pkgs.qemu_kvm</code></td></tr>
+            <tr><td><a href="blocks/vm-instance.html"><code>vm/instance</code></a></td><td>Built in (headless qemu)</td></tr>
             <tr><td><a href="blocks/monitor-prometheus.html"><code>monitor/prometheus</code></a></td><td><code>pkgs.prometheus</code></td></tr>
             <tr><td><a href="blocks/monitor-grafana.html"><code>monitor/grafana</code></a></td><td><code>pkgs.grafana</code> and Expanse's <code>packages.grafana-plugins</code></td></tr>
             <tr><td><a href="blocks/monitor-node-exporter.html"><code>monitor/node-exporter</code></a></td><td><code>pkgs.prometheus-node-exporter</code></td></tr>
