@@ -137,7 +137,7 @@
           <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
           <tbody>
             <tr data-key="accessKeyId"><td><code>accessKeyId</code></td><td>required</td><td><code>GK</code> followed by 24 lowercase hex digits.</td></tr>
-            <tr data-key="secretAccessKey"><td><code>secretAccessKey</code></td><td>required</td><td>64 lowercase hex digits. Fixed once the key exists on the volume: a changed secret makes the block fail to start, so deploy with a new <code>accessKeyId</code> instead.</td></tr>
+            <tr data-key="secretAccessKey"><td><code>secretAccessKey</code></td><td>required</td><td>64 lowercase hex digits. Fixed once the key exists on the volume: a changed secret makes the block fail to start, so deploy with a new <code>accessKeyId</code> instead. Sealed: kept out of the stored block (<a href="../blocks.html#secrets">block secrets</a>).</td></tr>
             <tr data-key="buckets"><td><code>buckets</code></td><td><code>[]</code></td><td>Buckets created on start and granted to the key (read, write, owner). Removing a name does not delete the bucket.</td></tr>
             <tr data-key="region"><td><code>region</code></td><td><code>garage</code></td><td>Region clients sign requests for.</td></tr>
             <tr data-key="port"><td><code>port</code></td><td><code>13900</code></td><td>Garage's S3 port, the <code>target_port</code> of 3900.</td></tr>

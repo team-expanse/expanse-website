@@ -68,6 +68,7 @@
       <h4>On this page</h4>
       <ol>
         <li><a href="#fields">Fields every block shares</a></li>
+        <li><a href="#secrets">Block secrets</a></li>
         <li><a href="#packages">Programs on the node</a></li>
         <li><a href="#web">Web and proxies</a></li>
         <li><a href="#db">Databases</a></li>
@@ -84,6 +85,7 @@
 
     <article class="prose">
       <p>A block is a service described in YAML that the cluster schedules onto nodes and runs as a sandboxed systemd unit. Apply one with <code>expanse ctl block apply -f &lt;file&gt;</code>; add <code>--dry-run</code> to validate it first. <a href="getting-started.html#next">Getting started</a> walks through a first block, and <a href="../features.html#blocks">Features</a> covers scheduling, rolling updates and self-healing. On a node, <code>expanse ctl catalog list</code> lists the types and <code>expanse ctl catalog show &lt;type&gt;</code> prints a type's schema.</p>
+      <p>Every type can also be deployed and edited without YAML from the web UI: <strong>Blocks → Deploy block</strong> lists the catalog, greying out types no node can run, and builds a form for each from its schema and starting template. Errors show on the field they concern, a pre-flight shows the node each replica would run on (or why no node takes it), and "Show as YAML" gives the same block as a manifest. The keys on each type's page are the settings the form shows.</p>
 
       <h2 id="fields">Fields every block shares</h2>
       <p>Every block has the same outer shape; only <code>spec.config</code> differs by type.</p>
@@ -92,9 +94,9 @@
           <thead><tr><th>Field under <code>spec</code></th><th>Meaning</th></tr></thead>
           <tbody>
             <tr><td><code>type</code></td><td>The catalog type, <code>&lt;category&gt;/&lt;name&gt;</code>: one of the types below.</td></tr>
-            <tr><td><code>replicas</code></td><td>How many replicas to run. Omit it for a daemonset.</td></tr>
+            <tr><td><code>replicas</code></td><td>How many replicas to run. Omit it for a daemonset; a singleton without it runs one.</td></tr>
             <tr><td><code>strategy.kind</code></td><td>Unset: active-active replicas. <code>SINGLETON</code>: exactly one instance, fenced by a Raft lease. <code>DAEMONSET</code>: one replica on every node.</td></tr>
-            <tr><td><code>strategy.update</code></td><td><code>mode</code> (<code>rolling</code> or <code>recreate</code>), <code>maxUnavailable</code>, <code>maxSurge</code> and <code>minReadySeconds</code>.</td></tr>
+            <tr><td><code>strategy.update</code></td><td><code>mode</code> (<code>UPDATE_MODE_ROLLING</code> or <code>UPDATE_MODE_RECREATE</code>), <code>maxUnavailable</code>, <code>maxSurge</code> and <code>minReadySeconds</code>.</td></tr>
             <tr><td><code>resources.requests</code></td><td><code>cpu</code> and <code>memory</code> the scheduler reserves on the node. A VM uses them as its vCPUs and RAM.</td></tr>
             <tr><td><code>storage[]</code></td><td>Volumes: <code>name</code>, <code>size</code>, <code>replication</code>, <code>mountPath</code>, and <code>filesystem: none</code> for a raw device. A singleton with storage always runs where its volume's primary is.</td></tr>
             <tr><td><code>placement</code></td><td><code>antiAffinity: ANTI_AFFINITY_NODE</code> keeps replicas on different nodes; <code>requiredCapabilities</code> such as <code>[kvm]</code> limits the nodes.</td></tr>
@@ -104,7 +106,16 @@
           </tbody>
         </table>
       </div>
-      <p><code>spec.secrets</code> is refused until secrets can be stored and delivered.</p>
+      <h2 id="secrets">Block secrets</h2>
+      <p>Passwords, tokens and secret keys in <code>config</code>, the fields a type's schema marks <code>writeOnly</code>, are taken out of the block before it is stored, whether they come from the web UI's form or from <code>expanse ctl block apply</code>. Each is sealed with age, keyed from the cluster secret, and the block keeps a <code>spec.secrets</code> reference in its place. The values are not in <code>block get</code>, the web UI, generation diffs or the replica's spec file; the node running a replica hands them to it as systemd credentials.</p>
+      <ul>
+        <li>Leaving a field out of an update keeps its value; an empty string removes it. In the web UI, an empty password field keeps it too.</li>
+        <li>A changed value restarts the replicas with it. Applying the same value again restarts nothing.</li>
+        <li>On Deploy, the web UI generates any required password left empty and shows it once.</li>
+        <li>Old values stay sealed until the block is deleted, so a generation rollback can restore them. Deleting a block deletes its secrets.</li>
+        <li>Blocks created before Expanse sealed secrets keep their passwords in their config until their next update, which seals them.</li>
+        <li><code>util/restic-backup</code>'s <code>env</code> map is not sealed yet.</li>
+      </ul>
 
       <h2 id="packages">Programs on the node</h2>
       <p>Most types run an upstream program, such as <code>postgres</code> or <code>caddy</code>. Nodes do not carry every type's programs, which together are about 5 GiB. <code>vm/instance</code>'s qemu is built into every node; any other type's programs are fetched from the NixOS binary cache the first time a block of that type is placed on a node, so that first placement needs network access and waits for the download. <code>util/echo</code>, <code>web/whoami</code> and <code>web/static-site</code> are built into Expanse and need nothing.</p>

@@ -142,7 +142,7 @@
           <tbody>
             <tr data-key="rootURL"><td><code>rootURL</code></td><td>required</td><td>URL users browse to; links and clone URLs are built from it.</td></tr>
             <tr data-key="adminUser"><td><code>adminUser</code></td><td>required</td><td>Administrator, created on first start. Forgejo reserves some names, such as <code>admin</code>.</td></tr>
-            <tr data-key="adminPassword"><td><code>adminPassword</code></td><td>required</td><td>The administrator's password, at least 8 characters; applied on every start.</td></tr>
+            <tr data-key="adminPassword"><td><code>adminPassword</code></td><td>required</td><td>The administrator's password, at least 8 characters; applied on every start. Sealed: kept out of the stored block (<a href="../blocks.html#secrets">block secrets</a>).</td></tr>
             <tr data-key="adminEmail"><td><code>adminEmail</code></td><td>required</td><td>The administrator's email address.</td></tr>
             <tr data-key="allowRegistration"><td><code>allowRegistration</code></td><td><code>false</code></td><td>Let anyone who reaches Forgejo register an account.</td></tr>
             <tr data-key="port"><td><code>port</code></td><td><code>13000</code></td><td>Forgejo's HTTP port, the <code>target_port</code> of 80.</td></tr>

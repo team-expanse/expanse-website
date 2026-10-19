@@ -138,10 +138,10 @@
         <table class="t config" data-block="db/mariadb">
           <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
           <tbody>
-            <tr data-key="rootPassword"><td><code>rootPassword</code></td><td>required</td><td>Password for <code>root@localhost</code> and <code>root@'%'</code>, at least 8 characters; applied on every start.</td></tr>
+            <tr data-key="rootPassword"><td><code>rootPassword</code></td><td>required</td><td>Password for <code>root@localhost</code> and <code>root@'%'</code>, at least 8 characters; applied on every start. Sealed: kept out of the stored block (<a href="../blocks.html#secrets">block secrets</a>).</td></tr>
             <tr data-key="database"><td><code>database</code></td><td>none</td><td>Database created on start if it is missing.</td></tr>
             <tr data-key="user"><td><code>user</code></td><td>none</td><td>Application account with all privileges on <code>database</code>; needs <code>password</code> and <code>database</code>.</td></tr>
-            <tr data-key="password"><td><code>password</code></td><td>none</td><td>Password for <code>user</code>; applied on every start.</td></tr>
+            <tr data-key="password"><td><code>password</code></td><td>none</td><td>Password for <code>user</code>; applied on every start. Sealed: kept out of the stored block (<a href="../blocks.html#secrets">block secrets</a>).</td></tr>
             <tr data-key="bufferPool"><td><code>bufferPool</code></td><td><code>128M</code></td><td><code>innodb_buffer_pool_size</code>; keep it inside the memory request.</td></tr>
             <tr data-key="maxConnections"><td><code>maxConnections</code></td><td><code>151</code></td><td><code>max_connections</code>.</td></tr>
             <tr data-key="port"><td><code>port</code></td><td><code>13306</code></td><td><code>mariadbd</code>'s listen port, the <code>target_port</code> of 3306.</td></tr>

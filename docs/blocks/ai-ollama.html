@@ -114,7 +114,7 @@
         <table class="t config" data-block="ai/ollama">
           <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
           <tbody>
-            <tr data-key="port"><td><code>port</code></td><td>none: always set it</td><td>Port of the Ollama API. Unset, Ollama takes a random free port.</td></tr>
+            <tr data-key="port"><td><code>port</code></td><td>none: always set it</td><td>Port of the Ollama API. Unset, Ollama takes a random free port. The deploy form sets <code>21434</code> and puts 11434 on the VIP.</td></tr>
             <tr data-key="models"><td><code>models</code></td><td>none</td><td>Model names to pull on start, per the schema; <strong>not applied</strong>. Pull models through the API instead.</td></tr>
             <tr data-key="keepAlive"><td><code>keepAlive</code></td><td>none</td><td>Model keep-alive; <strong>not applied</strong>.</td></tr>
           </tbody>

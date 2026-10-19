@@ -137,7 +137,7 @@
           <tbody>
             <tr data-key="domain"><td><code>domain</code></td><td>required</td><td>URL users and Bitwarden clients reach Vaultwarden at, such as <code>https://vault.example.com</code>; emails and links are built from it.</td></tr>
             <tr data-key="signupsAllowed"><td><code>signupsAllowed</code></td><td><code>false</code></td><td>Let anyone who reaches Vaultwarden create an account.</td></tr>
-            <tr data-key="adminToken"><td><code>adminToken</code></td><td>none</td><td>Turns on the <code>/admin</code> page. Use the Argon2 string <code>vaultwarden hash</code> prints; a plain token works but Vaultwarden logs it as insecure.</td></tr>
+            <tr data-key="adminToken"><td><code>adminToken</code></td><td>none</td><td>Turns on the <code>/admin</code> page. Use the Argon2 string <code>vaultwarden hash</code> prints; a plain token works but Vaultwarden logs it as insecure. Sealed: kept out of the stored block (<a href="../blocks.html#secrets">block secrets</a>).</td></tr>
             <tr data-key="port"><td><code>port</code></td><td><code>18000</code></td><td>Vaultwarden's HTTP port, the <code>target_port</code> of 80.</td></tr>
             <tr data-key="settings"><td><code>settings</code></td><td>none</td><td>Extra Vaultwarden environment variables (upper-case names, one-line values), applied after the block's own.</td></tr>
           </tbody>

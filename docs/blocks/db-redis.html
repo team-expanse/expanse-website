@@ -115,12 +115,12 @@
         <table class="t config" data-block="db/redis">
           <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
           <tbody>
-            <tr data-key="port"><td><code>port</code></td><td>none: always set it</td><td>TCP port Redis listens on. Unset, the runtime writes <code>port 0</code>, which turns off the TCP listener.</td></tr>
+            <tr data-key="port"><td><code>port</code></td><td>none: always set it</td><td>TCP port Redis listens on. Unset, the runtime writes <code>port 0</code>, which turns off the TCP listener. The deploy form sets <code>16379</code> and puts 6379 on the VIP.</td></tr>
             <tr data-key="maxMemory"><td><code>maxMemory</code></td><td><code>256mb</code></td><td><code>maxmemory</code>.</td></tr>
             <tr data-key="maxMemoryPolicy"><td><code>maxMemoryPolicy</code></td><td>none: always set it</td><td><code>maxmemory-policy</code>, one of <code>noeviction</code>, <code>allkeys-lru</code>, <code>volatile-lru</code>, <code>allkeys-random</code>, <code>volatile-random</code>, <code>volatile-ttl</code>.</td></tr>
             <tr data-key="appendOnly"><td><code>appendOnly</code></td><td>none</td><td>Accepted by the schema but <strong>not applied</strong>.</td></tr>
             <tr data-key="replicaOf"><td><code>replicaOf</code></td><td>none</td><td>Accepted by the schema but <strong>not applied</strong>.</td></tr>
-            <tr data-key="password"><td><code>password</code></td><td>none</td><td>Accepted by the schema but <strong>not applied</strong>: there is no <code>requirepass</code>, so anyone who reaches the port can connect.</td></tr>
+            <tr data-key="password"><td><code>password</code></td><td>none</td><td>Accepted by the schema but <strong>not applied</strong>: there is no <code>requirepass</code>, so anyone who reaches the port can connect. Sealed: kept out of the stored block (<a href="../blocks.html#secrets">block secrets</a>).</td></tr>
           </tbody>
         </table>
       </div>

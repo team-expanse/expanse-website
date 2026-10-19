@@ -179,6 +179,7 @@
         <h2>Replicated volumes that grow with the cluster.</h2>
         <p class="lead">Volumes are DRBD 9 resources (protocol C) on LVM thin volumes, placed by the leader. Replication is a <em>target</em>, not a precondition: a volume lands on one node today and gains replicas as nodes join, one fully synced replica at a time.</p>
         <ul class="checks">
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>On with one button.</strong> Every node loads the DRBD 9 module and thin-pool support from boot. <strong>Enable storage</strong> on a node's page in the web UI builds its thin pool and starts its volume stack, with no rebuild and no reboot; replicas go only to nodes whose storage is on.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Full lifecycle.</strong> Create, grow, snapshot and restore, verify and resync a scrubbed replica, retire a dead node's copy, or hand-pick the surviving side of a split-brain with <code>volume diverged --choose</code>.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Honest states.</strong> <code>UnderReplicated</code> means every replica is healthy but there are fewer than the target — the CLI and UI show "1 of 3 (no redundancy)" rather than a green tick.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Quorum switches on live.</strong> DRBD quorum turns on at three replicas without interrupting I/O, verified under continuous acknowledged writes. A two-replica volume borrows a spare node as a diskless tiebreaker, so a cut-off primary stops writing instead of splitting the volume; only a two-node cluster, with no spare, runs without one.</span></li>
@@ -231,24 +232,24 @@
   <span class="k">version</span>: <span class="s">"1.27"</span>
   <span class="k">replicas</span>: 3
   <span class="k">strategy</span>:
-    <span class="k">kind</span>: active-active
+    <span class="k">kind</span>: ACTIVE_ACTIVE
     <span class="k">update</span>:
-      <span class="k">mode</span>: rolling
+      <span class="k">mode</span>: UPDATE_MODE_ROLLING
       <span class="k">maxUnavailable</span>: 1
       <span class="k">maxSurge</span>: 0
       <span class="k">minReadySeconds</span>: 10
   <span class="k">resources</span>:
     <span class="k">requests</span>: { <span class="k">cpu</span>: <span class="s">"500m"</span>, <span class="k">memory</span>: <span class="s">"256Mi"</span> }
   <span class="k">placement</span>:
-    <span class="k">antiAffinity</span>: node   <span class="cm"># never two replicas on one node</span>
+    <span class="k">antiAffinity</span>: ANTI_AFFINITY_NODE   <span class="cm"># never two replicas on one node</span>
   <span class="k">network</span>:
     <span class="k">ports</span>:
       - <span class="k">name</span>: http
         <span class="k">port</span>: 80
         <span class="k">targetPort</span>: 8080
-        <span class="k">expose</span>: vip
+        <span class="k">expose</span>: EXPOSE_VIP
     <span class="k">healthCheck</span>:
-      <span class="k">readiness</span>: { <span class="k">type</span>: http, <span class="k">path</span>: /, <span class="k">port</span>: 8080 }</pre></div>
+      <span class="k">readiness</span>: { <span class="k">type</span>: PROBE_HTTP, <span class="k">path</span>: /, <span class="k">port</span>: 8080 }</pre></div>
         <div class="code" style="margin-top:0.75rem"><pre><span class="p">$ </span><span class="cmd">expanse ctl block apply -f web.yaml</span>
 <span class="p">$ </span><span class="cmd">expanse ctl block scale web --replicas 5</span>
 <span class="p">$ </span><span class="cmd">expanse ctl block logs default/web --replica 1</span>
@@ -333,7 +334,8 @@
         <h2>Two consoles, no agents to install.</h2>
         <p class="lead">Every node serves the web UI on <code>:8443</code> as soon as its agent starts, and shows a read-only host console on tty1 in place of a login prompt — the same idea as a hypervisor's local console, for a cluster node.</p>
         <ul class="checks">
-          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Live pages.</strong> Dashboard, Cluster, Nodes, Health &amp; alerts, Blocks (deploy, scale, delete, per-replica logs), Volumes (create, snapshot, resize), Generations (diff, rollback), Events and Settings, updating over Server-Sent Events, never by polling.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Live pages.</strong> Dashboard, Cluster, Nodes, Health &amp; alerts, Blocks (deploy, scale, delete, per-replica logs), Volumes (create, snapshot, resize), Generations (diff, rollback), Events and Settings, including the LAN address range block VIPs come from, updating over Server-Sent Events, never by polling.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Deploy without YAML.</strong> Blocks → Deploy block lists every type, VMs included, and builds a form from its schema with working defaults. Errors show on the field they concern, a pre-flight names the node each replica would run on, settings that point at another block offer its address, and "Show as YAML" gives the manifest. A block's Edit button opens the same form.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Built to work offline.</strong> Embedded templates, hand-written CSS, vendored htmx, no build step, and a self-only Content-Security-Policy. Light and dark themes, keyboard accessible, usable on a phone.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Sessions that survive failover.</strong> Sessions and CSRF tokens live in the replicated store, so a login keeps working when the UI's VIP moves to another node.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>One admin, never a default password.</strong> The first agent to open its store generates a random password, hashes it with argon2id and logs the plaintext exactly once. Reset locally with <code>expanse ctl admin reset-password</code>.</span></li>
@@ -412,7 +414,7 @@
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Three commands, from any node.</strong> No agent stops. <code>ca rotate</code> makes the new root primary, <code>ca status</code> lists nodes still pending, <code>ca complete</code> retires the old root — and refuses until every node has renewed, so it is safe to run early.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Nothing joins without a token.</strong> Single-use, expiring join tokens; self-signed client certificates are rejected with <code>unknown ca</code>; zero cleartext on the join path, verified in the VM tests.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Two CAs on purpose.</strong> Browsers reject Ed25519 TLS, so the web UI has its own ECDSA P-256 CA, created once per cluster. Node-to-node traffic and metrics keep the cluster CA.</span></li>
-          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Secrets at rest.</strong> Key material is age-encrypted, keyed by HKDF over the cluster secret. TPM sealing is a named, deferred feature: no TPM hardware has been available to validate it.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Secrets at rest.</strong> Key material is age-encrypted, keyed by HKDF over the cluster secret. Block passwords and tokens are sealed the same way and kept out of the stored block, so they never appear in <code>block get</code>, the web UI or generation diffs. TPM sealing is a named, deferred feature: no TPM hardware has been available to validate it.</span></li>
           <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span><strong>Firewall by default.</strong> Cluster ports are reachable only over the overlay; the web UI and metrics ports are open but TLS-authenticated.</span></li>
         </ul>
       </div>
@@ -494,7 +496,7 @@
         <article class="card">
           <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-vm"/></svg></div>
           <h3><a href="docs/blocks/vm-instance.html"><code>vm/instance</code></a></h3>
-          <p>A QEMU/KVM guest on a raw replicated disk, scheduled only to nodes with hardware virtualization, with a MAC pinned from the block's name so it comes back at the same address. It counts as <code>RUNNING</code> only once the guest reports over vsock that it has booted. Node loss means a cold boot elsewhere — the guest's filesystem was verified intact under sustained fsync load through the kill. There is no live migration. With <code>cpuModel: host</code> the guest can run KVM itself, which is how Expanse's own development guest runs its VM tests. A prebuilt guest image runs the Pando app platform this way, and Pando and its apps come back on a survivor.</p>
+          <p>A QEMU/KVM guest on a raw replicated disk, scheduled only to nodes with hardware virtualization, with a MAC pinned from the block's name so it comes back at the same address. It counts as <code>RUNNING</code> only once the guest reports over vsock that it has booted. Node loss means a cold boot elsewhere — the guest's filesystem was verified intact under sustained fsync load through the kill. There is no live migration. Give it a cloud image, such as Debian 13 or Ubuntu 24.04, and SSH keys, and the node downloads and checks the image and writes it onto the disk on the first start, with cloud-init setting up the guest. With <code>cpuModel: host</code> the guest can run KVM itself, which is how Expanse's own development guest runs its VM tests. A prebuilt guest image runs the Pando app platform this way, and Pando and its apps come back on a survivor.</p>
         </article>
       </div>
     </section>
@@ -516,7 +518,6 @@
             <li><strong>VM live migration and an interactive VM console.</strong> Deferred; failover is a cold restart and the guest console is the unit's journal.</li>
             <li><strong><code>exec</code> probes, and liveness probes for VMs.</strong> Not run yet; <code>tcp</code> and <code>http</code> probes of ordinary blocks are.</li>
             <li><strong>iSCSI persistent reservations across failover.</strong> Deferred; the target on the new node starts with no registered keys, so a workload that relies on SCSI reservations sees them lost.</li>
-            <li><strong>Block secrets.</strong> A block that lists <code>spec.secrets</code> is refused until they can be stored and delivered.</li>
             <li><strong>Alertmanager routing and scheduled backups of node state.</strong> Left to the operator by design; volume backups are scheduled by <code>util/restic-backup</code>.</li>
             <li><strong>Real-hardware validation.</strong> Automated tests run on QEMU/KVM. The old-laptop, mini-PC, server and ARM targets in the hardware matrix are marked untested, and idle CPU with a replicated volume attached has not been measured on bare metal.</li>
           </ul>

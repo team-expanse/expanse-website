@@ -112,9 +112,14 @@
   <span class="k">placement</span>:
     <span class="k">requiredCapabilities</span>: [kvm]
   <span class="k">config</span>:
-    <span class="k">bootKernel</span>: <span class="s">"/nix/store/...-linux/bzImage"</span>
-    <span class="k">bootInitrd</span>: <span class="s">"/nix/store/...-initrd/initrd"</span>
-    <span class="k">bootCmdline</span>: <span class="s">"root=/dev/vda console=ttyS0"</span></pre></div>
+    <span class="k">image</span>:
+      <span class="k">url</span>: https://cloud.debian.org/images/cloud/trixie/latest/debian-13-genericcloud-amd64.qcow2
+      <span class="k">checksumUrl</span>: https://cloud.debian.org/images/cloud/trixie/latest/SHA512SUMS
+    <span class="k">cloudInit</span>:
+      <span class="k">sshKeys</span>: [<span class="s">"ssh-ed25519 AAAA... me@laptop"</span>]
+      <span class="k">user</span>: ops        <span class="cm"># optional: a sudo user with the keys</span>
+      <span class="k">hostname</span>: vm1   <span class="cm"># optional: defaults to the block's name</span></pre></div>
+<p>The web UI builds the same block without YAML: Blocks → Deploy block → <code>vm/instance</code> starts from the Debian 13 image and offers Ubuntu 24.04 LTS or a custom URL. In its SSH key list, <code>gh:&lt;user&gt;</code> imports a GitHub user's keys.</p>
 
 <div class="code"><pre><span class="p">$ </span><span class="cmd">expanse ctl block apply -f instance.yaml --dry-run</span>   <span class="cm"># validate only</span>
 <span class="p">$ </span><span class="cmd">expanse ctl block apply -f instance.yaml</span></pre></div>
@@ -126,18 +131,22 @@
         <table class="t config" data-block="vm/instance">
           <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
           <tbody>
+            <tr data-key="image"><td><code>image</code></td><td>none</td><td>A cloud image (qcow2 or raw) written onto the disk on the VM's first start: <code>url</code>, plus <code>checksum</code> (SHA-256 or SHA-512 hex) or <code>checksumUrl</code> (a SHA256SUMS or SHA512SUMS file that lists it). Later changes do not touch the disk. Unset, the disk is used as it is.</td></tr>
+            <tr data-key="cloudInit"><td><code>cloudInit</code></td><td>none</td><td>Handed to the guest's cloud-init on its first boot: <code>sshKeys</code>, <code>user</code> (a sudo user with the keys; unset, the keys go to the image's own user) and <code>hostname</code> (unset, the block's name).</td></tr>
             <tr data-key="mac"><td><code>mac</code></td><td>derived from the block's name</td><td>The guest NIC's MAC address.</td></tr>
             <tr data-key="bootKernel"><td><code>bootKernel</code></td><td>none</td><td>A kernel for direct kernel boot. Unset, the guest boots from its disk through the BIOS.</td></tr>
             <tr data-key="bootInitrd"><td><code>bootInitrd</code></td><td>none</td><td>The initramfs for <code>bootKernel</code>.</td></tr>
             <tr data-key="bootCmdline"><td><code>bootCmdline</code></td><td>none</td><td>Kernel command line, used with <code>bootKernel</code>.</td></tr>
-            <tr data-key="guestReady"><td><code>guestReady</code></td><td><code>systemd</code></td><td>When the VM counts as <code>RUNNING</code>. <code>systemd</code>: once the guest's systemd (254 or newer) reports over vsock that it reached <code>multi-user.target</code>. <code>none</code>: as soon as QEMU starts, for guests without systemd.</td></tr>
+            <tr data-key="guestReady"><td><code>guestReady</code></td><td><code>systemd</code></td><td>When the VM counts as <code>RUNNING</code>. <code>systemd</code>: once the guest's systemd (254 or newer) reports over vsock that it reached <code>multi-user.target</code> (systemd 254 and 255, as in Ubuntu 24.04, report no targets, so <code>READY=1</code> alone counts). <code>none</code>: as soon as QEMU starts, for guests without systemd.</td></tr>
             <tr data-key="cpuModel"><td><code>cpuModel</code></td><td>qemu's default</td><td>The guest's CPU model. <code>host</code> passes the node's CPU through, including <code>vmx</code>/<code>svm</code>, so the guest can run KVM itself (nested virtualization). <code>host</code> is the only value accepted.</td></tr>
           </tbody>
         </table>
       </div>
 
       <h2 id="usage">Using it</h2>
-      <p>Getting a first operating system onto the empty disk is up to you: boot an installer, or write a prebuilt image onto the volume's DRBD device on its primary before applying the block. Expanse's <code>pando-guest-image</code> is a worked example: a prebuilt NixOS image with the Pando app platform, written onto a pre-created volume and booted with no <code>bootKernel</code>.</p>
+      <p>With <code>image</code> set, the VM's node downloads the image into <code>/var/lib/expanse/images</code> on the first start, checks it, and writes it onto the disk; the block's status shows the download's progress. The disk must be at least the image's size, and the guest grows its root filesystem into the rest. The image is written only while the disk's first MiB is still zero, and that MiB is written last, so a later start or a failover boots the disk as it is and an interrupted write is redone. A qcow2 that names a backing or external data file is refused. Downloaded images stay cached for other VMs; delete them there by hand to free the space.</p>
+<p>Each start attaches a NoCloud seed with the user, keys and hostname. cloud-init applies it on the first boot only, so change keys inside the guest after that. The guest gets its address from your DHCP server; the block's page in the web UI shows its MAC address and hostname, so you can find it in your router's leases.</p>
+<p>Without <code>image</code>, getting a first operating system onto the empty disk is up to you: write a prebuilt image onto the volume's DRBD device on its primary before applying the block, or boot a kernel directly with <code>bootKernel</code>. Expanse's <code>pando-guest-image</code> is a worked example: a prebuilt NixOS image with the Pando app platform, written onto a pre-created volume and booted with no <code>bootKernel</code>.</p>
 <p>The guest's serial console is the block unit's output, so read it with <code>journalctl</code> on the VM's node. Its readiness is the unit's status text:</p>
 <div class="code"><pre><span class="p">$ </span><span class="cmd">journalctl -u expanse-block-root@default-vm1-0.service -f</span>
 <span class="p">$ </span><span class="cmd">systemctl show -p StatusText --value expanse-block-root@default-vm1-0.service</span>
@@ -153,7 +162,9 @@
 <li>No interactive console; the serial console is read-only through the journal.</li>
 <li>Liveness probes are not run for VMs.</li>
 <li>A <code>cpuModel: host</code> guest is tied to its node's CPU features; keep its candidate nodes on the same CPU generation.</li>
-<li>Validated guest: a minimal NixOS image. Other operating systems are unverified.</li>
+<li>Tested guests: the Debian 13 and Ubuntu 24.04 cloud images, and NixOS. Other operating systems, such as Windows and the BSDs, are unverified.</li>
+<li>Use guests with systemd 254 or newer (Debian 12 has 252), or set <code>guestReady: none</code>.</li>
+<li>Installing from an ISO with a web console is not built yet.</li>
 </ul>
 
       <h2 id="source">Source</h2>

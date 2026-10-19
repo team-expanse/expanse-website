@@ -120,7 +120,7 @@
         <table class="t config" data-block="monitor/prometheus">
           <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
           <tbody>
-            <tr data-key="metricsToken"><td><code>metricsToken</code></td><td>none</td><td>The cluster metrics bearer token (<code>expanse ctl metrics set-token</code>). Without it only node-exporter and Prometheus itself are scraped, because the cluster stores the token only as a hash.</td></tr>
+            <tr data-key="metricsToken"><td><code>metricsToken</code></td><td>none</td><td>The cluster metrics bearer token (<code>expanse ctl metrics set-token</code>). Without it only node-exporter and Prometheus itself are scraped, because the cluster stores the token only as a hash. Sealed: kept out of the stored block (<a href="../blocks.html#secrets">block secrets</a>).</td></tr>
             <tr data-key="scrapeInterval"><td><code>scrapeInterval</code></td><td><code>5s</code></td><td>Scrape and rule-evaluation interval. Keep it at 5 s or below so alerts fire within their 30 s budget.</td></tr>
             <tr data-key="retention"><td><code>retention</code></td><td><code>15d</code></td><td>How long samples are kept.</td></tr>
             <tr data-key="port"><td><code>port</code></td><td><code>9090</code></td><td>Port of the web UI and API.</td></tr>
@@ -131,7 +131,7 @@
       </div>
 
       <h2 id="usage">Using it</h2>
-      <p>Give the block a VIP so that <a href="monitor-grafana.html"><code>monitor/grafana</code></a>'s <code>prometheusUrl</code> survives a failover. As for every VIP-exposed block, <code>port</code> must then differ from the port exposed on the VIP. Alertmanager is not configured; route alerts with your own.</p>
+      <p>Give the block a VIP so that <a href="monitor-grafana.html"><code>monitor/grafana</code></a>'s <code>prometheusUrl</code> survives a failover. As for every VIP-exposed block, <code>port</code> must then differ from the port exposed on the VIP. The deploy form exposes port 80, forwarded to 9090, so the URL is <code>http://&lt;address&gt;</code>. Alertmanager is not configured; route alerts with your own.</p>
 
       <h2 id="failover">When a node fails</h2>
       <p>With a replicated volume, the singleton restarts on the node that takes over the volume's primary, with the same time-series database. Samples during the gap are missing.</p>

@@ -135,8 +135,8 @@
           <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
           <tbody>
             <tr data-key="repository"><td><code>repository</code></td><td>required</td><td>Any restic repository, such as <code>s3:https://host/bucket</code> or <code>sftp:user@host:/path</code>. It is created if it does not exist.</td></tr>
-            <tr data-key="password"><td><code>password</code></td><td>required</td><td>Encrypts the repository. Keep a copy outside the cluster: without it the backups cannot be read.</td></tr>
-            <tr data-key="env"><td><code>env</code></td><td>none</td><td>Extra environment for restic, such as the S3 credentials. <code>RESTIC_REPOSITORY</code> and <code>RESTIC_PASSWORD*</code> are set by the block.</td></tr>
+            <tr data-key="password"><td><code>password</code></td><td>required</td><td>Encrypts the repository. Keep a copy outside the cluster: without it the backups cannot be read. Sealed: kept out of the stored block (<a href="../blocks.html#secrets">block secrets</a>).</td></tr>
+            <tr data-key="env"><td><code>env</code></td><td>none</td><td>Extra environment for restic, such as the S3 credentials. <code>RESTIC_REPOSITORY</code> and <code>RESTIC_PASSWORD*</code> are set by the block. Not sealed yet: credentials here stay in the block's config.</td></tr>
             <tr data-key="volumes"><td><code>volumes</code></td><td>required</td><td><code>&lt;block&gt;/&lt;storage&gt;</code> (a storage entry of a block in this namespace) or a volume name from <code>expanse ctl volume list</code>.</td></tr>
             <tr data-key="interval"><td><code>interval</code></td><td><code>24h</code></td><td>Time between backups of each volume, at least <code>1m</code>.</td></tr>
             <tr data-key="keep"><td><code>keep</code></td><td>daily 7, weekly 4, monthly 6</td><td>Backups kept per volume, as <code>restic forget --keep-*</code> counts: <code>last</code>, <code>hourly</code>, <code>daily</code>, <code>weekly</code>, <code>monthly</code>, <code>yearly</code>.</td></tr>

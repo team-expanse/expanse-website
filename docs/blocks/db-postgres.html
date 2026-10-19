@@ -109,7 +109,7 @@
       <span class="k">replication</span>: 1   <span class="cm"># one independent volume per replica</span>
       <span class="k">mountPath</span>: /var/lib/postgresql-data
   <span class="k">config</span>:
-    <span class="k">port</span>: 5432
+    <span class="k">port</span>: 15432
     <span class="k">database</span>: app
     <span class="k">replicationPassword</span>: &lt;shared secret&gt;
     <span class="k">superuserPassword</span>: &lt;shared secret&gt;
@@ -117,13 +117,13 @@
     <span class="k">ports</span>:
       - <span class="k">name</span>: pg
         <span class="k">port</span>: 5432
-        <span class="k">target_port</span>: 5432
+        <span class="k">target_port</span>: 15432
         <span class="k">protocol</span>: tcp
         <span class="k">expose</span>: EXPOSE_VIP
     <span class="k">health_check</span>:
       <span class="k">readiness</span>:
         <span class="k">type</span>: PROBE_TCP
-        <span class="k">port</span>: 5432
+        <span class="k">port</span>: 15432
         <span class="k">period_seconds</span>: 2</pre></div>
 <p><code>storage[0].replication</code> must be <code>1</code>: three replicas means three independent volumes, kept in sync by PostgreSQL itself.</p>
 <div class="code"><pre><span class="p">$ </span><span class="cmd">expanse ctl block apply -f postgres.yaml --dry-run</span>   <span class="cm"># validate only</span>
@@ -136,9 +136,9 @@
         <table class="t config" data-block="db/postgres">
           <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
           <tbody>
-            <tr data-key="replicationPassword"><td><code>replicationPassword</code></td><td>required</td><td>Password of the internal <code>replicator</code> role standbys stream with.</td></tr>
-            <tr data-key="superuserPassword"><td><code>superuserPassword</code></td><td>required</td><td>Password of the <code>postgres</code> superuser over TCP. Local socket access, which the failover controller uses, needs none.</td></tr>
-            <tr data-key="port"><td><code>port</code></td><td><code>5432</code></td><td>Port for client and replication connections.</td></tr>
+            <tr data-key="replicationPassword"><td><code>replicationPassword</code></td><td>required</td><td>Password of the internal <code>replicator</code> role standbys stream with. Sealed: kept out of the stored block (<a href="../blocks.html#secrets">block secrets</a>).</td></tr>
+            <tr data-key="superuserPassword"><td><code>superuserPassword</code></td><td>required</td><td>Password of the <code>postgres</code> superuser over TCP. Local socket access, which the failover controller uses, needs none. Sealed: kept out of the stored block (<a href="../blocks.html#secrets">block secrets</a>).</td></tr>
+            <tr data-key="port"><td><code>port</code></td><td><code>5432</code></td><td>Port for client and replication connections. Behind a VIP, use another port, such as the <code>15432</code> the deploy form sets, so the VIP can take 5432 on the same node.</td></tr>
             <tr data-key="database"><td><code>database</code></td><td><code>app</code></td><td>Database created on the first primary at bootstrap.</td></tr>
             <tr data-key="sharedBuffers"><td><code>sharedBuffers</code></td><td><code>256MB</code></td><td><code>shared_buffers</code>.</td></tr>
             <tr data-key="maxWalSenders"><td><code>maxWalSenders</code></td><td><code>10</code></td><td><code>max_wal_senders</code>. Keep it above the replica count, with headroom for <code>pg_basebackup</code> during a rejoin.</td></tr>

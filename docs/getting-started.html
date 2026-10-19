@@ -143,7 +143,7 @@
 <span class="p">$ </span><span class="cmd">expanse node info</span>
 <span class="p">$ </span><span class="cmd">btrfs subvolume list /</span>    <span class="cm"># @root @nix @persist @log</span>
 <span class="p">$ </span><span class="cmd">vgs expanse</span>                <span class="cm"># the LVM data pool volumes will live in</span></pre></div>
-      <div class="callout info"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><div><p>The volume group exists but is otherwise empty. Replicated volumes (the thin pool and DRBD) are an explicit opt-in, covered in <a href="#next">step 8</a>.</p></div></div>
+      <div class="callout info"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><div><p>The volume group exists but is otherwise empty. Replicated volumes need a thin pool on it, an explicit opt-in that is one button in the web UI, covered in <a href="#next">step 8</a>.</p></div></div>
 
       <h2 id="cluster">5. Form a one-node cluster</h2>
       <p>One installed node is already a usable cluster. Form it with the agent stopped — <code>cluster init</code> refuses while <code>expansed</code> runs, since the running agent would never join the new cluster.</p>
@@ -191,17 +191,20 @@
 
       <h2 id="next">8. Volumes and blocks</h2>
       <h3>Enable replicated volumes</h3>
-      <p>Replicated volumes need the DRBD kernel module and a thin pool, so they are an explicit opt-in. Add to the node's NixOS configuration (<code>/etc/nixos/configuration.nix</code>, kept in <code>/persist/etc/nixos</code>), run <code>nixos-rebuild switch</code> and <strong>reboot</strong>: a switch can only load the kernel's in-tree DRBD 8.4, and until the reboot <code>expansed</code> refuses to create volumes. Create the pool once per node, before or after the reboot — its size is a capacity decision, so it is not inferred:</p>
+      <p>Replicated volumes need a thin pool, so they are an explicit opt-in. Every node already loads the DRBD 9 module and thin-pool support from boot, so turning storage on needs no rebuild and no reboot. In the web UI, open <strong>Nodes → the node → Storage</strong> and press <strong>Enable storage</strong>: the node builds the thin pool in its <code>expanse</code> volume group (95% of the free space by default; the rest is headroom), starts its volume stack, and the card reads <strong>On</strong>. Do it on each node that should hold volume replicas; replicas go only to nodes whose storage is on.</p>
+      <p>Setting the options in the node's NixOS configuration instead (<code>/etc/nixos/configuration.nix</code>, kept in <code>/persist/etc/nixos</code>) overrides the UI on that node. After <code>nixos-rebuild switch</code>, create the pool once by hand:</p>
       <div class="code"><div class="code-title">configuration.nix</div><pre><span class="k">expanse.agent.storageVG</span> = <span class="s">"expanse"</span>;
 <span class="k">expanse.agent.storagePool</span> = <span class="s">"pool"</span>;   <span class="cm"># empty = thick volumes, no snapshots</span></pre></div>
-      <div class="code"><pre><span class="p">$ </span><span class="cmd">lvcreate --type thin-pool -l 95%FREE -n pool expanse</span>   <span class="cm"># leave headroom</span>
-<span class="p">$ </span><span class="cmd">expanse ctl volume create data --size 10Gi</span>
+      <div class="code"><pre><span class="p">$ </span><span class="cmd">lvcreate --type thin-pool -l 95%FREE -n pool expanse</span>   <span class="cm"># leave headroom</span></pre></div>
+      <p>Either way, volumes are then created on demand:</p>
+      <div class="code"><pre><span class="p">$ </span><span class="cmd">expanse ctl volume create data --size 10Gi</span>
 <span class="p">$ </span><span class="cmd">expanse ctl volume list</span>
 <span class="p">$ </span><span class="cmd">expanse doctor storage --vg expanse</span></pre></div>
       <p>A volume without an explicit <code>--replication</code> takes its class's target (3 by default) and is placed on as many eligible nodes as exist; it reads <code>underreplicated</code> until the target is met and gains replicas automatically as nodes join.</p>
 
       <h3>Deploy a block</h3>
-      <p>Blocks are services described in YAML and run as systemd units. <code>util/echo</code> is the shipped test workload and runs on a fresh install with no download; other types fetch their programs from the NixOS binary cache the first time they are placed on a node, so that first placement needs network access; other types are listed with <code>expanse ctl catalog list</code>, and the <a href="blocks.html">block reference</a> covers each one's configuration and usage.</p>
+      <p>Blocks are services run as systemd units. The easiest way to deploy one is the web UI: <strong>Blocks → Deploy block</strong> lists every type, VMs included, each with a form filled in with working defaults, and nothing needs a change to <code>/etc/nixos</code>. The form warns while no node has storage on. Until a LAN address range is set under <strong>Settings → LAN addresses</strong>, block VIPs are reachable inside the cluster only.</p>
+      <p>The same blocks can be described in YAML. <code>util/echo</code> is the shipped test workload and runs on a fresh install with no download; other types fetch their programs from the NixOS binary cache the first time they are placed on a node, so that first placement needs network access. Types are listed with <code>expanse ctl catalog list</code>, and the <a href="blocks.html">block reference</a> covers each one's configuration and usage.</p>
       <div class="code"><div class="code-title">echo.yaml</div><pre><span class="k">apiVersion</span>: expanse.io/v1
 <span class="k">kind</span>: Block
 <span class="k">metadata</span>:
@@ -223,7 +226,7 @@
 <span class="p">$ </span><span class="cmd">expanse ctl block explain echo</span>
 <span class="out">echo: 1/1 placed (phase <span class="ok">RUNNING</span>)</span>
 <span class="p">$ </span><span class="cmd">expanse ctl block logs default/echo</span></pre></div>
-      <p>The same deploy, scale and delete actions are on the Blocks page of the web UI, with schema errors shown inline.</p>
+      <p>The same deploy, edit, scale and delete actions are on the Blocks page of the web UI, and "Show as YAML" on the deploy form gives a manifest for <code>block apply</code>.</p>
 
       <h2 id="troubleshooting">Troubleshooting</h2>
       <div class="table-wrap">

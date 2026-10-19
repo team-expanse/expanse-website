@@ -139,7 +139,7 @@
             <tr data-key="iqn"><td><code>iqn</code></td><td>derived from the block's name</td><td>Target IQN. Unset, it is <code>iqn.2026-09.io.expanse:&lt;namespace&gt;-&lt;name&gt;-0</code>.</td></tr>
             <tr data-key="wwn"><td><code>wwn</code></td><td>derived from the block's name</td><td>The LUN's NAA WWN, the device identity initiators see.</td></tr>
             <tr data-key="chapUser"><td><code>chapUser</code></td><td>none</td><td>CHAP user required at login. Unset, any initiator may log in with read-write access.</td></tr>
-            <tr data-key="chapPassword"><td><code>chapPassword</code></td><td>none</td><td>CHAP secret, at least 12 characters. Required with <code>chapUser</code>.</td></tr>
+            <tr data-key="chapPassword"><td><code>chapPassword</code></td><td>none</td><td>CHAP secret, at least 12 characters. Required with <code>chapUser</code>. Sealed: kept out of the stored block (<a href="../blocks.html#secrets">block secrets</a>).</td></tr>
           </tbody>
         </table>
       </div>

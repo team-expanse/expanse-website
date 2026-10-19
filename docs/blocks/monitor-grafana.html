@@ -105,7 +105,7 @@
       <span class="k">replication</span>: 3
       <span class="k">mountPath</span>: /var/lib/grafana
   <span class="k">config</span>:
-    <span class="k">prometheusUrl</span>: http://&lt;prometheus block address&gt;:9090
+    <span class="k">prometheusUrl</span>: http://&lt;prometheus block address&gt;
     <span class="k">adminPassword</span>: &lt;at least 8 characters&gt;</pre></div>
 
 <div class="code"><pre><span class="p">$ </span><span class="cmd">expanse ctl block apply -f grafana.yaml --dry-run</span>   <span class="cm"># validate only</span>
@@ -118,8 +118,8 @@
         <table class="t config" data-block="monitor/grafana">
           <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
           <tbody>
-            <tr data-key="prometheusUrl"><td><code>prometheusUrl</code></td><td>required</td><td>URL of the Prometheus to query, such as the <a href="monitor-prometheus.html"><code>monitor/prometheus</code></a> block's VIP.</td></tr>
-            <tr data-key="adminPassword"><td><code>adminPassword</code></td><td>required</td><td>Password of Grafana's <code>admin</code> user, at least 8 characters. Applied only when Grafana first creates its database; change it later in Grafana.</td></tr>
+            <tr data-key="prometheusUrl"><td><code>prometheusUrl</code></td><td>required</td><td>URL of the Prometheus to query, such as the <a href="monitor-prometheus.html"><code>monitor/prometheus</code></a> block's address. The deploy form lists the Prometheus blocks' addresses and fills in the only one.</td></tr>
+            <tr data-key="adminPassword"><td><code>adminPassword</code></td><td>required</td><td>Password of Grafana's <code>admin</code> user, at least 8 characters. Applied only when Grafana first creates its database; change it later in Grafana. Sealed: kept out of the stored block (<a href="../blocks.html#secrets">block secrets</a>).</td></tr>
             <tr data-key="port"><td><code>port</code></td><td><code>3000</code></td><td>Port of the web UI.</td></tr>
             <tr data-key="anonymousViewer"><td><code>anonymousViewer</code></td><td><code>false</code></td><td>Let anyone who reaches the port view dashboards without logging in.</td></tr>
           </tbody>
