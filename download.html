@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <title>Download — Expanse</title>
-  <meta name="description" content="Get Expanse 1.11.1: the installer ISO, how to build it from source, hardware requirements, the changelog and known issues.">
+  <meta name="description" content="Get Expanse 1.11.2: the installer ISO, how to build it from source, hardware requirements, the changelog and known issues.">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/site.css">
   <script>
@@ -34,7 +34,7 @@
     <a class="brand" href="index.html" aria-label="Expanse home">
       <svg class="brand-mark" aria-hidden="true"><use href="#i-logo"/></svg>
       <span>Expanse</span>
-      <span class="brand-version">1.11.1</span>
+      <span class="brand-version">1.11.2</span>
     </a>
     <nav class="site-nav" id="site-nav" data-nav aria-label="Main">
       <a href="features.html">Features</a>
@@ -61,7 +61,7 @@
     <div class="hero-bg" aria-hidden="true"></div>
     <div class="container">
       <div class="eyebrow">Download</div>
-      <h1>Get Expanse 1.11.1.</h1>
+      <h1>Get Expanse 1.11.2.</h1>
       <p class="lead">One hybrid ISO installs a node on x86_64 hardware. Build it from the flake, or write a release image to a USB stick, then follow the <a href="docs/getting-started.html">quickstart</a>.</p>
     </div>
   </section>
@@ -71,21 +71,21 @@
       <div class="release">
         <div class="release-card">
           <div class="eyebrow">Latest release</div>
-          <h2>Expanse 1.11.1</h2>
-          <div class="date">Released 2026-10-19 · block addresses behind the stock firewall, runtime builds, address ports</div>
+          <h2>Expanse 1.11.2</h2>
+          <div class="date">Released 2026-10-19 · lease reclaim, gh: keys in the installer, CLI lookups, cluster status</div>
           <div class="file">
             <svg class="icon" aria-hidden="true"><use href="#i-disc"/></svg>
             <div>
-              <div class="name">expanse-1.11.1-x86_64-linux.iso</div>
+              <div class="name">expanse-1.11.2-x86_64-linux.iso</div>
               <div class="meta">Hybrid UEFI + BIOS installer image · about 1.8 GB · needs a 4 GB USB stick</div>
-              <div class="meta">SHA-256 <code class="sha256">cdf7aade6a1c1f392e6337e0dfed767c79298012be96b07555654480321df9c3</code></div>
+              <div class="meta">SHA-256 <code class="sha256">f6e45149e68a326b8c0506f18be02684a98e1c4aaeeafcc07410f6c7653c6901</code></div>
             </div>
           </div>
           <div class="hero-actions" style="justify-content:flex-start">
-            <a class="btn btn-primary btn-lg" href="https://github.com/team-expanse/expanse/releases/download/v1.11.1/expanse-1.11.1-x86_64-linux.iso"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download ISO</a>
+            <a class="btn btn-primary btn-lg" href="https://github.com/team-expanse/expanse/releases/download/v1.11.2/expanse-1.11.2-x86_64-linux.iso"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download ISO</a>
             <a class="btn btn-secondary btn-lg" href="#source">Build from source</a>
           </div>
-          <p class="muted" style="margin-top:1.25rem;font-size:0.9rem">Release images are attached to the <a href="https://github.com/team-expanse/expanse/releases/tag/v1.11.1"><code>v1.11.1</code> release</a> on GitHub. Check the download against the release's <a href="https://github.com/team-expanse/expanse/releases/download/v1.11.1/SHA256SUMS"><code>SHA256SUMS</code></a> with <code>sha256sum -c SHA256SUMS</code> in the same folder. Building from source gives you the same release: the flake asserts the ISO is named <code>expanse-1.11.1-*</code> and that the installer reports 1.11.1.</p>
+          <p class="muted" style="margin-top:1.25rem;font-size:0.9rem">Release images are attached to the <a href="https://github.com/team-expanse/expanse/releases/tag/v1.11.2"><code>v1.11.2</code> release</a> on GitHub. Check the download against the release's <a href="https://github.com/team-expanse/expanse/releases/download/v1.11.2/SHA256SUMS"><code>SHA256SUMS</code></a> with <code>sha256sum -c SHA256SUMS</code> in the same folder. Building from source gives you the same release: the flake asserts the ISO is named <code>expanse-1.11.2-*</code> and that the installer reports 1.11.2.</p>
         </div>
         <div>
           <div class="card" style="height:100%">
@@ -122,10 +122,10 @@
             <li><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span>The release version lives in one place, <code>nix/version.nix</code>; the ISO name and <code>expanse version</code> both read it.</span></li>
           </ul>
         </div>
-        <div class="terminal"><div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>build the installer</span></div><pre><span class="cm"># the 1.11.1 installer ISO, straight from the release tag</span>
-<span class="p">$ </span><span class="cmd">nix build github:team-expanse/expanse/v1.11.1#iso</span>
+        <div class="terminal"><div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>build the installer</span></div><pre><span class="cm"># the 1.11.2 installer ISO, straight from the release tag</span>
+<span class="p">$ </span><span class="cmd">nix build github:team-expanse/expanse/v1.11.2#iso</span>
 <span class="p">$ </span><span class="cmd">ls result/iso/</span>
-<span class="out">expanse-1.11.1-x86_64-linux.iso</span>
+<span class="out">expanse-1.11.2-x86_64-linux.iso</span>
 
 <span class="cm"># or from a checkout</span>
 <span class="p">$ </span><span class="cmd">nix develop</span>          <span class="cm"># go, golangci-lint, protoc, qemu, …</span>
@@ -146,6 +146,22 @@
       </div>
       <div class="changelog">
         <details class="rel latest" open>
+          <summary><span class="ver">1.11.2</span><span>Lease reclaim, gh: keys in the installer, CLI lookups, cluster status</span><span class="when">2026-10-19</span><svg class="icon chev" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+          <div class="rel-body">
+            <h4>Fixed</h4>
+            <ul>
+              <li>A restarted agent takes back its own singleton lease at once, so a singleton that needs placing no longer waits out the old lease (up to its TTL) as "LeaseHeld".</li>
+              <li>The installer fetches <code>gh:&lt;user&gt;</code> SSH keys from GitHub instead of writing <code>gh:&lt;user&gt;</code> into <code>authorized_keys</code>, where it let nobody in. It does so before touching any disk, and stops if the keys can't be fetched.</li>
+              <li><code>expanse ctl volume</code> commands take the volume ID that <code>volume list</code> shows first, as well as the name, and <code>volume list</code> keeps its columns lined up with long names.</li>
+              <li><code>expanse ctl block</code> commands take <code>namespace/name</code>, the form <code>block list</code> prints, as well as <code>-n</code>.</li>
+              <li>The haproxy and caddy forms list the existing blocks' addresses under their frontends and sites.</li>
+              <li><code>expanse cluster status</code> shows every node's API address (the first node's was blank, joined nodes' had no host) and, when the cluster was formed by an older release, the version this node runs.</li>
+              <li><code>docs/INSTALL.md</code> §5 upgrades to the release you name and works on a node with no <code>expanse/</code> yet; <code>docs/STORAGE.md</code> says the DRBD 8.4 caveat only applies to nodes that had storage off.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="rel">
           <summary><span class="ver">1.11.1</span><span>Block addresses behind the stock firewall, runtime builds, address ports</span><span class="when">2026-10-19</span><svg class="icon chev" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
           <div class="rel-body">
             <h4>Fixed</h4>
@@ -633,10 +649,10 @@
         <div>
           <div class="eyebrow">Known issues</div>
           <h2>Read before you install.</h2>
-          <p class="lead" style="margin-top:0.9rem">Carried in the changelog as of 1.11.1. Everything under 1.0.0 still applies unless a later release says otherwise.</p>
+          <p class="lead" style="margin-top:0.9rem">Carried in the changelog as of 1.11.2. Everything under 1.0.0 still applies unless a later release says otherwise.</p>
         </div>
         <div class="panel isnt">
-          <h3><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Open in 1.11.1</h3>
+          <h3><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Open in 1.11.2</h3>
           <ul>
             <li><strong>Block programs on installed nodes.</strong> Every block type except <code>util/echo</code>, <code>web/whoami</code> and <code>web/static-site</code> runs an upstream program, such as <code>postgres</code> or <code>caddy</code>, that an installed node does not ship; add its package to <code>environment.systemPackages</code> on each node that may run the block. The <a href="docs/blocks.html#packages">block reference</a> lists the package for every type.</li>
             <li><strong>Web UI VIP.</strong> The UI takes one address from the external VIP pool; size the pool one larger than the block VIPs you need.</li>
@@ -705,7 +721,7 @@
     </div>
     <div class="footer-bottom">
       <p class="made-with">Expanse and this site are a joint human–AI effort: built by a human maintainer working with AI coding assistants. <a href="index.html#made-with-ai">How Expanse is made</a></p>
-      <span>Expanse 1.11.1 · Apache License 2.0 · Versions follow Semantic Versioning.</span>
+      <span>Expanse 1.11.2 · Apache License 2.0 · Versions follow Semantic Versioning.</span>
       <span>This site makes no external requests. Fonts: Inter and JetBrains Mono (OFL).</span>
     </div>
   </div>
