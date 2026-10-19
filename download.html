@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <title>Download — Expanse</title>
-  <meta name="description" content="Get Expanse 1.10.1: the installer ISO, how to build it from source, hardware requirements, the changelog and known issues.">
+  <meta name="description" content="Get Expanse 1.11.0: the installer ISO, how to build it from source, hardware requirements, the changelog and known issues.">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/site.css">
   <script>
@@ -34,7 +34,7 @@
     <a class="brand" href="index.html" aria-label="Expanse home">
       <svg class="brand-mark" aria-hidden="true"><use href="#i-logo"/></svg>
       <span>Expanse</span>
-      <span class="brand-version">1.10.1</span>
+      <span class="brand-version">1.11.0</span>
     </a>
     <nav class="site-nav" id="site-nav" data-nav aria-label="Main">
       <a href="features.html">Features</a>
@@ -61,7 +61,7 @@
     <div class="hero-bg" aria-hidden="true"></div>
     <div class="container">
       <div class="eyebrow">Download</div>
-      <h1>Get Expanse 1.10.1.</h1>
+      <h1>Get Expanse 1.11.0.</h1>
       <p class="lead">One hybrid ISO installs a node on x86_64 hardware. Build it from the flake, or write a release image to a USB stick, then follow the <a href="docs/getting-started.html">quickstart</a>.</p>
     </div>
   </section>
@@ -71,21 +71,21 @@
       <div class="release">
         <div class="release-card">
           <div class="eyebrow">Latest release</div>
-          <h2>Expanse 1.10.1</h2>
-          <div class="date">Released 2026-10-17 · Expanse 1.10.1</div>
+          <h2>Expanse 1.11.0</h2>
+          <div class="date">Released 2026-10-18 · every block from the web UI</div>
           <div class="file">
             <svg class="icon" aria-hidden="true"><use href="#i-disc"/></svg>
             <div>
-              <div class="name">expanse-1.10.1-x86_64-linux.iso</div>
+              <div class="name">expanse-1.11.0-x86_64-linux.iso</div>
               <div class="meta">Hybrid UEFI + BIOS installer image · about 1.8 GB · needs a 4 GB USB stick</div>
-              <div class="meta">SHA-256 <code class="sha256">df896dda4ece66fa6366f4aea4ed748236e4bbb89bcedb82afa3e944aad7007c</code></div>
+              <div class="meta">SHA-256 <code class="sha256">7986846288661d5381ebc725cdb2a8bd8ac7e72161089e980796663e88eaadab</code></div>
             </div>
           </div>
           <div class="hero-actions" style="justify-content:flex-start">
-            <a class="btn btn-primary btn-lg" href="https://github.com/team-expanse/expanse/releases/download/v1.10.1/expanse-1.10.1-x86_64-linux.iso"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download ISO</a>
+            <a class="btn btn-primary btn-lg" href="https://github.com/team-expanse/expanse/releases/download/v1.11.0/expanse-1.11.0-x86_64-linux.iso"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download ISO</a>
             <a class="btn btn-secondary btn-lg" href="#source">Build from source</a>
           </div>
-          <p class="muted" style="margin-top:1.25rem;font-size:0.9rem">Release images are attached to the <a href="https://github.com/team-expanse/expanse/releases/tag/v1.10.1"><code>v1.10.1</code> release</a> on GitHub. Check the download against the release's <a href="https://github.com/team-expanse/expanse/releases/download/v1.10.1/SHA256SUMS"><code>SHA256SUMS</code></a> with <code>sha256sum -c SHA256SUMS</code> in the same folder. Building from source gives you the same release: the flake asserts the ISO is named <code>expanse-1.10.1-*</code> and that the installer reports 1.10.1.</p>
+          <p class="muted" style="margin-top:1.25rem;font-size:0.9rem">Release images are attached to the <a href="https://github.com/team-expanse/expanse/releases/tag/v1.11.0"><code>v1.11.0</code> release</a> on GitHub. Check the download against the release's <a href="https://github.com/team-expanse/expanse/releases/download/v1.11.0/SHA256SUMS"><code>SHA256SUMS</code></a> with <code>sha256sum -c SHA256SUMS</code> in the same folder. Building from source gives you the same release: the flake asserts the ISO is named <code>expanse-1.11.0-*</code> and that the installer reports 1.11.0.</p>
         </div>
         <div>
           <div class="card" style="height:100%">
@@ -122,10 +122,10 @@
             <li><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span>The release version lives in one place, <code>nix/version.nix</code>; the ISO name and <code>expanse version</code> both read it.</span></li>
           </ul>
         </div>
-        <div class="terminal"><div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>build the installer</span></div><pre><span class="cm"># the 1.10.1 installer ISO, straight from the release tag</span>
-<span class="p">$ </span><span class="cmd">nix build github:team-expanse/expanse/v1.10.1#iso</span>
+        <div class="terminal"><div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>build the installer</span></div><pre><span class="cm"># the 1.11.0 installer ISO, straight from the release tag</span>
+<span class="p">$ </span><span class="cmd">nix build github:team-expanse/expanse/v1.11.0#iso</span>
 <span class="p">$ </span><span class="cmd">ls result/iso/</span>
-<span class="out">expanse-1.10.1-x86_64-linux.iso</span>
+<span class="out">expanse-1.11.0-x86_64-linux.iso</span>
 
 <span class="cm"># or from a checkout</span>
 <span class="p">$ </span><span class="cmd">nix develop</span>          <span class="cm"># go, golangci-lint, protoc, qemu, …</span>
@@ -146,6 +146,40 @@
       </div>
       <div class="changelog">
         <details class="rel latest" open>
+          <summary><span class="ver">1.11.0</span><span>Every block from the web UI</span><span class="when">2026-10-18</span><svg class="icon chev" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+          <div class="rel-body">
+            <h4>Added</h4>
+            <ul>
+              <li>Every catalog type ships a <code>template.yaml</code>: the strategy, ports, storage and resources a new block of that type starts from. <code>CatalogService.GetType</code> now returns the type's shipped <code>schema.json</code> as is, plus its defaults and template as JSON, so clients can build a deploy form from them.</li>
+              <li>Deploy any catalog type from the web UI without writing YAML: Blocks → Deploy block lists the catalog (types no node can run are greyed out), and each type gets a form built from its schema, template and defaults. Errors show on the field they belong to; "Show as YAML" gives the same block as a manifest. A block's Edit button opens the same form.</li>
+              <li>The LAN address range for block VIPs (and the UI's own) is a cluster setting, edited under Settings → LAN addresses in the web UI and checked against the nodes' subnet before it is saved. <code>expanse.agent.externalVIPPool</code> still works and applies while the setting is unset. Changing the range moves blocks to addresses in the new one.</li>
+              <li>A block's page shows its address, and whether it is reachable from the LAN.</li>
+              <li>Turn storage on from the web UI: a node's page has a Storage card with an Enable storage button, which builds the thin pool in the data VG and starts the node's volume stack without a rebuild or a reboot. The deploy form warns while no node has storage on. <code>expanse.agent.storageVG</code> still works and overrides the UI on that node.</li>
+              <li>Block passwords and tokens are sealed: the fields a type's schema marks <code>writeOnly</code> are moved out of the block's config into the cluster's secret store (age, keyed from the cluster secret), whether they come from the form or <code>expanse ctl block apply</code>. Replicas get them as systemd credentials. They no longer appear in <code>block get</code>, the web UI, generation diffs or replica spec files. The deploy form generates a required password left empty and shows it once.</li>
+              <li>The deploy form has a pre-flight: it shows the node each replica would run on, or why no node takes it, and warns when another block uses the same port. Check runs it, and admission, against the form's values without deploying.</li>
+              <li>Deploy-form settings that point at another block offer the addresses of existing blocks of that type: grafana's <code>prometheusUrl</code> lists the <code>monitor/prometheus</code> blocks (and is filled in when there is one), redis's <code>replicaOf</code> the other redis blocks. Schemas mark such a field with <code>x-expanse-ref</code>.</li>
+              <li>VMs from cloud images: <code>vm/instance</code> takes an <code>image</code> (URL plus a checksum or checksum file) that the node downloads, checks and writes onto the blank disk on the first start, and <code>cloudInit</code> settings (SSH keys, user, hostname) it hands to the guest as a NoCloud seed. The deploy form offers Debian 13, Ubuntu 24.04 LTS or a custom URL, imports <code>gh:&lt;user&gt;</code> SSH keys, and the block's page shows the guest's MAC address.</li>
+            </ul>
+            <h4>Changed</h4>
+            <ul>
+              <li>Every node loads the DRBD 9 kernel module and LVM thin-pool support from boot, whether or not storage is on, so turning it on needs no reboot.</li>
+              <li><code>spec.secrets</code> is accepted (V20): each entry names a sealed secret for one of the type's <code>writeOnly</code> fields. Blocks created earlier keep their passwords in their config until their next update, which seals them.</li>
+              <li>VMs get a standard VGA device: Debian's cloud image resets right after GRUB without one.</li>
+              <li>A VM whose systemd is 254 or 255 (Ubuntu 24.04) counts as RUNNING on <code>READY=1</code>; those versions do not report <code>multi-user.target</code>.</li>
+              <li>Volume replicas are placed only on nodes whose storage is on. Nodes from before this release, which do not report it, stay eligible.</li>
+              <li>New <code>db/postgres</code>, <code>db/redis</code> and <code>ai/ollama</code> blocks built from the catalog defaults listen on 15432, 16379 and 21434, so their VIP can take the standard client port (5432, 6379, 11434) on the same node, as <code>db/mariadb</code> already does. Existing blocks keep the ports in their config.</li>
+            </ul>
+            <h4>Fixed</h4>
+            <ul>
+              <li>A SINGLETON block without <code>replicas</code> (allowed, and how the deploy form writes prometheus, grafana, uptime-kuma, nfs, smb, s3, vaultwarden, caddy and vm/instance) was never placed. It is now stored with <code>replicas: 1</code>, and the scheduler counts one for a singleton either way.</li>
+              <li>A <code>vm/instance</code> deployed from the form never got its disk: the type's template gave the volume no <code>mountPath</code>, and a volume without one is never bound to its replica.</li>
+              <li>The worked example in <code>docs/BLOCKS.md</code> used lowercase enum values (<code>expose: vip</code>, <code>antiAffinity: node</code>, ...) that <code>expanse ctl block apply</code> rejects.</li>
+              <li>The per-type docs no longer tell you to add the type's packages to <code>environment.systemPackages</code>: a node has fetched them itself since 1.10.1. <code>docs/OBSERVABILITY.md</code>'s Grafana example points at Prometheus's VIP on port 80, not 9090.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="rel">
           <summary><span class="ver">1.10.1</span><span>Expanse 1.10.1</span><span class="when">2026-10-17</span><svg class="icon chev" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
           <div class="rel-body">
             <h4>Fixed</h4>
@@ -585,10 +619,10 @@
         <div>
           <div class="eyebrow">Known issues</div>
           <h2>Read before you install.</h2>
-          <p class="lead" style="margin-top:0.9rem">Carried in the changelog as of 1.10.1. Everything under 1.0.0 still applies unless a later release says otherwise.</p>
+          <p class="lead" style="margin-top:0.9rem">Carried in the changelog as of 1.11.0. Everything under 1.0.0 still applies unless a later release says otherwise.</p>
         </div>
         <div class="panel isnt">
-          <h3><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Open in 1.10.1</h3>
+          <h3><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Open in 1.11.0</h3>
           <ul>
             <li><strong>Block programs on installed nodes.</strong> Every block type except <code>util/echo</code>, <code>web/whoami</code> and <code>web/static-site</code> runs an upstream program, such as <code>postgres</code> or <code>caddy</code>, that an installed node does not ship; add its package to <code>environment.systemPackages</code> on each node that may run the block. The <a href="docs/blocks.html#packages">block reference</a> lists the package for every type.</li>
             <li><strong>Web UI VIP.</strong> The UI takes one address from the external VIP pool; size the pool one larger than the block VIPs you need.</li>
@@ -657,7 +691,7 @@
     </div>
     <div class="footer-bottom">
       <p class="made-with">Expanse and this site are a joint human–AI effort: built by a human maintainer working with AI coding assistants. <a href="index.html#made-with-ai">How Expanse is made</a></p>
-      <span>Expanse 1.10.1 · Apache License 2.0 · Versions follow Semantic Versioning.</span>
+      <span>Expanse 1.11.0 · Apache License 2.0 · Versions follow Semantic Versioning.</span>
       <span>This site makes no external requests. Fonts: Inter and JetBrains Mono (OFL).</span>
     </div>
   </div>
