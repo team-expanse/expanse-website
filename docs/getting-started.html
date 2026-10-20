@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <title>Getting started — Expanse</title>
-  <meta name="description" content="Quickstart: make the installer USB, install a node with the TUI or unattended, form a one-node cluster, open the web UI, add nodes, and turn on replicated volumes and blocks.">
+  <meta name="description" content="Quickstart: make the installer USB, install a node with the TUI or unattended, form a one-node cluster, open the web UI, add nodes, turn on replicated volumes and blocks, and upgrade.">
   <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../assets/site.css">
   <script>
@@ -77,6 +77,7 @@
         <li><a href="#web-ui">6. Open the web UI</a></li>
         <li><a href="#join">7. Add nodes</a></li>
         <li><a href="#next">8. Volumes and blocks</a></li>
+        <li><a href="#upgrading">9. Upgrade</a></li>
         <li><a href="#troubleshooting">Troubleshooting</a></li>
       </ol>
     </aside>
@@ -109,7 +110,7 @@
         <li><strong>Welcome</strong> — a hardware summary.</li>
         <li><strong>Disks</strong> — select target disks. One disk gives a <em>single</em> layout (a btrfs system partition plus the remainder as LVM). Two or more give a <em>mirror</em>: the first two disks each carry an ESP and a system partition mirrored as md RAID1 so either disk alone boots, and every disk's remainder joins the LVM data pool. Disks holding data are marked <code>CONTAINS DATA</code> and require explicit confirmation.</li>
         <li><strong>Network</strong> — DHCP (recommended) or static.</li>
-        <li><strong>SSH key</strong> — paste a public key, or type <code>gh:&lt;username&gt;</code> to fetch your keys from GitHub.</li>
+        <li><strong>SSH key</strong> — paste a public key, or type <code>gh:&lt;username&gt;</code> to fetch your keys from GitHub. The installer fetches them before touching any disk, so this needs network; if GitHub can't be reached, the install stops.</li>
         <li><strong>Review</strong> — the full plan, with a red list of everything that will be destroyed. Type <code>INSTALL</code> to proceed; the install starts on the last letter, with no Enter needed.</li>
         <li><strong>Progress</strong> — the current stage, a progress bar, elapsed time and a scrolling tail of the log (the full log is in <code>/tmp/expanse-install.log</code>).</li>
       </ol>
@@ -227,6 +228,9 @@
 <span class="out">echo: 1/1 placed (phase <span class="ok">RUNNING</span>)</span>
 <span class="p">$ </span><span class="cmd">expanse ctl block logs default/echo</span></pre></div>
       <p>The same deploy, edit, scale and delete actions are on the Blocks page of the web UI, and "Show as YAML" on the deploy form gives a manifest for <code>block apply</code>.</p>
+
+      <h2 id="upgrading">9. Upgrade</h2>
+      <p>Upgrade the cluster from the web UI: <strong>Operations → Upgrades</strong> shows the newest release and each node's version, and <strong>Upgrade cluster</strong> moves one node at a time, the leader last, while the cluster stays healthy. Blocks keep running through it. A node that says <strong>reboot to finish</strong> needs a reboot; reboot such nodes one at a time. Nodes on 1.11 or earlier have no Upgrades page and move once by hand with <code>scripts/upgrade-node.sh</code>, one node at a time, as the project's <code>docs/UPGRADE.md</code> describes.</p>
 
       <h2 id="troubleshooting">Troubleshooting</h2>
       <div class="table-wrap">

@@ -143,7 +143,7 @@
         <table class="t config" data-block="net/haproxy">
           <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
           <tbody>
-            <tr data-key="frontends"><td><code>frontends</code></td><td>required, or <code>config</code></td><td>Listeners, each balancing over its own servers.</td></tr>
+            <tr data-key="frontends"><td><code>frontends</code></td><td>required, or <code>config</code></td><td>Listeners, each balancing over its own servers. The deploy form lists existing blocks' addresses for the servers.</td></tr>
             <tr data-key="frontends[].name"><td><code>frontends[].name</code></td><td>required</td><td>Name in stats and metrics (<code>fe_&lt;name&gt;</code>, <code>be_&lt;name&gt;</code>).</td></tr>
             <tr data-key="frontends[].port"><td><code>frontends[].port</code></td><td>required</td><td>Listen port, 1024 or above (HAProxy runs unprivileged).</td></tr>
             <tr data-key="frontends[].servers"><td><code>frontends[].servers</code></td><td>required</td><td>Servers as <code>host:port</code>. Names resolve once, at start.</td></tr>

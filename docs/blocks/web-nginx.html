@@ -131,7 +131,7 @@
           <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
           <tbody>
             <tr data-key="serverName"><td><code>serverName</code></td><td>required</td><td>The <code>server_name</code> nginx answers for.</td></tr>
-            <tr data-key="port"><td><code>port</code></td><td>none: always set it</td><td>TCP port nginx listens on. Unset, the runtime passes port 0.</td></tr>
+            <tr data-key="port"><td><code>port</code></td><td>none: always set it</td><td>Port nginx listens on, behind the block's address; clients connect to the address port in <code>network.ports</code>. Unset, the runtime passes port 0.</td></tr>
             <tr data-key="root"><td><code>root</code></td><td>a private temporary directory</td><td>Document root. It is created if missing, and an <code>index.html</code> placeholder is written when the directory has none. The unit is sandboxed (<code>ProtectSystem=strict</code>), so the directory must be one it can write.</td></tr>
             <tr data-key="tls"><td><code>tls</code></td><td>none</td><td>Accepted by the schema (<code>cert</code> and <code>key</code> paths) but <strong>not applied</strong>: the runtime always serves plain HTTP. Put <a href="web-caddy.html"><code>web/caddy</code></a> in front for HTTPS.</td></tr>
           </tbody>

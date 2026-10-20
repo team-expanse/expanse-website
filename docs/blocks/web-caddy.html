@@ -144,7 +144,7 @@
         <table class="t config" data-block="web/caddy">
           <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
           <tbody>
-            <tr data-key="sites"><td><code>sites</code></td><td>required, or <code>caddyfile</code></td><td>Sites served, one host name each.</td></tr>
+            <tr data-key="sites"><td><code>sites</code></td><td>required, or <code>caddyfile</code></td><td>Sites served, one host name each. The deploy form lists existing blocks' addresses for the reverse proxy targets.</td></tr>
             <tr data-key="sites[].host"><td><code>sites[].host</code></td><td>required</td><td>Host name the site answers for. A wildcard such as <code>*.example.com</code> needs a DNS challenge, so use <code>caddyfile</code> for it.</td></tr>
             <tr data-key="sites[].tls"><td><code>sites[].tls</code></td><td><code>acme</code></td><td><code>acme</code>: a public certificate; <code>internal</code>: Caddy's own CA; <code>off</code>: plain HTTP only.</td></tr>
             <tr data-key="sites[].reverseProxy"><td><code>sites[].reverseProxy</code></td><td>one of these two</td><td>Upstreams as <code>host:port</code>, round robin. A failing upstream is skipped for 30 s.</td></tr>
