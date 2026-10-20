@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <title>Download — Expanse</title>
-  <meta name="description" content="Get Expanse 1.12.2: the installer ISO, how to build it from source, hardware requirements, the changelog and known issues.">
+  <meta name="description" content="Get Expanse 1.12.3: the installer ISO, how to build it from source, hardware requirements, the changelog and known issues.">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/site.css">
   <script>
@@ -34,7 +34,7 @@
     <a class="brand" href="index.html" aria-label="Expanse home">
       <svg class="brand-mark" aria-hidden="true"><use href="#i-logo"/></svg>
       <span>Expanse</span>
-      <span class="brand-version">1.12.2</span>
+      <span class="brand-version">1.12.3</span>
     </a>
     <nav class="site-nav" id="site-nav" data-nav aria-label="Main">
       <a href="features.html">Features</a>
@@ -61,7 +61,7 @@
     <div class="hero-bg" aria-hidden="true"></div>
     <div class="container">
       <div class="eyebrow">Download</div>
-      <h1>Get Expanse 1.12.2.</h1>
+      <h1>Get Expanse 1.12.3.</h1>
       <p class="lead">One hybrid ISO installs a node on x86_64 hardware. Build it from the flake, or write a release image to a USB stick, then follow the <a href="docs/getting-started.html">quickstart</a>.</p>
     </div>
   </section>
@@ -71,21 +71,21 @@
       <div class="release">
         <div class="release-card">
           <div class="eyebrow">Latest release</div>
-          <h2>Expanse 1.12.2</h2>
-          <div class="date">Released 2026-10-20 · upgrades from the web UI read the release's version</div>
+          <h2>Expanse 1.12.3</h2>
+          <div class="date">Released 2026-10-20 · upgrades keep blocks running and the UI certificate</div>
           <div class="file">
             <svg class="icon" aria-hidden="true"><use href="#i-disc"/></svg>
             <div>
-              <div class="name">expanse-1.12.2-x86_64-linux.iso</div>
+              <div class="name">expanse-1.12.3-x86_64-linux.iso</div>
               <div class="meta">Hybrid UEFI + BIOS installer image · about 1.8 GB · needs a 4 GB USB stick</div>
-              <div class="meta">SHA-256 <code class="sha256">c72a559009a7d6e3197915bfb0b44d68fadd737d9c16efb08e3d9e52ee458cae</code></div>
+              <div class="meta">SHA-256 <code class="sha256">15f29ec8899d823a46d7eb536a7d70850d7f047021d37eb3e9e4807da392c73c</code></div>
             </div>
           </div>
           <div class="hero-actions" style="justify-content:flex-start">
-            <a class="btn btn-primary btn-lg" href="https://github.com/team-expanse/expanse/releases/download/v1.12.2/expanse-1.12.2-x86_64-linux.iso"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download ISO</a>
+            <a class="btn btn-primary btn-lg" href="https://github.com/team-expanse/expanse/releases/download/v1.12.3/expanse-1.12.3-x86_64-linux.iso"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download ISO</a>
             <a class="btn btn-secondary btn-lg" href="#source">Build from source</a>
           </div>
-          <p class="muted" style="margin-top:1.25rem;font-size:0.9rem">Release images are attached to the <a href="https://github.com/team-expanse/expanse/releases/tag/v1.12.2"><code>v1.12.2</code> release</a> on GitHub. Check the download against the release's <a href="https://github.com/team-expanse/expanse/releases/download/v1.12.2/SHA256SUMS"><code>SHA256SUMS</code></a> with <code>sha256sum -c SHA256SUMS</code> in the same folder. Building from source gives you the same release: the flake asserts the ISO is named <code>expanse-1.12.2-*</code> and that the installer reports 1.12.2.</p>
+          <p class="muted" style="margin-top:1.25rem;font-size:0.9rem">Release images are attached to the <a href="https://github.com/team-expanse/expanse/releases/tag/v1.12.3"><code>v1.12.3</code> release</a> on GitHub. Check the download against the release's <a href="https://github.com/team-expanse/expanse/releases/download/v1.12.3/SHA256SUMS"><code>SHA256SUMS</code></a> with <code>sha256sum -c SHA256SUMS</code> in the same folder. Building from source gives you the same release: the flake asserts the ISO is named <code>expanse-1.12.3-*</code> and that the installer reports 1.12.3.</p>
         </div>
         <div>
           <div class="card" style="height:100%">
@@ -122,10 +122,10 @@
             <li><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span>The release version lives in one place, <code>nix/version.nix</code>; the ISO name and <code>expanse version</code> both read it.</span></li>
           </ul>
         </div>
-        <div class="terminal"><div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>build the installer</span></div><pre><span class="cm"># the 1.12.2 installer ISO, straight from the release tag</span>
-<span class="p">$ </span><span class="cmd">nix build github:team-expanse/expanse/v1.12.2#iso</span>
+        <div class="terminal"><div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>build the installer</span></div><pre><span class="cm"># the 1.12.3 installer ISO, straight from the release tag</span>
+<span class="p">$ </span><span class="cmd">nix build github:team-expanse/expanse/v1.12.3#iso</span>
 <span class="p">$ </span><span class="cmd">ls result/iso/</span>
-<span class="out">expanse-1.12.2-x86_64-linux.iso</span>
+<span class="out">expanse-1.12.3-x86_64-linux.iso</span>
 
 <span class="cm"># or from a checkout</span>
 <span class="p">$ </span><span class="cmd">nix develop</span>          <span class="cm"># go, golangci-lint, protoc, qemu, …</span>
@@ -146,6 +146,24 @@
       </div>
       <div class="changelog">
         <details class="rel latest" open>
+          <summary><span class="ver">1.12.3</span><span>Upgrades keep blocks running and the UI certificate</span><span class="when">2026-10-20</span><svg class="icon chev" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+          <div class="rel-body">
+            <h4>Changed</h4>
+            <ul>
+              <li>The Pando guest (<code>docs/PANDO.md</code>) runs Pando 0.12.0, up from 0.10.0. Pando now flushes its secrets and API token keys to disk when it first creates them, creates its GitHub App itself, and connects Slack in one step. The compose file is unchanged. Existing guests are not upgraded in place.</li>
+            </ul>
+            <h4>Fixed</h4>
+            <ul>
+              <li>Upgrading a node no longer restarts its blocks that have more than one config field. Each agent build spaced a block's config JSON its own way, and the new agent took the difference for a config change. Configs are now encoded the same way by every build and compared by content, so an upgrade from 1.12.2 or earlier keeps them running too.</li>
+              <li>The web UI keeps its TLS certificate across agent restarts and upgrades, so a browser that accepted it is not asked again. A node issued a new one at every start.</li>
+              <li>Upgrades remove the release downloads (source tarball and binary cache, several GB) once the node runs the release, and remove an earlier release's downloads before fetching. Both the web UI's upgrades and <code>scripts/upgrade-node.sh</code> kept every download. The script keeps its log.</li>
+              <li>A <code>db/postgres</code> block's replication password no longer reaches <code>postgresql.auto.conf</code> or the block's log. Standbys connect with a libpq passfile on their volume (0600) instead, and a standby cloned by an earlier release has its stored connection string rewritten at its next start. Earlier failovers logged the password in the block's journal, so rotate it if that matters.</li>
+              <li>A node no longer runs <code>drbdadm adjust</code> on every volume pass, logging "rs_discard_granularity changed to 1048576" every 2 s. The volume config now asks for the resync discard granularity the kernel keeps for the backing LV (a thin pool's chunk size, 1 MiB on larger pools), so <code>adjust</code> finds nothing to change.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="rel">
           <summary><span class="ver">1.12.2</span><span>Upgrades from the web UI read the release's version</span><span class="when">2026-10-20</span><svg class="icon chev" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
           <div class="rel-body">
             <h4>Fixed</h4>
@@ -712,10 +730,10 @@
         <div>
           <div class="eyebrow">Known issues</div>
           <h2>Read before you install.</h2>
-          <p class="lead" style="margin-top:0.9rem">Carried in the changelog as of 1.12.2. Everything under 1.0.0 still applies unless a later release says otherwise.</p>
+          <p class="lead" style="margin-top:0.9rem">Carried in the changelog as of 1.12.3. Everything under 1.0.0 still applies unless a later release says otherwise.</p>
         </div>
         <div class="panel isnt">
-          <h3><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Open in 1.12.2</h3>
+          <h3><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Open in 1.12.3</h3>
           <ul>
             <li><strong>Block programs on installed nodes.</strong> Every block type except <code>util/echo</code>, <code>web/whoami</code> and <code>web/static-site</code> runs an upstream program, such as <code>postgres</code> or <code>caddy</code>, that an installed node does not ship; add its package to <code>environment.systemPackages</code> on each node that may run the block. The <a href="docs/blocks.html#packages">block reference</a> lists the package for every type.</li>
             <li><strong>Web UI VIP.</strong> The UI takes one address from the external VIP pool; size the pool one larger than the block VIPs you need.</li>
@@ -784,7 +802,7 @@
     </div>
     <div class="footer-bottom">
       <p class="made-with">Expanse and this site are a joint human–AI effort: built by a human maintainer working with AI coding assistants. <a href="index.html#made-with-ai">How Expanse is made</a></p>
-      <span>Expanse 1.12.2 · Apache License 2.0 · Versions follow Semantic Versioning.</span>
+      <span>Expanse 1.12.3 · Apache License 2.0 · Versions follow Semantic Versioning.</span>
       <span>This site makes no external requests. Fonts: Inter and JetBrains Mono (OFL).</span>
     </div>
   </div>
