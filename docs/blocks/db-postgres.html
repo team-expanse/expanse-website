@@ -136,7 +136,7 @@
         <table class="t config" data-block="db/postgres">
           <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
           <tbody>
-            <tr data-key="replicationPassword"><td><code>replicationPassword</code></td><td>required</td><td>Password of the internal <code>replicator</code> role standbys stream with. Sealed: kept out of the stored block (<a href="../blocks.html#secrets">block secrets</a>).</td></tr>
+            <tr data-key="replicationPassword"><td><code>replicationPassword</code></td><td>required</td><td>Password of the internal <code>replicator</code> role standbys stream with. Standbys read it from a libpq passfile on their volume (mode 0600), so it never reaches <code>postgresql.auto.conf</code> or the block's log. Sealed: kept out of the stored block (<a href="../blocks.html#secrets">block secrets</a>).</td></tr>
             <tr data-key="superuserPassword"><td><code>superuserPassword</code></td><td>required</td><td>Password of the <code>postgres</code> superuser over TCP. Local socket access, which the failover controller uses, needs none. Sealed: kept out of the stored block (<a href="../blocks.html#secrets">block secrets</a>).</td></tr>
             <tr data-key="port"><td><code>port</code></td><td><code>5432</code></td><td>Port for client and replication connections. Behind a VIP, use another port, such as the <code>15432</code> the deploy form sets, so the VIP can take 5432 on the same node.</td></tr>
             <tr data-key="database"><td><code>database</code></td><td><code>app</code></td><td>Database created on the first primary at bootstrap.</td></tr>

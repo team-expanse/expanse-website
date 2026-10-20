@@ -172,7 +172,7 @@
       <div class="code"><pre><span class="p">$ </span><span class="cmd">journalctl -u expansed | grep "initial web UI admin password"</span>
 <span class="out">… generated initial web UI admin password — save it now, it will not be shown again  password=…</span></pre></div>
       <p>If it has scrolled past, reset it instead of searching: <code>expanse ctl admin reset-password --socket /run/expanse/agent.sock</code> prints a new one, once.</p>
-      <p>The certificate is issued by the cluster's own web UI CA. Browsers show it as untrusted until you import <code>/persist/expanse/ca/ui-ca.pem</code> (not <code>ca.pem</code>, which is the cluster's Ed25519 CA and rejected by browsers) as a trusted authority:</p>
+      <p>The certificate is issued by the cluster's own web UI CA. Browsers show it as untrusted until you import <code>/persist/expanse/ca/ui-ca.pem</code> (not <code>ca.pem</code>, which is the cluster's Ed25519 CA and rejected by browsers) as a trusted authority. The node keeps its certificate across agent restarts and upgrades, so a browser that accepted it is not asked again.</p>
       <div class="code"><pre><span class="p">$ </span><span class="cmd">scp root@&lt;node&gt;:/persist/expanse/ca/ui-ca.pem .</span>
 <span class="cm"># Firefox: Settings → Privacy &amp; Security → Certificates → Authorities → Import</span>
 <span class="cm"># curl:    --cacert ui-ca.pem</span></pre></div>
