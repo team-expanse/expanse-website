@@ -85,7 +85,7 @@
 
     <article class="prose">
       <p>A block is a service described in YAML that the cluster schedules onto nodes and runs as a sandboxed systemd unit. Apply one with <code>expanse ctl block apply -f &lt;file&gt;</code>; add <code>--dry-run</code> to validate it first. <a href="getting-started.html#next">Getting started</a> walks through a first block, and <a href="../features.html#blocks">Features</a> covers scheduling, rolling updates and self-healing. On a node, <code>expanse ctl catalog list</code> lists the types and <code>expanse ctl catalog show &lt;type&gt;</code> prints a type's schema.</p>
-      <p>Every type can also be deployed and edited without YAML from the web UI: <strong>Blocks → Deploy block</strong> lists the catalog, greying out types no node can run, and builds a form for each from its schema and starting template. Errors show on the field they concern, a pre-flight shows the node each replica would run on (or why no node takes it), and "Show as YAML" gives the same block as a manifest. The keys on each type's page are the settings the form shows.</p>
+      <p>Every type can also be deployed and edited without YAML from the web UI: <strong>Workloads → Blocks → Deploy block</strong> lists the catalog by category, greying out types no node can run, and builds a form for each from its schema and starting template. Errors show on the field they concern, a pre-flight shows the node each replica would run on (or why no node takes it), and "Show as YAML" gives the same block as a manifest. The keys on each type's page are the settings the form shows.</p>
 
       <h2 id="fields">Fields every block shares</h2>
       <p>Every block has the same outer shape; only <code>spec.config</code> differs by type.</p>

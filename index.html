@@ -107,28 +107,21 @@
       <!-- Product stage: web UI dashboard + tty1 host console -->
       <div class="stage reveal">
         <figure class="window" style="margin:0">
-          <div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>Dashboard · expanse · Expanse</span><span class="url">https://10.0.0.11:8443/</span></div>
-          <div class="mu" role="img" aria-label="Mock of the Expanse web console dashboard: 3 of 3 nodes reachable, quorum 3 of 2 with leader n1, 2 blocks running, 2 volumes healthy, no alerts firing, generation 12, and a node table">
+          <div class="window-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span>Overview · expanse · Expanse</span><span class="url">https://10.0.0.11:8443/</span></div>
+          <div class="mu" role="img" aria-label="Mock of the Expanse web console overview: 3 of 3 nodes reachable, quorum 3 of 2 with leader n1, 2 blocks running, 2 volumes healthy, no alerts firing, generation 12, and a node table">
             <div class="mu-side" aria-hidden="true">
               <div class="mu-brand"><svg><use href="#i-cube"/></svg>Expanse</div>
-              <div class="grp">Cluster</div>
-              <div class="it on"><svg><use href="#i-dashboard"/></svg>Dashboard</div>
+              <div class="it on"><svg><use href="#i-dashboard"/></svg>Overview</div>
               <div class="it"><svg><use href="#i-cluster"/></svg>Cluster</div>
               <div class="it"><svg><use href="#i-nodes"/></svg>Nodes</div>
-              <div class="it"><svg><use href="#i-health"/></svg>Health &amp; alerts</div>
-              <div class="grp">Workloads</div>
-              <div class="it"><svg><use href="#i-blocks"/></svg>Blocks</div>
-              <div class="it"><svg><use href="#i-volumes"/></svg>Volumes</div>
-              <div class="grp">History</div>
-              <div class="it"><svg><use href="#i-generations"/></svg>Generations</div>
-              <div class="it"><svg><use href="#i-events"/></svg>Events</div>
-              <div class="grp">System</div>
-              <div class="it"><svg><use href="#i-settings"/></svg>Settings</div>
+              <div class="it"><svg><use href="#i-blocks"/></svg>Workloads</div>
+              <div class="it"><svg><use href="#i-generations"/></svg>Changes</div>
+              <div class="it"><svg><use href="#i-download"/></svg>Upgrades</div>
             </div>
             <div class="mu-main" aria-hidden="true">
               <div class="mu-head"><strong>expanse</strong><span class="spill"><i></i>Healthy</span><span class="muted">quorum 3/2</span><span class="sp"></span><span class="avatar">A</span><span>admin</span></div>
               <div class="mu-body">
-                <div class="mu-title"><h4>Dashboard</h4><span class="muted">Cluster <b>expanse</b> at a glance.</span><span class="live"><i></i>Live</span></div>
+                <div class="mu-title"><h4>Overview</h4><span class="muted">Cluster <b>expanse</b> at a glance.</span><span class="live"><i></i>Live</span></div>
                 <div class="mu-stats">
                   <div class="mu-stat"><div class="l"><svg><use href="#i-nodes"/></svg>Nodes</div><div class="v">3<small>/3</small></div><div class="s">all reachable</div></div>
                   <div class="mu-stat"><div class="l"><svg><use href="#i-cluster"/></svg>Quorum</div><div class="v">3<small>/2</small></div><div class="s">leader n1</div></div>
@@ -270,7 +263,7 @@
         <article class="card reveal">
           <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-web"/></svg></div>
           <h3>A live web console</h3>
-          <p>Every node serves the UI on <code>:8443</code>: dashboard, cluster, nodes, health, blocks, volumes, generations and events, updating over Server-Sent Events. Deploy any block, VMs included, from a form, and turn storage on with one button. Password login plus optional OIDC single sign-on with a fail-closed allow-list.</p>
+          <p>Every node serves the UI on <code>:8443</code>: overview and checks, cluster, nodes, blocks and volumes, changes and upgrades, updating over Server-Sent Events. Deploy any block, VMs included, from a form, and turn storage on with one button. Password login plus optional OIDC single sign-on with a fail-closed allow-list.</p>
           <a class="more" href="features.html#console">Web UI and host console<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         </article>
         <article class="card reveal reveal-2">

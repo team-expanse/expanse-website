@@ -172,7 +172,7 @@
       <div class="code"><pre><span class="p">$ </span><span class="cmd">journalctl -u expansed | grep "initial web UI admin password"</span>
 <span class="out">… generated initial web UI admin password — save it now, it will not be shown again  password=…</span></pre></div>
       <p>If it has scrolled past, reset it instead of searching: <code>expanse ctl admin reset-password --socket /run/expanse/agent.sock</code> prints a new one, once.</p>
-      <p>The certificate is issued by the cluster's own web UI CA. Browsers show it as untrusted until you import <code>/persist/expanse/ca/ui-ca.pem</code> (not <code>ca.pem</code>, which is the cluster's Ed25519 CA and rejected by browsers) as a trusted authority. The node keeps its certificate across agent restarts and upgrades, so a browser that accepted it is not asked again.</p>
+      <p>The certificate is issued by the cluster's own web UI CA. Browsers show it as untrusted until you import <code>/persist/expanse/ca/ui-ca.pem</code> (also a download under Cluster → Settings) (not <code>ca.pem</code>, which is the cluster's Ed25519 CA and rejected by browsers) as a trusted authority. The node keeps its certificate across agent restarts and upgrades, so a browser that accepted it is not asked again.</p>
       <div class="code"><pre><span class="p">$ </span><span class="cmd">scp root@&lt;node&gt;:/persist/expanse/ca/ui-ca.pem .</span>
 <span class="cm"># Firefox: Settings → Privacy &amp; Security → Certificates → Authorities → Import</span>
 <span class="cm"># curl:    --cacert ui-ca.pem</span></pre></div>
@@ -192,7 +192,7 @@
 
       <h2 id="next">8. Volumes and blocks</h2>
       <h3>Enable replicated volumes</h3>
-      <p>Replicated volumes need a thin pool, so they are an explicit opt-in. Every node already loads the DRBD 9 module and thin-pool support from boot, so turning storage on needs no rebuild and no reboot. In the web UI, open <strong>Nodes → the node → Storage</strong> and press <strong>Enable storage</strong>: the node builds the thin pool in its <code>expanse</code> volume group (95% of the free space by default; the rest is headroom), starts its volume stack, and the card reads <strong>On</strong>. Do it on each node that should hold volume replicas; replicas go only to nodes whose storage is on.</p>
+      <p>Replicated volumes need a thin pool, so they are an explicit opt-in. Every node already loads the DRBD 9 module and thin-pool support from boot, so turning storage on needs no rebuild and no reboot. In the web UI, open <strong>Nodes</strong>, pick the node, and press <strong>Enable storage</strong> on the Storage card of its Overview tab: the node builds the thin pool in its <code>expanse</code> volume group (95% of the free space by default; the rest is headroom), starts its volume stack, and the card reads <strong>On</strong>. Do it on each node that should hold volume replicas; replicas go only to nodes whose storage is on.</p>
       <p>Setting the options in the node's NixOS configuration instead (<code>/etc/nixos/configuration.nix</code>, kept in <code>/persist/etc/nixos</code>) overrides the UI on that node. After <code>nixos-rebuild switch</code>, create the pool once by hand:</p>
       <div class="code"><div class="code-title">configuration.nix</div><pre><span class="k">expanse.agent.storageVG</span> = <span class="s">"expanse"</span>;
 <span class="k">expanse.agent.storagePool</span> = <span class="s">"pool"</span>;   <span class="cm"># empty = thick volumes, no snapshots</span></pre></div>
@@ -204,7 +204,7 @@
       <p>A volume without an explicit <code>--replication</code> takes its class's target (3 by default) and is placed on as many eligible nodes as exist; it reads <code>underreplicated</code> until the target is met and gains replicas automatically as nodes join.</p>
 
       <h3>Deploy a block</h3>
-      <p>Blocks are services run as systemd units. The easiest way to deploy one is the web UI: <strong>Blocks → Deploy block</strong> lists every type, VMs included, each with a form filled in with working defaults, and nothing needs a change to <code>/etc/nixos</code>. The form warns while no node has storage on. Until a LAN address range is set under <strong>Settings → LAN addresses</strong>, block VIPs are reachable inside the cluster only.</p>
+      <p>Blocks are services run as systemd units. The easiest way to deploy one is the web UI: <strong>Workloads → Blocks → Deploy block</strong> lists every type, grouped by category, VMs included, each with a form filled in with working defaults, and nothing needs a change to <code>/etc/nixos</code>. The form warns while no node has storage on. Until a LAN address range is set under <strong>Cluster → Settings → LAN addresses</strong>, block VIPs are reachable inside the cluster only.</p>
       <p>The same blocks can be described in YAML. <code>util/echo</code> is the shipped test workload and runs on a fresh install with no download; other types fetch their programs from the NixOS binary cache the first time they are placed on a node, so that first placement needs network access. Types are listed with <code>expanse ctl catalog list</code>, and the <a href="blocks.html">block reference</a> covers each one's configuration and usage.</p>
       <div class="code"><div class="code-title">echo.yaml</div><pre><span class="k">apiVersion</span>: expanse.io/v1
 <span class="k">kind</span>: Block
@@ -227,10 +227,10 @@
 <span class="p">$ </span><span class="cmd">expanse ctl block explain echo</span>
 <span class="out">echo: 1/1 placed (phase <span class="ok">RUNNING</span>)</span>
 <span class="p">$ </span><span class="cmd">expanse ctl block logs default/echo</span></pre></div>
-      <p>The same deploy, edit, scale and delete actions are on the Blocks page of the web UI, and "Show as YAML" on the deploy form gives a manifest for <code>block apply</code>.</p>
+      <p>In the web UI, a block's page has Overview (placement, address, scale), Logs (a live tail per replica) and Settings (the deploy form with its current settings, and Delete) tabs, and "Show as YAML" on the deploy form gives a manifest for <code>block apply</code>.</p>
 
       <h2 id="upgrading">9. Upgrade</h2>
-      <p>Upgrade the cluster from the web UI: <strong>Operations → Upgrades</strong> shows the newest release and each node's version, and <strong>Upgrade cluster</strong> moves one node at a time, the leader last, while the cluster stays healthy. Blocks keep running through it. A node that says <strong>reboot to finish</strong> needs a reboot; reboot such nodes one at a time. Nodes on 1.11 or earlier have no Upgrades page and move once by hand with <code>scripts/upgrade-node.sh</code>, one node at a time, as the project's <code>docs/UPGRADE.md</code> describes.</p>
+      <p>Upgrade the cluster from the web UI: <strong>Upgrades</strong> in the web UI's rail shows the newest release and each node's version, and <strong>Upgrade cluster</strong> moves one node at a time, the leader last, while the cluster stays healthy. Blocks keep running through it. A node that says <strong>reboot to finish</strong> needs a reboot; reboot such nodes one at a time. Nodes on 1.11 or earlier have no Upgrades page and move once by hand with <code>scripts/upgrade-node.sh</code>, one node at a time, as the project's <code>docs/UPGRADE.md</code> describes.</p>
 
       <h2 id="troubleshooting">Troubleshooting</h2>
       <div class="table-wrap">

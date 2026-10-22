@@ -119,7 +119,7 @@
       <span class="k">sshKeys</span>: [<span class="s">"ssh-ed25519 AAAA... me@laptop"</span>]
       <span class="k">user</span>: ops        <span class="cm"># optional: a sudo user with the keys</span>
       <span class="k">hostname</span>: vm1   <span class="cm"># optional: defaults to the block's name</span></pre></div>
-<p>The web UI builds the same block without YAML: Blocks → Deploy block → <code>vm/instance</code> starts from the Debian 13 image and offers Ubuntu 24.04 LTS or a custom URL. In its SSH key list, <code>gh:&lt;user&gt;</code> imports a GitHub user's keys. Its First-boot setup field offers ready-made setups, starting with Pando under Docker on a Debian 13 or Ubuntu 24.04 image, so the Pando app platform deploys from the UI with no image to build; give that VM 2 CPUs, 4 GiB and a 40 GiB disk or more.</p>
+<p>The web UI builds the same block without YAML: Workloads → Blocks → Deploy block → <code>vm/instance</code> starts from the Debian 13 image and offers Ubuntu 24.04 LTS or a custom URL. In its SSH key list, <code>gh:&lt;user&gt;</code> imports a GitHub user's keys. Its First-boot setup field offers ready-made setups, starting with Pando under Docker on a Debian 13 or Ubuntu 24.04 image, so the Pando app platform deploys from the UI with no image to build; give that VM 2 CPUs, 4 GiB and a 40 GiB disk or more.</p>
 
 <div class="code"><pre><span class="p">$ </span><span class="cmd">expanse ctl block apply -f instance.yaml --dry-run</span>   <span class="cm"># validate only</span>
 <span class="p">$ </span><span class="cmd">expanse ctl block apply -f instance.yaml</span></pre></div>
