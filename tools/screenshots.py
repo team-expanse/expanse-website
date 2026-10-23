@@ -20,7 +20,7 @@ from playwright.sync_api import sync_playwright
 SITE = Path(__file__).resolve().parent.parent
 OUT = SITE / "screenshots"
 
-# (file name, path, viewport width, colour scheme, forced data-theme)
+# (file name, path, viewport width, color scheme, forced data-theme)
 SHOTS = [
     ("landing-desktop-dark.png", "/index.html", 1440, "dark"),
     ("landing-desktop-light.png", "/index.html", 1440, "light"),

@@ -17,7 +17,7 @@ requests, works opened straight from disk.
 | `download.html` | Latest release (1.16.0), build-from-source, requirements, changelog, known issues |
 | `assets/site.css` | The whole design system: tokens, light/dark themes, components |
 | `assets/site.js` | Theme toggle, mobile nav, copy buttons, scroll reveal, TOC highlight |
-| `assets/fonts/` | Self-hosted Inter and JetBrains Mono (OFL; licences alongside) |
+| `assets/fonts/` | Self-hosted Inter and JetBrains Mono (OFL; licenses alongside) |
 | `assets/logo.svg` | Favicon / mark |
 | `tools/screenshots.py` | Serves the site and captures review screenshots with Playwright |
 | `tools/sync-release` | Release hook: syncs the site to a new Expanse release (see below) |
@@ -98,4 +98,4 @@ model, vendor or tool, since those change over time; the commits record them.
 
 The site is licensed under the [Apache License, Version 2.0](LICENSE); see
 [`NOTICE`](NOTICE). The self-hosted fonts in `assets/fonts/` are under the SIL
-Open Font License 1.1, with their licence files alongside.
+Open Font License 1.1, with their license files alongside.

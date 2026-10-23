@@ -240,7 +240,7 @@
             <tr><td>"refusing to wipe non-empty disk"</td><td>That is intentional. Add <code>--force</code> only if you mean it.</td></tr>
             <tr><td>Install fails at <code>partition</code></td><td>Check <code>lsblk</code>; the target may be the USB stick itself.</td></tr>
             <tr><td>Root not wiped on reboot</td><td>The <code>@root-blank</code> snapshot is missing — <code>expanse doctor storage</code> flags it. Re-install to restore it; never hand-edit the subvolume layout.</td></tr>
-            <tr><td>Clock warnings in logs</td><td>Old CMOS battery; chrony fixes the time after a few steps. Health reads "unknown" rather than unhealthy for the first 10 minutes after boot while it synchronises.</td></tr>
+            <tr><td>Clock warnings in logs</td><td>Old CMOS battery; chrony fixes the time after a few steps. Health reads "unknown" rather than unhealthy for the first 10 minutes after boot while it synchronizes.</td></tr>
             <tr><td>Want to see what changed on reboot</td><td><code>journalctl -u expanse-impermanence-check</code></td></tr>
             <tr><td>Browser says the UI's certificate is invalid</td><td>Import <code>ui-ca.pem</code>, not <code>ca.pem</code> (see <a href="#web-ui">step 6</a>).</td></tr>
           </tbody>

@@ -11,7 +11,7 @@ RELEASE = {
     "version": "1.1.7",
     "tag": "v1.1.7",
     "date": "2026-09-29",
-    "title": "Expanse 1.1.7: licence files, release script",
+    "title": "Expanse 1.1.7: license files, release script",
     "release_url": "https://github.com/team-expanse/expanse/releases/tag/v1.1.7",
     "notes": "notes.md",
     "iso": {
@@ -53,7 +53,7 @@ class LoadRelease(unittest.TestCase):
         with tempfile.TemporaryDirectory() as t:
             rel = rs.load_release(write_release(Path(t)))
         self.assertEqual(rel.version, "1.1.7")
-        self.assertEqual(rel.summary, "licence files, release script")
+        self.assertEqual(rel.summary, "license files, release script")
         self.assertIn("### Added", rel.notes_md)
 
     def test_rejects_a_non_semver_version(self):
@@ -107,7 +107,7 @@ class AddChangelogEntry(unittest.TestCase):
         self.assertLess(out.index('<span class="ver">1.1.7</span>'), out.index('<span class="ver">1.1.6</span>'))
         self.assertEqual(out.count('class="rel latest" open'), 1)
         self.assertIn('<details class="rel">\n          <summary><span class="ver">1.1.6</span>', out)
-        self.assertIn("<span>Licence files, release script</span><span class=\"when\">2026-09-29</span>", out)
+        self.assertIn("<span>License files, release script</span><span class=\"when\">2026-09-29</span>", out)
 
     def test_replaces_an_entry_whose_notes_changed(self):
         rel = rs.Release.from_manifest(RELEASE, NOTES)
@@ -132,8 +132,8 @@ class ReleaseCard(unittest.TestCase):
     def test_updates_summary_date_size_and_checksum(self):
         rel = rs.Release.from_manifest(RELEASE, NOTES)
         out = rs.update_release_details(self.CARD, rel)
-        self.assertIn("<span>Licence files, release script</span>", out)
-        self.assertIn("Released 2026-09-29 · licence files, release script", out)
+        self.assertIn("<span>License files, release script</span>", out)
+        self.assertIn("Released 2026-09-29 · license files, release script", out)
         self.assertIn("about 1.5 GB", out)
         self.assertIn(f'<code class="sha256">{"ab" * 32}</code>', out)
 
