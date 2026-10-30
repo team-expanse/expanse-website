@@ -139,6 +139,8 @@
             <tr data-key="bootCmdline"><td><code>bootCmdline</code></td><td>none</td><td>Kernel command line, used with <code>bootKernel</code>.</td></tr>
             <tr data-key="guestReady"><td><code>guestReady</code></td><td><code>systemd</code></td><td>When the VM counts as <code>RUNNING</code>. <code>systemd</code>: once the guest's systemd (254 or newer) reports over vsock that it reached <code>multi-user.target</code> (systemd 254 and 255, as in Ubuntu 24.04, report no targets, so <code>READY=1</code> alone counts). <code>none</code>: as soon as QEMU starts, for guests without systemd.</td></tr>
             <tr data-key="cpuModel"><td><code>cpuModel</code></td><td>qemu's default</td><td>The guest's CPU model. <code>host</code> passes the node's CPU through, including <code>vmx</code>/<code>svm</code>, so the guest can run KVM itself (nested virtualization). <code>host</code> is the only value accepted.</td></tr>
+            <tr data-key="machine"><td><code>machine</code></td><td><code>pc-i440fx-11.1</code></td><td>The virtual hardware the guest sees, as a versioned QEMU machine type: <code>pc-i440fx-</code> or <code>pc-q35-</code> and a version. It stays fixed when Expanse updates QEMU, so the guest keeps the same hardware and a suspended VM can still resume.</td></tr>
+            <tr data-key="shutdownTimeout"><td><code>shutdownTimeout</code></td><td><code>60</code></td><td>Seconds a stop waits for the guest to power off after asking it to, before the VM is turned off hard. <code>0</code> turns it off at once; at most <code>80</code>.</td></tr>
           </tbody>
         </table>
       </div>
