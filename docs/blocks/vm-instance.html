@@ -160,7 +160,10 @@
 <span class="p">$ </span><span class="cmd">echo hello | expanse ctl vm exec -i vm1 -- tee /root/note</span></pre></div>
 <p>A VM started by an earlier Expanse, and still running through an upgrade, gets the agent port, its address on the page and <code>vm exec</code> after its next restart. cloud-init runs once, so a VM deployed before the guest agent was added needs <code>qemu-guest-agent</code> installed in the guest by hand.</p>
 <p>Without <code>image</code>, getting a first operating system onto the empty disk is up to you: write a prebuilt image onto the volume's DRBD device on its primary before applying the block, or boot a kernel directly with <code>bootKernel</code>. Expanse's <code>pando-guest-image</code> is a worked example, for a Pando guest that boots without a registry: a prebuilt NixOS image with the Pando app platform, written onto a pre-created volume and booted with no <code>bootKernel</code>.</p>
-<p>The guest's serial console is the block unit's output, so read it with <code>journalctl</code> on the VM's node. Its readiness is the unit's status text:</p>
+<p>The block page's <strong>Console</strong> tab is the guest's serial console (<code>ttyS0</code>), live in the browser from whichever node serves the page. <code>expanse ctl vm console</code> attaches a terminal to it from any node, as root; Ctrl-] leaves and the guest keeps running. It opens with the console's recent output, several people can attach at once, and logging in takes an account the guest already has: cloud images have no passwords, so set one first with <code>vm exec</code>. A VM started by an earlier Expanse gets its console after its next restart.</p>
+<div class="code"><pre><span class="p">$ </span><span class="cmd">echo debian:secret | expanse ctl vm exec -i vm1 -- chpasswd</span>
+<span class="p">$ </span><span class="cmd">expanse ctl vm console vm1</span></pre></div>
+<p>The console's output also goes to the block unit's journal on the VM's node. Its readiness is the unit's status text:</p>
 <div class="code"><pre><span class="p">$ </span><span class="cmd">journalctl -u expanse-block-root@default-vm1-0.service -f</span>
 <span class="p">$ </span><span class="cmd">systemctl show -p StatusText --value expanse-block-root@default-vm1-0.service</span>
 <span class="out">ready: multi-user.target reached</span></pre></div>
@@ -172,7 +175,7 @@
       <h2 id="limits">Limits</h2>
       <ul>
 <li>No live migration.</li>
-<li>No interactive console; the serial console is read-only through the journal, and <code>vm exec</code> runs single commands through the guest agent.</li>
+<li>The console is the serial console only; there is no graphical (VNC or SPICE) console.</li>
 <li>Liveness probes are not run for VMs.</li>
 <li>A <code>cpuModel: host</code> guest is tied to its node's CPU features; keep its candidate nodes on the same CPU generation.</li>
 <li>Tested guests: the Debian 13 and Ubuntu 24.04 cloud images, and NixOS. Other operating systems, such as Windows and the BSDs, are unverified.</li>
